@@ -1,0 +1,101 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{5E7621D3-037F-4D21-A628-CCABB6A0AAF8}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Abstractor.Cqrs</RootNamespace>
+    <AssemblyName>Abstractor.Cqrs</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Infrastructure\CrossCuttingConcerns\EmptyLogger.cs" />
+    <Compile Include="Infrastructure\CrossCuttingConcerns\EmptyValidator.cs" />
+    <Compile Include="Infrastructure\CrossCuttingConcerns\OperationException.cs" />
+    <Compile Include="Infrastructure\CrossCuttingConcerns\SystemClock.cs" />
+    <Compile Include="Infrastructure\Domain\AggregateRoot.cs" />
+    <Compile Include="Infrastructure\Domain\Entity.cs" />
+    <Compile Include="Infrastructure\Domain\ValueObject.cs" />
+    <Compile Include="Infrastructure\Events\EventDispatcher.cs" />
+    <Compile Include="Infrastructure\Events\MultipleDispatchEventTrigger.cs" />
+    <Compile Include="Infrastructure\Events\TriggerEventWhenHandlersExistDecorator.cs" />
+    <Compile Include="Infrastructure\Operations\CommandPostAction.cs" />
+    <Compile Include="Infrastructure\Operations\Decorators\CommandEventDispatcherDecorator.cs" />
+    <Compile Include="Infrastructure\Operations\Decorators\CommandLifetimeScopeDecorator.cs" />
+    <Compile Include="Infrastructure\Operations\Decorators\CommandNotNullDecorator.cs" />
+    <Compile Include="Infrastructure\Operations\Decorators\CommandPostActionDecorator.cs" />
+    <Compile Include="Infrastructure\Operations\Decorators\CommandTransactionDecorator.cs" />
+    <Compile Include="Infrastructure\Operations\Decorators\QueryAsyncLifetimeScopeDecorator.cs" />
+    <Compile Include="Infrastructure\Operations\Decorators\QueryAsyncNotNullDecorator.cs" />
+    <Compile Include="Infrastructure\Operations\Decorators\QueryLifetimeScopeDecorator.cs" />
+    <Compile Include="Infrastructure\Operations\Decorators\QueryNotNullDecorator.cs" />
+    <Compile Include="Infrastructure\Operations\Dispatchers\CommandDispatcher.cs" />
+    <Compile Include="Infrastructure\Operations\Dispatchers\QueryDispatcher.cs" />
+    <Compile Include="Infrastructure\Persistence\EmptyUnitOfWork.cs" />
+    <Compile Include="Interfaces\CompositionRoot\IContainer.cs" />
+    <Compile Include="Interfaces\CompositionRoot\IInstanceProducer.cs" />
+    <Compile Include="Interfaces\CrossCuttingConcerns\IClock.cs" />
+    <Compile Include="Interfaces\CrossCuttingConcerns\ILogger.cs" />
+    <Compile Include="Interfaces\CrossCuttingConcerns\IValidator.cs" />
+    <Compile Include="Interfaces\Domain\IAggregateRoot.cs" />
+    <Compile Include="Interfaces\Events\IEvent.cs" />
+    <Compile Include="Interfaces\Events\IEventDispatcher.cs" />
+    <Compile Include="Interfaces\Events\IEventHandler.cs" />
+    <Compile Include="Interfaces\Events\IEventTrigger.cs" />
+    <Compile Include="Interfaces\Operations\ICommand.cs" />
+    <Compile Include="Interfaces\Operations\ICommandDispatcher.cs" />
+    <Compile Include="Interfaces\Operations\ICommandEvent.cs" />
+    <Compile Include="Interfaces\Operations\ICommandHandler.cs" />
+    <Compile Include="Interfaces\Operations\ICommandPostAction.cs" />
+    <Compile Include="Interfaces\Operations\ICreateAggregateCommand.cs" />
+    <Compile Include="Interfaces\Operations\IQuery.cs" />
+    <Compile Include="Interfaces\Operations\IQueryAsyncHandler.cs" />
+    <Compile Include="Interfaces\Operations\IQueryDispatcher.cs" />
+    <Compile Include="Interfaces\Operations\IQueryHandler.cs" />
+    <Compile Include="Interfaces\Persistence\IAggregateReader.cs" />
+    <Compile Include="Interfaces\Persistence\IAggregateWriter.cs" />
+    <Compile Include="Interfaces\Persistence\IRepository.cs" />
+    <Compile Include="Interfaces\Persistence\IUnitOfWork.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
