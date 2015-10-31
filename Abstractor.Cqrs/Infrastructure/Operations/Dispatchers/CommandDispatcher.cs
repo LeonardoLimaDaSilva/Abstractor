@@ -18,7 +18,7 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Dispatchers
         [DebuggerStepThrough]
         public void Dispatch(ICommand command)
         {
-            if (command == null) throw new ArgumentNullException("command");
+            if (command == null) throw new ArgumentNullException(nameof(command));
 
             var handlerType = typeof(ICommandHandler<>).MakeGenericType(command.GetType());
             dynamic handler = _container.GetInstance(handlerType);
@@ -29,7 +29,7 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Dispatchers
         [DebuggerStepThrough]
         public async Task DispatchAsync(ICommand command)
         {
-            if (command == null) throw new ArgumentNullException("command");
+            if (command == null) throw new ArgumentNullException(nameof(command));
 
             var handlerType = typeof(ICommandHandler<>).MakeGenericType(command.GetType());
             dynamic handler = _container.GetInstance(handlerType);

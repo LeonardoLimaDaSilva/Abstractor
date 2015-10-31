@@ -18,7 +18,7 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Dispatchers
         [DebuggerStepThrough]
         public TResult Dispatch<TResult>(IQuery<TResult> query)
         {
-            if (query == null) throw new ArgumentNullException("query");
+            if (query == null) throw new ArgumentNullException(nameof(query));
 
             var handlerType = typeof(IQueryHandler<,>).MakeGenericType(query.GetType(), typeof(TResult));
             dynamic handler = _container.GetInstance(handlerType);
@@ -29,7 +29,7 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Dispatchers
         [DebuggerStepThrough]
         public async Task<TResult> DispatchAsync<TResult>(IQuery<TResult> query)
         {
-            if (query == null) throw new ArgumentNullException("query");
+            if (query == null) throw new ArgumentNullException(nameof(query));
 
             var handlerType = typeof(IQueryAsyncHandler<,>).MakeGenericType(query.GetType(), typeof(TResult));
             dynamic handler = _container.GetInstance(handlerType);
