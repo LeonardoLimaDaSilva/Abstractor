@@ -39,12 +39,6 @@ namespace Abstractor.Cqrs.SimpleInjector.CompositionRoot.Installers
                 typeof(CommandLifetimeScopeDecorator<>),
                 Lifestyle.Singleton
             );
-
-            container.RegisterDecorator(
-                typeof(ICommandHandler<>),
-                typeof(CommandNotNullDecorator<>),
-                Lifestyle.Singleton
-            );
         }
     }
 }

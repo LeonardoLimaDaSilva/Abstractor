@@ -43,22 +43,23 @@ namespace Abstractor.Cqrs.SimpleInjector.CompositionRoot
         {
             var packages = from assembly in AppDomain.CurrentDomain.GetAssemblies()
                            from type in assembly.GetSafeTypes()
-                            where typeof(IAbstractorInstaller).IsAssignableFrom(type)
-                            where !type.IsAbstract
-                            select (IAbstractorInstaller)Activator.CreateInstance(type);
+                           where typeof(IAbstractorInstaller).IsAssignableFrom(type)
+                           where !type.IsAbstract
+                           select (IAbstractorInstaller)Activator.CreateInstance(type);
 
             packages.ToList().ForEach(p => p.RegisterServices(container, settings));
         }
 
         internal static void AllowResolvingFuncFactories(this ContainerOptions options)
         {
-            options.Container.ResolveUnregisteredType += (s, e) => {
+            options.Container.ResolveUnregisteredType += (s, e) =>
+            {
                 var type = e.UnregisteredServiceType;
 
                 if (!type.IsGenericType || type.GetGenericTypeDefinition() != typeof(Func<>)) return;
 
                 var serviceType = type.GetGenericArguments().First();
-                var registration =  options.Container.GetRegistration(serviceType, true);
+                var registration = options.Container.GetRegistration(serviceType, true);
                 var funcType = typeof(Func<>).MakeGenericType(serviceType);
 
                 var factoryDelegate = Expression.Lambda(funcType, registration.BuildExpression()).Compile();

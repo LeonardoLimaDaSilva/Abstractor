@@ -23,20 +23,8 @@ namespace Abstractor.Cqrs.SimpleInjector.CompositionRoot.Installers
                 );
 
             container.RegisterDecorator(
-                typeof(IQueryHandler<,>),
-                typeof(QueryNotNullDecorator<,>),
-                Lifestyle.Singleton
-                );
-
-            container.RegisterDecorator(
                 typeof(IQueryAsyncHandler<,>),
                 typeof(QueryAsyncLifetimeScopeDecorator<,>),
-                Lifestyle.Singleton
-                );
-
-            container.RegisterDecorator(
-                typeof(IQueryAsyncHandler<,>),
-                typeof(QueryAsyncNotNullDecorator<,>),
                 Lifestyle.Singleton
                 );
         }
