@@ -54,13 +54,10 @@
     <Compile Include="Infrastructure\Operations\CommandPostAction.cs" />
     <Compile Include="Infrastructure\Operations\Decorators\CommandEventDispatcherDecorator.cs" />
     <Compile Include="Infrastructure\Operations\Decorators\CommandLifetimeScopeDecorator.cs" />
-    <Compile Include="Infrastructure\Operations\Decorators\CommandNotNullDecorator.cs" />
     <Compile Include="Infrastructure\Operations\Decorators\CommandPostActionDecorator.cs" />
     <Compile Include="Infrastructure\Operations\Decorators\CommandTransactionDecorator.cs" />
     <Compile Include="Infrastructure\Operations\Decorators\QueryAsyncLifetimeScopeDecorator.cs" />
-    <Compile Include="Infrastructure\Operations\Decorators\QueryAsyncNotNullDecorator.cs" />
     <Compile Include="Infrastructure\Operations\Decorators\QueryLifetimeScopeDecorator.cs" />
-    <Compile Include="Infrastructure\Operations\Decorators\QueryNotNullDecorator.cs" />
     <Compile Include="Infrastructure\Operations\Dispatchers\CommandDispatcher.cs" />
     <Compile Include="Infrastructure\Operations\Dispatchers\QueryDispatcher.cs" />
     <Compile Include="Infrastructure\Persistence\EmptyUnitOfWork.cs" />
@@ -70,6 +67,8 @@
     <Compile Include="Interfaces\CrossCuttingConcerns\ILogger.cs" />
     <Compile Include="Interfaces\CrossCuttingConcerns\IValidator.cs" />
     <Compile Include="Interfaces\Domain\IAggregateRoot.cs" />
+    <Compile Include="Interfaces\Domain\IMemento.cs" />
+    <Compile Include="Interfaces\Domain\IRestorable.cs" />
     <Compile Include="Interfaces\Events\IEvent.cs" />
     <Compile Include="Interfaces\Events\IEventDispatcher.cs" />
     <Compile Include="Interfaces\Events\IEventHandler.cs" />
