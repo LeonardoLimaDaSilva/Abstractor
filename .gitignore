@@ -143,7 +143,7 @@ publish/
 # NuGet Packages
 *.nupkg
 # except nuget/
-!**/nuget/
+!**/nuget/*.nupkg
 
 # The packages folder can be ignored because of Package Restore
 **/packages/*
