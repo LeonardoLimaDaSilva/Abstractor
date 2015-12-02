@@ -62,6 +62,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="nuget\Abstractor.Cqrs.SimpleInjector.1.0.0.2.nupkg" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
