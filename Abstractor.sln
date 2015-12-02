@@ -9,6 +9,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abstractor.Cqrs.SimpleInjec
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abstractor.Cqrs.SimpleInjector.EntityFramework", "Abstractor.Cqrs.SimpleInjector.EntityFramework\Abstractor.Cqrs.SimpleInjector.EntityFramework.csproj", "{AEFE28E8-635D-471C-8B4A-0A44A88236F9}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "nuget", "nuget", "{E16BA176-E41C-4BD3-8F1A-B24A2E1799AF}"
+	ProjectSection(SolutionItems) = preProject
+		nuget\Abstractor.Cqrs.1.0.0.2.nupkg = nuget\Abstractor.Cqrs.1.0.0.2.nupkg
+		nuget\Abstractor.Cqrs.SimpleInjector.1.0.0.2.nupkg = nuget\Abstractor.Cqrs.SimpleInjector.1.0.0.2.nupkg
+		nuget\Abstractor.Cqrs.SimpleInjector.EntityFramework.1.0.0.2.nupkg = nuget\Abstractor.Cqrs.SimpleInjector.EntityFramework.1.0.0.2.nupkg
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
