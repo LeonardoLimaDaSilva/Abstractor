@@ -73,7 +73,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="app.config" />
     <None Include="nuget\Abstractor.Cqrs.SimpleInjector.EntityFramework.1.0.0.2.nupkg" />
     <None Include="packages.config" />
   </ItemGroup>
