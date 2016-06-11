@@ -50,6 +50,10 @@ namespace Abstractor.Cqrs.SimpleInjector.CompositionRoot
             packages.ToList().ForEach(p => p.RegisterServices(container, settings));
         }
 
+        /// <summary>
+        /// Permite que delegates sejam resolvidos pelo container.
+        /// </summary>
+        /// <param name="options">Opções do container.</param>
         internal static void AllowResolvingFuncFactories(this ContainerOptions options)
         {
             options.Container.ResolveUnregisteredType += (s, e) =>
@@ -62,6 +66,7 @@ namespace Abstractor.Cqrs.SimpleInjector.CompositionRoot
                 var registration = options.Container.GetRegistration(serviceType, true);
                 var funcType = typeof(Func<>).MakeGenericType(serviceType);
 
+                // Constrói o delegate e o registra no container
                 var factoryDelegate = Expression.Lambda(funcType, registration.BuildExpression()).Compile();
                 e.Register(Expression.Constant(factoryDelegate));
             };

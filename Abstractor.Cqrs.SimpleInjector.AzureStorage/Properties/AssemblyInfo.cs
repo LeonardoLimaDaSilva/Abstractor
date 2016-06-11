@@ -4,11 +4,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Abstractor.Cqrs")]
+[assembly: AssemblyTitle("Abstractor.Cqrs.SimpleInjector.AzureStorage")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Abstractor.Cqrs")]
+[assembly: AssemblyProduct("Abstractor.Cqrs.SimpleInjector.AzureStorage")]
 [assembly: AssemblyCopyright("Copyright ©  2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -19,7 +19,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("5e7621d3-037f-4d21-a628-ccabb6a0aaf8")]
+[assembly: Guid("11cb3c29-aaec-4447-844a-1396200b7199")]
 
 // Version information for an assembly consists of the following four values:
 //

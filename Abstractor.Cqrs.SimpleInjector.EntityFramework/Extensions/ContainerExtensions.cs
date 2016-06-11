@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Data.Entity;
-using System.Reflection;
 using Abstractor.Cqrs.Interfaces.Persistence;
-using Abstractor.Cqrs.SimpleInjector.EntityFramework.ModelCreation;
+using Abstractor.Cqrs.SimpleInjector.EntityFramework.Interfaces;
 using Abstractor.Cqrs.SimpleInjector.EntityFramework.Persistence;
 using SimpleInjector;
 
@@ -18,16 +17,19 @@ namespace Abstractor.Cqrs.SimpleInjector.EntityFramework.Extensions
         /// </summary>
         /// <typeparam name="TContext">DbContext da aplicação.</typeparam>
         /// <param name="container">Container do Simple Injector.</param>
-        /// <param name="infrastructureAssemblies">Local dos assemblies da camada de infraestrutura.</param>
-        public static void RegisterEntityFramework<TContext>(this Container container, Assembly[] infrastructureAssemblies) where TContext : DbContext
+        /// <param name="compositeUnitOfWork">Registra o EntityFrameworkUnitOfWork apenas se não estiver usando um composite.</param>
+        public static void RegisterEntityFramework<TContext>(this Container container, bool compositeUnitOfWork = false)
+            where TContext : DbContext
         {
-            if (container == null) 
+            if (container == null)
                 throw new ArgumentNullException(nameof(container));
 
-            container.Register<ICreateDbModel>(() => new DefaultDbModelCreator(infrastructureAssemblies), Lifestyle.Singleton);
             container.Register<DbContext, TContext>(Lifestyle.Scoped);
-            container.Register<IUnitOfWork, EntityFrameworkUnitOfWork>(Lifestyle.Scoped);
-            container.Register(typeof (IRepository<>), typeof (EntityFrameworkRepository<>), Lifestyle.Scoped);
+
+            if (!compositeUnitOfWork)
+                container.Register<IUnitOfWork, EntityFrameworkUnitOfWork>(Lifestyle.Scoped);
+
+            container.Register(typeof(IEntityFrameworkRepository<>), typeof(EntityFrameworkRepository<>), Lifestyle.Scoped);
         }
     }
 }
