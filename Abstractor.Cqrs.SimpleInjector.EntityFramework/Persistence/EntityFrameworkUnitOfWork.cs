@@ -7,7 +7,7 @@ using Abstractor.Cqrs.Interfaces.Persistence;
 
 namespace Abstractor.Cqrs.SimpleInjector.EntityFramework.Persistence
 {
-    internal sealed class EntityFrameworkUnitOfWork : IUnitOfWork
+    public sealed class EntityFrameworkUnitOfWork : IUnitOfWork
     {
         private readonly Func<DbContext> _contextProvider;
         private readonly ILogger _logger;
