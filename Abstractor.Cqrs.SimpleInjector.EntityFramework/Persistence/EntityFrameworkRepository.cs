@@ -2,11 +2,11 @@
 using System.Data.Entity;
 using System.Linq;
 using Abstractor.Cqrs.Infrastructure.Domain;
-using Abstractor.Cqrs.Interfaces.Persistence;
+using Abstractor.Cqrs.SimpleInjector.EntityFramework.Interfaces;
 
 namespace Abstractor.Cqrs.SimpleInjector.EntityFramework.Persistence
 {
-    internal sealed class EntityFrameworkRepository<TAggregate> : IRepository<TAggregate> where TAggregate : AggregateRoot
+    internal sealed class EntityFrameworkRepository<TAggregate> : IEntityFrameworkRepository<TAggregate> where TAggregate : AggregateRoot
     {
         private readonly Func<DbContext> _contextProvider;
 
