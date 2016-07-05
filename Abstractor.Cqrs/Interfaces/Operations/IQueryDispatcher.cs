@@ -4,12 +4,12 @@ using System.Threading.Tasks;
 namespace Abstractor.Cqrs.Interfaces.Operations
 {
     /// <summary>
-    /// Processa consultas.
+    ///     Processa consultas.
     /// </summary>
     public interface IQueryDispatcher
     {
         /// <summary>
-        /// Executa a consulta.
+        ///     Executa a consulta.
         /// </summary>
         /// <typeparam name="TResult">Retorno da consulta.</typeparam>
         /// <param name="query">Consulta.</param>
@@ -18,7 +18,7 @@ namespace Abstractor.Cqrs.Interfaces.Operations
         TResult Dispatch<TResult>(IQuery<TResult> query);
 
         /// <summary>
-        /// Executa a consulta de forma assíncrona.
+        ///     Executa a consulta de forma assíncrona.
         /// </summary>
         /// <typeparam name="TResult">Retorno da consulta.</typeparam>
         /// <param name="query">Consulta.</param>

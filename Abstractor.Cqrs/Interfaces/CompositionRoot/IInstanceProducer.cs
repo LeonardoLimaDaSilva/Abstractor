@@ -3,11 +3,12 @@
 namespace Abstractor.Cqrs.Interfaces.CompositionRoot
 {
     /// <summary>
-    /// Abstrai o produtor de instâncias do container.
+    ///     Abstrai o produtor de instâncias do container.
     /// </summary>
     public interface IInstanceProducer
     {
-        Type ServiceType { get; set; }
+        Type ServiceType { get; }
+
         object GetInstance();
     }
 }

@@ -35,12 +35,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="SimpleInjector, Version=3.1.5.0, Culture=neutral, PublicKeyToken=984cb50dea722e99, processorArchitecture=MSIL">
-      <HintPath>..\packages\SimpleInjector.3.1.5\lib\net45\SimpleInjector.dll</HintPath>
+    <Reference Include="SimpleInjector, Version=3.2.0.0, Culture=neutral, PublicKeyToken=984cb50dea722e99, processorArchitecture=MSIL">
+      <HintPath>..\packages\SimpleInjector.3.2.0\lib\net45\SimpleInjector.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="SimpleInjector.Extensions.LifetimeScoping, Version=3.1.5.0, Culture=neutral, PublicKeyToken=984cb50dea722e99, processorArchitecture=MSIL">
-      <HintPath>..\packages\SimpleInjector.Extensions.LifetimeScoping.3.1.5\lib\net40-client\SimpleInjector.Extensions.LifetimeScoping.dll</HintPath>
+    <Reference Include="SimpleInjector.Extensions.LifetimeScoping, Version=3.2.0.0, Culture=neutral, PublicKeyToken=984cb50dea722e99, processorArchitecture=MSIL">
+      <HintPath>..\packages\SimpleInjector.Extensions.LifetimeScoping.3.2.0\lib\net40-client\SimpleInjector.Extensions.LifetimeScoping.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -52,25 +52,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CompositionRoot\Adapters\ContainerAdapter.cs" />
-    <Compile Include="CompositionRoot\Adapters\InstanceProducerAdapter.cs" />
-    <Compile Include="CompositionRoot\CompositionRootSettings.cs" />
-    <Compile Include="CompositionRoot\ContainerExtensions.cs" />
-    <Compile Include="CompositionRoot\Installers\CommandInstaller.cs" />
-    <Compile Include="CompositionRoot\Installers\ContainerInstaller.cs" />
-    <Compile Include="CompositionRoot\Installers\EventInstaller.cs" />
-    <Compile Include="CompositionRoot\Installers\IAbstractorInstaller.cs" />
-    <Compile Include="CompositionRoot\Installers\InfrastructureInstaller.cs" />
-    <Compile Include="CompositionRoot\Installers\QueryInstaller.cs" />
-    <Compile Include="Extensions\ImplementationConvention.cs" />
-    <Compile Include="Extensions\PredicateBuilder.cs" />
-    <Compile Include="Extensions\ReflectionExtensions.cs" />
+    <Compile Include="Adapters\ContainerAdapter.cs" />
+    <Compile Include="Adapters\InstanceProducerAdapter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="nuget\Abstractor.Cqrs.SimpleInjector.1.0.0.2.nupkg" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Abstractor.Cqrs\Abstractor.Cqrs.csproj">
+      <Project>{5E7621D3-037F-4D21-A628-CCABB6A0AAF8}</Project>
+      <Name>Abstractor.Cqrs</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -46,33 +46,54 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Infrastructure\CompositionRoot\CompositionRootSettings.cs" />
+    <Compile Include="Infrastructure\CompositionRoot\Extensions\ContainerExtensions.cs" />
+    <Compile Include="Infrastructure\CompositionRoot\Extensions\ReflectionExtensions.cs" />
+    <Compile Include="Infrastructure\CompositionRoot\ImplementationConvention.cs" />
+    <Compile Include="Infrastructure\CompositionRoot\Installers\CommandInstaller.cs" />
+    <Compile Include="Infrastructure\CompositionRoot\Installers\EventInstaller.cs" />
+    <Compile Include="Infrastructure\CompositionRoot\Installers\InfrastructureInstaller.cs" />
+    <Compile Include="Infrastructure\CompositionRoot\Installers\IShopDeliveryInstaller.cs" />
+    <Compile Include="Infrastructure\CompositionRoot\Installers\QueryInstaller.cs" />
+    <Compile Include="Infrastructure\CompositionRoot\PredicateBuilder.cs" />
+    <Compile Include="Infrastructure\CrossCuttingConcerns\DataAnnotationsValidator.cs" />
     <Compile Include="Infrastructure\CrossCuttingConcerns\EmptyLogger.cs" />
-    <Compile Include="Infrastructure\CrossCuttingConcerns\EmptyValidator.cs" />
-    <Compile Include="Infrastructure\CrossCuttingConcerns\OperationException.cs" />
+    <Compile Include="Infrastructure\CrossCuttingConcerns\EntityNotFoundException.cs" />
+    <Compile Include="Infrastructure\CrossCuttingConcerns\Guard.cs" />
     <Compile Include="Infrastructure\CrossCuttingConcerns\SystemClock.cs" />
     <Compile Include="Infrastructure\Domain\AggregateRoot.cs" />
     <Compile Include="Infrastructure\Domain\Entity.cs" />
+    <Compile Include="Infrastructure\Domain\GenericFile.cs" />
+    <Compile Include="Infrastructure\Domain\QueueMessage.cs" />
     <Compile Include="Infrastructure\Domain\ValueObject.cs" />
     <Compile Include="Infrastructure\Events\EventDispatcher.cs" />
     <Compile Include="Infrastructure\Events\MultipleDispatchEventTrigger.cs" />
-    <Compile Include="Infrastructure\Events\TriggerEventWhenHandlersExistDecorator.cs" />
+    <Compile Include="Infrastructure\Events\TriggerRegisteredEventsDecorator.cs" />
     <Compile Include="Infrastructure\Operations\CommandPostAction.cs" />
     <Compile Include="Infrastructure\Operations\Decorators\CommandEventDispatcherDecorator.cs" />
     <Compile Include="Infrastructure\Operations\Decorators\CommandLifetimeScopeDecorator.cs" />
     <Compile Include="Infrastructure\Operations\Decorators\CommandPostActionDecorator.cs" />
     <Compile Include="Infrastructure\Operations\Decorators\CommandTransactionDecorator.cs" />
+    <Compile Include="Infrastructure\Operations\Decorators\CommandValidationDecorator.cs" />
     <Compile Include="Infrastructure\Operations\Decorators\QueryAsyncLifetimeScopeDecorator.cs" />
     <Compile Include="Infrastructure\Operations\Decorators\QueryLifetimeScopeDecorator.cs" />
     <Compile Include="Infrastructure\Operations\Dispatchers\CommandDispatcher.cs" />
     <Compile Include="Infrastructure\Operations\Dispatchers\QueryDispatcher.cs" />
-    <Compile Include="Infrastructure\Persistence\CompositeUnitOfWork.cs" />
+    <Compile Include="Infrastructure\Persistence\BaseDataContext.cs" />
+    <Compile Include="Infrastructure\Persistence\BaseDataSet.cs" />
+    <Compile Include="Infrastructure\Persistence\BaseDataSetOperation.cs" />
+    <Compile Include="Infrastructure\Persistence\BaseDataSetOperationType.cs" />
+    <Compile Include="Infrastructure\Persistence\EmptyUnitOfWork.cs" />
+    <Compile Include="Infrastructure\Persistence\IBaseDataSet.cs" />
     <Compile Include="Interfaces\CompositionRoot\IContainer.cs" />
     <Compile Include="Interfaces\CompositionRoot\IInstanceProducer.cs" />
     <Compile Include="Interfaces\CrossCuttingConcerns\IClock.cs" />
     <Compile Include="Interfaces\CrossCuttingConcerns\ILogger.cs" />
     <Compile Include="Interfaces\CrossCuttingConcerns\IValidator.cs" />
     <Compile Include="Interfaces\Domain\IAggregateRoot.cs" />
+    <Compile Include="Interfaces\Domain\IFileRepository.cs" />
     <Compile Include="Interfaces\Domain\IMemento.cs" />
+    <Compile Include="Interfaces\Domain\IQueueRepository.cs" />
     <Compile Include="Interfaces\Domain\IRestorable.cs" />
     <Compile Include="Interfaces\Events\IEvent.cs" />
     <Compile Include="Interfaces\Events\IEventDispatcher.cs" />
@@ -83,21 +104,18 @@
     <Compile Include="Interfaces\Operations\ICommandEvent.cs" />
     <Compile Include="Interfaces\Operations\ICommandHandler.cs" />
     <Compile Include="Interfaces\Operations\ICommandPostAction.cs" />
-    <Compile Include="Interfaces\Operations\ICreateAggregateCommand.cs" />
     <Compile Include="Interfaces\Operations\IQuery.cs" />
     <Compile Include="Interfaces\Operations\IQueryAsyncHandler.cs" />
     <Compile Include="Interfaces\Operations\IQueryDispatcher.cs" />
     <Compile Include="Interfaces\Operations\IQueryHandler.cs" />
-    <Compile Include="Interfaces\Operations\ITransaction.cs" />
+    <Compile Include="Interfaces\Operations\TransactionAttribute.cs" />
     <Compile Include="Interfaces\Persistence\IAggregateReader.cs" />
     <Compile Include="Interfaces\Persistence\IAggregateWriter.cs" />
     <Compile Include="Interfaces\Persistence\IRepository.cs" />
     <Compile Include="Interfaces\Persistence\IUnitOfWork.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="nuget\Abstractor.Cqrs.1.0.0.2.nupkg" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

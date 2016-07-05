@@ -1,11 +1,15 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Threading.Tasks;
+using Abstractor.Cqrs.Infrastructure.CrossCuttingConcerns;
 using Abstractor.Cqrs.Interfaces.CompositionRoot;
 using Abstractor.Cqrs.Interfaces.Operations;
 
 namespace Abstractor.Cqrs.Infrastructure.Operations.Dispatchers
 {
+    /// <summary>
+    ///     Processador de comandos.
+    /// </summary>
+    [DebuggerStepThrough]
     public sealed class CommandDispatcher : ICommandDispatcher
     {
         private readonly IContainer _container;
@@ -15,29 +19,33 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Dispatchers
             _container = container;
         }
 
-        [DebuggerStepThrough]
+        /// <summary>
+        ///     Dispara um <see cref="ICommandHandler{ICommand}" /> registrado em <see cref="IContainer" />.
+        /// </summary>
+        /// <param name="command">Objeto de comando.</param>
         public void Dispatch(ICommand command)
         {
-            if (command == null) throw new ArgumentNullException(nameof(command));
+            Guard.ArgumentIsNotNull(command, nameof(command));
 
-            var handlerType = typeof(ICommandHandler<>).MakeGenericType(command.GetType());
+            var handlerType = typeof (ICommandHandler<>).MakeGenericType(command.GetType());
             dynamic handler = _container.GetInstance(handlerType);
 
-            handler.Handle((dynamic)command);
+            handler.Handle((dynamic) command);
         }
 
-        [DebuggerStepThrough]
+        /// <summary>
+        ///     Dispara, de forma assíncrona, um <see cref="ICommandHandler{ICommand}" /> registrado em <see cref="IContainer" />.
+        /// </summary>
+        /// <param name="command">Objeto de comando.</param>
+        /// <returns>Task assíncrona.</returns>
         public async Task DispatchAsync(ICommand command)
         {
-            if (command == null) throw new ArgumentNullException(nameof(command));
+            Guard.ArgumentIsNotNull(command, nameof(command));
 
-            var handlerType = typeof(ICommandHandler<>).MakeGenericType(command.GetType());
+            var handlerType = typeof (ICommandHandler<>).MakeGenericType(command.GetType());
             dynamic handler = _container.GetInstance(handlerType);
 
-            await Task.Run(() =>
-            {
-                handler.Handle((dynamic)command);
-            });
+            await Task.Run(() => { handler.Handle((dynamic) command); });
         }
     }
 }

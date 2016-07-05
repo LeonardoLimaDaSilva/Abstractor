@@ -3,7 +3,7 @@
 namespace Abstractor.Cqrs.Infrastructure.CrossCuttingConcerns
 {
     /// <summary>
-    /// Logger vazio utilizado quando nenhuma outra implementação for explicitamente definida.
+    ///     Logger vazio utilizado quando nenhuma outra implementação for explicitamente definida.
     /// </summary>
     public sealed class EmptyLogger : ILogger
     {

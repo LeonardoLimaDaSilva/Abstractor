@@ -4,19 +4,19 @@ using System.Linq;
 namespace Abstractor.Cqrs.Infrastructure.Domain
 {
     /// <summary>
-    /// Um objeto de valor que pode ser comparado através das suas propriedades.
+    ///     Um objeto de valor que pode ser comparado através das suas propriedades.
     /// </summary>
     /// <typeparam name="T">Tipo do objeto de valor.</typeparam>
     public abstract class ValueObject<T> where T : ValueObject<T>
     {
         /// <summary>
-        /// Atributos que serão comparados para determinar igualdade.
+        ///     Atributos que serão comparados para determinar igualdade.
         /// </summary>
         /// <returns></returns>
         protected abstract IEnumerable<object> GetAttributesToIncludeInEqualityCheck();
 
         /// <summary>
-        /// Determina se o objeto possui o mesmo valor que o outro.
+        ///     Determina se o objeto possui o mesmo valor que o outro.
         /// </summary>
         /// <param name="other">Objeto que será comparado à instância atual.</param>
         /// <returns>Verdadeiro se os objetos possuem o mesmo valor.</returns>
@@ -26,7 +26,7 @@ namespace Abstractor.Cqrs.Infrastructure.Domain
         }
 
         /// <summary>
-        /// Determina se o objeto possui o mesmo valor que o outro.
+        ///     Determina se o objeto possui o mesmo valor que o outro.
         /// </summary>
         /// <param name="other">Objeto que será comparado à instância atual.</param>
         /// <returns>Verdadeiro se os objetos possuem o mesmo valor.</returns>
@@ -37,7 +37,7 @@ namespace Abstractor.Cqrs.Infrastructure.Domain
         }
 
         /// <summary>
-        /// Determina se os objetos possuem o mesmo valor.
+        ///     Determina se os objetos possuem o mesmo valor.
         /// </summary>
         /// <param name="left">Objeto da esquerda.</param>
         /// <param name="right">Objeto da direita.</param>
@@ -48,7 +48,7 @@ namespace Abstractor.Cqrs.Infrastructure.Domain
         }
 
         /// <summary>
-        /// Determina se os objetos não possuem o mesmo valor.
+        ///     Determina se os objetos não possuem o mesmo valor.
         /// </summary>
         /// <param name="left">Objeto da esquerda.</param>
         /// <param name="right">Objeto da direita.</param>
@@ -59,13 +59,13 @@ namespace Abstractor.Cqrs.Infrastructure.Domain
         }
 
         /// <summary>
-        /// Retorna o hash code desta instância.
+        ///     Retorna o hash code desta instância.
         /// </summary>
         /// <returns>Hash code da instância.</returns>
         public override int GetHashCode()
         {
             return GetAttributesToIncludeInEqualityCheck()
-                .Aggregate(17, (current, obj) => current * 31 + (obj?.GetHashCode() ?? 0));
+                .Aggregate(17, (current, obj) => current * 31 + obj.GetHashCode());
         }
     }
 }
