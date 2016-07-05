@@ -65,12 +65,6 @@
     <None Include="nuget\Abstractor.Cqrs.SimpleInjector.1.0.0.2.nupkg" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Abstractor.Cqrs\Abstractor.Cqrs.csproj">
-      <Project>{5e7621d3-037f-4d21-a628-ccabb6a0aaf8}</Project>
-      <Name>Abstractor.Cqrs</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

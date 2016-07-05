@@ -61,16 +61,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Abstractor.Cqrs.SimpleInjector\Abstractor.Cqrs.SimpleInjector.csproj">
-      <Project>{B2DE5824-5A4D-4370-9471-B5AC6310F026}</Project>
-      <Name>Abstractor.Cqrs.SimpleInjector</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Abstractor.Cqrs\Abstractor.Cqrs.csproj">
-      <Project>{5E7621D3-037F-4D21-A628-CCABB6A0AAF8}</Project>
-      <Name>Abstractor.Cqrs</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="App.config" />
     <None Include="nuget\Abstractor.Cqrs.SimpleInjector.EntityFramework.1.0.0.2.nupkg" />
     <None Include="packages.config" />
