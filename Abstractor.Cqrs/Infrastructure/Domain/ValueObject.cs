@@ -64,8 +64,11 @@ namespace Abstractor.Cqrs.Infrastructure.Domain
         /// <returns>Hash code da instância.</returns>
         public override int GetHashCode()
         {
+            // algoritmo que utiliza a múltiplicação de números primos para minimizar a ocorrência de 
+            // conflitos entre os hashcodes das propriedades do objeto de valor
+
             return GetAttributesToIncludeInEqualityCheck()
-                .Aggregate(17, (current, obj) => current * 31 + obj.GetHashCode());
+                .Aggregate(17, (current, o) => current*31 + (o?.GetHashCode() ?? 0));
         }
     }
 }

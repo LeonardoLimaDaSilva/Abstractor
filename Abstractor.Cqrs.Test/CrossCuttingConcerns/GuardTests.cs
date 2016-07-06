@@ -7,12 +7,6 @@ namespace Abstractor.Cqrs.Test.CrossCuttingConcerns
 {
     public class GuardTests
     {
-        [Fact]
-        internal void Guard_ValueNotNull_ShouldPass()
-        {
-            Guard.ArgumentIsNotNull("value", "argument");
-        }
-
         [Theory]
         [InlineData(null, null, "Valor não pode ser nulo.")]
         [InlineData(null, "message", "message")]
@@ -44,6 +38,12 @@ namespace Abstractor.Cqrs.Test.CrossCuttingConcerns
         {
             var ex = Assert.Throws<EntityNotFoundException>(() => Guard.EntityIsNotNull<string>(null, "primaryKey"));
             ex.Message.Should().Be("A entidade do tipo 'String' não foi encontrada para a chave primária 'primaryKey'.");
+        }
+
+        [Fact]
+        internal void Guard_ValueNotNull_ShouldPass()
+        {
+            Guard.ArgumentIsNotNull("value", "argument");
         }
     }
 }

@@ -128,6 +128,42 @@ namespace Abstractor.Cqrs.Test.Domain
             (vo1 != vo2).Should().Be.True();
         }
 
+        [Fact]
+        internal void GetHashCode_AllValuesAreEqual_ShouldHaveEqualHashCodes()
+        {
+            var vo1 = new ValueObject1
+            {
+                Property1 = 1,
+                Property2 = "xxx"
+            };
+
+            var vo2 = new ValueObject1
+            {
+                Property1 = 1,
+                Property2 = "xxx"
+            };
+
+            vo1.GetHashCode().Equals(vo2.GetHashCode()).Should().Be.True();
+        }
+
+        [Fact]
+        internal void GetHashCode_AnyValueIsDifferent_ShouldHaveDifferentHashCodes()
+        {
+            var vo1 = new ValueObject1
+            {
+                Property1 = 1,
+                Property2 = "xxx"
+            };
+
+            var vo2 = new ValueObject1
+            {
+                Property1 = 1,
+                Property2 = "xyz"
+            };
+
+            vo1.GetHashCode().Equals(vo2.GetHashCode()).Should().Be.False();
+        }
+
         private class ValueObject1 : ValueObject<ValueObject1>
         {
             public int Property1 { private get; set; }
