@@ -12,13 +12,13 @@ namespace Abstractor.Cqrs.Test.Operations.Dispatchers
     public class CommandDispatcherTests
     {
         [Theory, AutoMoqData]
-        internal void Dispatch_NullCommand_ThrowsArgumentNullException(CommandDispatcher dispatcher)
+        public void Dispatch_NullCommand_ThrowsArgumentNullException(CommandDispatcher dispatcher)
         {
             Assert.Throws<ArgumentNullException>(() => dispatcher.Dispatch(null));
         }
 
         [Theory, AutoMoqData]
-        internal void Dispatch_BuildGenericCommandHandlerAndGetFromContainer_ShouldHandleCommand(
+        public void Dispatch_BuildGenericCommandHandlerAndGetFromContainer_ShouldHandleCommand(
             [Frozen] Mock<IContainer> container,
             [Frozen] Mock<ICommandHandler<FakeCommand>> commandHandler,
             FakeCommand command,
@@ -42,13 +42,13 @@ namespace Abstractor.Cqrs.Test.Operations.Dispatchers
         }
 
         [Theory, AutoMoqData]
-        internal async void DispatchAsync_NullCommand_ThrowsArgumentNullException(CommandDispatcher dispatcher)
+        public async void DispatchAsync_NullCommand_ThrowsArgumentNullException(CommandDispatcher dispatcher)
         {
             await Assert.ThrowsAsync<ArgumentNullException>(() => dispatcher.DispatchAsync(null));
         }
 
         [Theory, AutoMoqData]
-        internal async void DispatchAsync_BuildGenericCommandHandlerAndGetFromContainer_ShouldHandleCommandOnANewThread(
+        public async void DispatchAsync_BuildGenericCommandHandlerAndGetFromContainer_ShouldHandleCommandOnANewThread(
             [Frozen] Mock<IContainer> container,
             [Frozen] Mock<ICommandHandler<FakeCommand>> commandHandler,
             FakeCommand command,

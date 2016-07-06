@@ -12,7 +12,7 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
     public class QueryLifetimeScopeDecoratorTests
     {
         [Theory, AutoMoqData]
-        internal void Handle_HasCurrentLifetimeScope_ShouldHandleQuery(
+        public void Handle_HasCurrentLifetimeScope_ShouldHandleQuery(
             [Frozen] Mock<IContainer> container,
             [Frozen] Mock<IQueryHandler<IQuery<object>, object>> queryHandler,
             IQuery<object> query,
@@ -32,7 +32,7 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
         }
 
         [Theory, AutoMoqData]
-        internal void Handle_HasNoCurrentLifetimeScope_ShouldBeginNewLifetimeScopeBeforeHandleQuery(
+        public void Handle_HasNoCurrentLifetimeScope_ShouldBeginNewLifetimeScopeBeforeHandleQuery(
             [Frozen] Mock<IContainer> container,
             [Frozen] Mock<IQueryHandler<IQuery<object>, object>> queryHandler,
             IQuery<object> query,

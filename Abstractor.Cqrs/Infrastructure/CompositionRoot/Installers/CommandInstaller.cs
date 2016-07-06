@@ -20,7 +20,7 @@ namespace Abstractor.Cqrs.Infrastructure.CompositionRoot.Installers
             container.RegisterDecoratorTransient(
                 typeof (ICommandHandler<>),
                 typeof (CommandTransactionDecorator<>),
-                typeof(TransactionAttribute));
+                typeof (TransactionAttribute));
 
             container.RegisterDecoratorTransient(
                 typeof (ICommandHandler<>),

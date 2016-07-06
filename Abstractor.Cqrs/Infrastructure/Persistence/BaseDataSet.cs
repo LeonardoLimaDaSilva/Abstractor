@@ -104,7 +104,9 @@ namespace Abstractor.Cqrs.Infrastructure.Persistence
         {
             Operations.Add(new BaseDataSetOperation
             {
-                Entity = entity, Type = BaseDataSetOperationType.Insert, Done = false
+                Entity = entity,
+                Type = BaseDataSetOperationType.Insert,
+                Done = false
             });
         }
 
@@ -112,7 +114,9 @@ namespace Abstractor.Cqrs.Infrastructure.Persistence
         {
             Operations.Add(new BaseDataSetOperation
             {
-                Entity = entity, Type = BaseDataSetOperationType.Update, Done = false
+                Entity = entity,
+                Type = BaseDataSetOperationType.Update,
+                Done = false
             });
         }
 
@@ -120,7 +124,9 @@ namespace Abstractor.Cqrs.Infrastructure.Persistence
         {
             Operations.Add(new BaseDataSetOperation
             {
-                Entity = entity, Type = BaseDataSetOperationType.Delete, Done = false
+                Entity = entity,
+                Type = BaseDataSetOperationType.Delete,
+                Done = false
             });
         }
     }

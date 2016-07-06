@@ -8,15 +8,17 @@ namespace Abstractor.Cqrs.Test.CrossCuttingConcerns
     public class DataAnnotationsValidatorTests
     {
         [Theory, AutoMoqData]
-        internal void Validate_Valid_ShouldPass(
+        public void Validate_Valid_ShouldPass(
             FakeObject fake,
             DataAnnotationsValidator validator)
         {
+            // Act
+
             validator.Validate(fake);
         }
 
         [Theory, AutoMoqData]
-        internal void Validate_Invalid_ThrowsValidationException(
+        public void Validate_Invalid_ThrowsValidationException(
             FakeObject fake,
             DataAnnotationsValidator validator)
         {
@@ -29,7 +31,7 @@ namespace Abstractor.Cqrs.Test.CrossCuttingConcerns
             Assert.Throws<ValidationException>(() => validator.Validate(fake));
         }
 
-        internal class FakeObject
+        public class FakeObject
         {
             [Required]
             public string Property { get; set; }

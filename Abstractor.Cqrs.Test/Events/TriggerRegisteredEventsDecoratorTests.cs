@@ -14,7 +14,7 @@ namespace Abstractor.Cqrs.Test.Events
     public class TriggerRegisteredEventsDecoratorTests
     {
         [Theory, AutoMoqData]
-        internal void Trigger_NoHandlersRegistered_ShouldNotTrigger(
+        public void Trigger_NoHandlersRegistered_ShouldNotTrigger(
             [Frozen] Mock<IEventTrigger<IEvent>> eventTrigger,
             IEvent @event,
             TriggerRegisteredEventsDecorator<IEvent> decorator)
@@ -29,7 +29,7 @@ namespace Abstractor.Cqrs.Test.Events
         }
 
         [Theory, AutoMoqData]
-        internal void Trigger_HasCurrentLifetimeScope_ShouldTrigger(
+        public void Trigger_HasCurrentLifetimeScope_ShouldTrigger(
             [Frozen] Mock<IContainer> container,
             [Frozen] Mock<IEventHandler<IEvent>> fakeEventHandler,
             [Frozen] Mock<IEventTrigger<IEvent>> eventTrigger,
@@ -66,7 +66,7 @@ namespace Abstractor.Cqrs.Test.Events
         }
 
         [Theory, AutoMoqData]
-        internal void Trigger_HasNoCurrentLifetimeScope_ShouldBeginNewLifetimeScopeAndTrigger(
+        public void Trigger_HasNoCurrentLifetimeScope_ShouldBeginNewLifetimeScopeAndTrigger(
             [Frozen] Mock<IContainer> container,
             [Frozen] Mock<IEventHandler<IEvent>> fakeEventHandler,
             [Frozen] Mock<IEventTrigger<IEvent>> eventTrigger,

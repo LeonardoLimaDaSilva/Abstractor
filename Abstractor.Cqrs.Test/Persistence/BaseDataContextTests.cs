@@ -9,7 +9,7 @@ namespace Abstractor.Cqrs.Test.Persistence
     public class BaseDataContextTests
     {
         [Theory, AutoMoqData]
-        internal void Set_DataSetAlreadyExistsInInternalContext_ShouldReturnSameInstance(
+        public void Set_DataSetAlreadyExistsInInternalContext_ShouldReturnSameInstance(
             FakeDataContext context)
         {
             // Act
@@ -23,7 +23,7 @@ namespace Abstractor.Cqrs.Test.Persistence
         }
 
         [Theory, AutoMoqData]
-        internal void SaveChanges_MultipleDataSets_ShouldCommitAllInternalContexts(
+        public void SaveChanges_MultipleDataSets_ShouldCommitAllInternalContexts(
             Mock<BaseDataSet<int>> dataSet1,
             Mock<BaseDataSet<string>> dataSet2,
             FakeDataContext context)
@@ -47,7 +47,7 @@ namespace Abstractor.Cqrs.Test.Persistence
         }
 
         [Theory, AutoMoqData]
-        internal void Rollback_MultipleDataSets_ShouldRollbackAllInternalContexts(
+        public void Rollback_MultipleDataSets_ShouldRollbackAllInternalContexts(
             Mock<BaseDataSet<int>> dataSet1,
             Mock<BaseDataSet<string>> dataSet2,
             FakeDataContext context)
@@ -71,7 +71,7 @@ namespace Abstractor.Cqrs.Test.Persistence
         }
 
         [Theory, AutoMoqData]
-        internal void Dispose_MultipleDataSets_ShouldDisposeAllInternalContexts(
+        public void Dispose_MultipleDataSets_ShouldDisposeAllInternalContexts(
             Mock<BaseDataSet<int>> dataSet1,
             Mock<BaseDataSet<string>> dataSet2,
             FakeDataContext context)

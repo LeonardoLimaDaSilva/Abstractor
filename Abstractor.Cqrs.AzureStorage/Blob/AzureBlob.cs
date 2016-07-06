@@ -14,11 +14,6 @@ namespace Abstractor.Cqrs.AzureStorage.Blob
 
         public Stream Stream { get; set; }
 
-        public void Dispose()
-        {
-            Stream.Dispose();
-        }
-
         public AzureBlob()
         {
         }
@@ -29,6 +24,11 @@ namespace Abstractor.Cqrs.AzureStorage.Blob
 
             FileName = file.FileName;
             Stream = file.Stream;
+        }
+
+        public void Dispose()
+        {
+            Stream.Dispose();
         }
 
         public GenericFile ToGeneric()

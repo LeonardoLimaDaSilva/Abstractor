@@ -12,7 +12,7 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
     public class CommandLifetimeScopeDecoratorTests
     {
         [Theory, AutoMoqData]
-        internal void Handle_HasCurrentLifetimeScope_ShouldHandleCommand(
+        public void Handle_HasCurrentLifetimeScope_ShouldHandleCommand(
             [Frozen] Mock<IContainer> container,
             [Frozen] Mock<ICommandHandler<ICommand>> commandHandler,
             ICommand command,
@@ -30,7 +30,7 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
         }
 
         [Theory, AutoMoqData]
-        internal void Handle_HasNoCurrentLifetimeScope_ShouldBeginNewLifetimeScopeBeforeHandleCommand(
+        public void Handle_HasNoCurrentLifetimeScope_ShouldBeginNewLifetimeScopeBeforeHandleCommand(
             [Frozen] Mock<IContainer> container,
             [Frozen] Mock<ICommandHandler<ICommand>> commandHandler,
             ICommand command,

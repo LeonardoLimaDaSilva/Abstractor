@@ -7,7 +7,7 @@ namespace Abstractor.Cqrs.Test.Operations
     public class CommandPostActionTests
     {
         [Fact]
-        internal void Act_ShouldCallExecuteEvent()
+        public void Act_ShouldCallExecuteEvent()
         {
             // Arrange
 
@@ -26,7 +26,7 @@ namespace Abstractor.Cqrs.Test.Operations
         }
 
         [Fact]
-        internal void Reset_ShouldSetAnEmptyAction()
+        public void Reset_ShouldSetAnEmptyAction()
         {
             // Arrange
 

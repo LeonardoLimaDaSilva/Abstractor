@@ -2,7 +2,7 @@ using Abstractor.Cqrs.Infrastructure.Persistence;
 
 namespace Abstractor.Cqrs.Test.Helpers
 {
-    internal class FakeDataContext : BaseDataContext
+    public class FakeDataContext : BaseDataContext
     {
         private object _dataSet;
 

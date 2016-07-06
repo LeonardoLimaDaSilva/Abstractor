@@ -12,7 +12,7 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
     public class CommandPostActionDecoratorTests
     {
         [Theory, AutoMoqData]
-        internal void Handle_Success_ShouldCallActAfterCommandHandleAndThenReset(
+        public void Handle_Success_ShouldCallActAfterCommandHandleAndThenReset(
             [Frozen] Mock<ICommandHandler<ICommand>> commandHandler,
             [Frozen] Mock<ICommandPostAction> commandPostAction,
             ICommand command,
@@ -40,7 +40,7 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
         }
 
         [Theory, AutoMoqData]
-        internal void Handle_HandlerThrowsException_ShouldNotCallActAndShouldReset(
+        public void Handle_HandlerThrowsException_ShouldNotCallActAndShouldReset(
             [Frozen] Mock<ICommandHandler<ICommand>> commandHandler,
             [Frozen] Mock<ICommandPostAction> commandPostAction,
             ICommand command,

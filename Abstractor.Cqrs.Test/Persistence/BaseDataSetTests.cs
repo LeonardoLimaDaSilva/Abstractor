@@ -11,7 +11,7 @@ namespace Abstractor.Cqrs.Test.Persistence
     public class BaseDataSetTests
     {
         [Theory, AutoMoqData]
-        internal void Insert_WithoutCommit_ShouldCreateANewInsertOperation(
+        public void Insert_WithoutCommit_ShouldCreateANewInsertOperation(
             object entity,
             FakeDataSet<object> dataSet)
         {
@@ -29,7 +29,7 @@ namespace Abstractor.Cqrs.Test.Persistence
         }
 
         [Theory, AutoMoqData]
-        internal void Insert_WithCommit_ShouldChangeOperationTypeToDeleteAndSetAsDone(
+        public void Insert_WithCommit_ShouldChangeOperationTypeToDeleteAndSetAsDone(
             object entity,
             FakeDataSet<object> dataSet)
         {
@@ -47,7 +47,7 @@ namespace Abstractor.Cqrs.Test.Persistence
         }
 
         [Theory, AutoMoqData]
-        internal void Insert_WithCommitAndRollback_ShouldInsertAfterCommitAndDeleteAfterRollback(
+        public void Insert_WithCommitAndRollback_ShouldInsertAfterCommitAndDeleteAfterRollback(
             object entity,
             FakeDataSet<object> dataSet)
         {
@@ -70,7 +70,7 @@ namespace Abstractor.Cqrs.Test.Persistence
         }
 
         [Theory, AutoMoqData]
-        internal void Delete_WithoutCommit_ShouldCreateANewDeleteOperation(
+        public void Delete_WithoutCommit_ShouldCreateANewDeleteOperation(
             object entity,
             FakeDataSet<object> dataSet)
         {
@@ -88,7 +88,7 @@ namespace Abstractor.Cqrs.Test.Persistence
         }
 
         [Theory, AutoMoqData]
-        internal void Delete_WithCommit_ShouldChangeOperationTypeToInsertAndSetAsDone(
+        public void Delete_WithCommit_ShouldChangeOperationTypeToInsertAndSetAsDone(
             object entity,
             FakeDataSet<object> dataSet)
         {
@@ -106,7 +106,7 @@ namespace Abstractor.Cqrs.Test.Persistence
         }
 
         [Theory, AutoMoqData]
-        internal void Delete_WithCommitAndRollback_ShouldDeleteAfterCommitAndInsertAfterRollback(
+        public void Delete_WithCommitAndRollback_ShouldDeleteAfterCommitAndInsertAfterRollback(
             object entity,
             FakeDataSet<object> dataSet)
         {
@@ -129,7 +129,7 @@ namespace Abstractor.Cqrs.Test.Persistence
         }
 
         [Theory, AutoMoqData]
-        internal void Update_WithoutCommit_ShouldCreateANewUpdateOperation(
+        public void Update_WithoutCommit_ShouldCreateANewUpdateOperation(
             object entity,
             FakeDataSet<object> dataSet)
         {
@@ -147,7 +147,7 @@ namespace Abstractor.Cqrs.Test.Persistence
         }
 
         [Theory, AutoMoqData]
-        internal void Update_WithCommit_ShouldSetTheOriginalEntityToOldEntityAndSetAsDone(
+        public void Update_WithCommit_ShouldSetTheOriginalEntityToOldEntityAndSetAsDone(
             object entity1,
             object entity2,
             FakeDataSet<object> dataSet)
@@ -171,7 +171,7 @@ namespace Abstractor.Cqrs.Test.Persistence
         }
 
         [Theory, AutoMoqData]
-        internal void Update_WithCommitAndRollback_ShouldCallUpdateTwice(
+        public void Update_WithCommitAndRollback_ShouldCallUpdateTwice(
             object entity,
             FakeDataSet<object> dataSet)
         {
@@ -198,7 +198,7 @@ namespace Abstractor.Cqrs.Test.Persistence
         }
 
         [Theory, AutoMoqData]
-        internal void Rollback_WithoutCommit_ShouldNotExecuteAnyOperations(
+        public void Rollback_WithoutCommit_ShouldNotExecuteAnyOperations(
             object entity,
             FakeDataSet<object> dataSet)
         {
@@ -218,7 +218,7 @@ namespace Abstractor.Cqrs.Test.Persistence
         }
 
         [Theory, AutoMoqData]
-        internal void Rollback_PassingDoRollbackFalseInConstructor_ShouldNotRollbackTheOperations(
+        public void Rollback_PassingDoRollbackFalseInConstructor_ShouldNotRollbackTheOperations(
             object entity)
         {
             // Arrange
@@ -242,7 +242,7 @@ namespace Abstractor.Cqrs.Test.Persistence
         }
 
         [Theory, AutoMoqData]
-        internal void Dispose_ShouldDisposeTheEntitiesStoredOnOperations(
+        public void Dispose_ShouldDisposeTheEntitiesStoredOnOperations(
             Mock<IDisposable> entity1,
             Mock<IDisposable> entity2,
             FakeDataSet<object> dataSet)

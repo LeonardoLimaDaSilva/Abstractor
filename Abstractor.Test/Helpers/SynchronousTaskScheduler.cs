@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Abstractor.Cqrs.Test.Helpers
+namespace Abstractor.Test.Helpers
 {
     public class SynchronousTaskScheduler : TaskScheduler
     {

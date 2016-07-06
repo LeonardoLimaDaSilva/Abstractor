@@ -12,13 +12,13 @@ namespace Abstractor.Cqrs.Test.Events
     public class EventDispatcherTests
     {
         [Theory, AutoMoqData]
-        internal void Dispatch_NullEvent_ThrowsArgumentNullException(EventDispatcher dispatcher)
+        public void Dispatch_NullEvent_ThrowsArgumentNullException(EventDispatcher dispatcher)
         {
             Assert.Throws<ArgumentNullException>(() => dispatcher.Dispatch(null));
         }
 
         [Theory, AutoMoqData]
-        internal void Dispatch_BuildGenericEventTriggerAndGetFromContainer_ShouldExecuteTriggerPassingEvent(
+        public void Dispatch_BuildGenericEventTriggerAndGetFromContainer_ShouldExecuteTriggerPassingEvent(
             [Frozen] Mock<IContainer> container,
             [Frozen] Mock<IEventTrigger<FakeEvent>> eventTrigger,
             FakeEvent @event,

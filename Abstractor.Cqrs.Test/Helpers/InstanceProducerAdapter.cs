@@ -3,7 +3,7 @@ using Abstractor.Cqrs.Interfaces.CompositionRoot;
 
 namespace Abstractor.Cqrs.Test.Helpers
 {
-    internal class InstanceProducerAdapter : IInstanceProducer
+    public class InstanceProducerAdapter : IInstanceProducer
     {
         private readonly object _instance;
 

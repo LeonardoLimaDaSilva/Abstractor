@@ -12,7 +12,7 @@ namespace Abstractor.Cqrs.Test.Events
     public class MultipleDispatchEventTriggerTests
     {
         [Theory, AutoMoqData]
-        internal void Trigger_MultipleEventHandlersRegisteredInContainer_ShouldHandleAll(
+        public void Trigger_MultipleEventHandlersRegisteredInContainer_ShouldHandleAll(
             [Frozen] Mock<IContainer> container,
             Mock<IEventHandler<IEvent>> fakeEventHandler1,
             Mock<IEventHandler<IEvent>> fakeEventHandler2,
@@ -42,7 +42,7 @@ namespace Abstractor.Cqrs.Test.Events
         }
 
         [Theory, AutoMoqData]
-        internal void Trigger_NoEventHandlersRegistered_ShouldDoNothing(
+        public void Trigger_NoEventHandlersRegistered_ShouldDoNothing(
             [Frozen] Mock<IContainer> container,
             IEvent @event,
             MultipleDispatchEventTrigger<IEvent> trigger)

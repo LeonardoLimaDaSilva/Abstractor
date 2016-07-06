@@ -3,7 +3,7 @@ using Abstractor.Cqrs.Infrastructure.Persistence;
 
 namespace Abstractor.Cqrs.Test.Helpers
 {
-    internal class FakeDataSet<TEntity> : BaseDataSet<TEntity>
+    public class FakeDataSet<TEntity> : BaseDataSet<TEntity>
     {
         private TEntity _entity;
 

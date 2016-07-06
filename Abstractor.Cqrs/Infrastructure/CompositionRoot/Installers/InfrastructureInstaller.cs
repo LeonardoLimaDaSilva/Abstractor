@@ -21,9 +21,9 @@ namespace Abstractor.Cqrs.Infrastructure.CompositionRoot.Installers
             if (settings.PersistenceTypes != null)
                 foreach (var type in settings.PersistenceTypes)
                     container.RegisterScoped(type.GetInterfaces().Last(), type);
-            
+
             if (settings.ApplicationTypes == null) return;
-            
+
             // Registra as implementações da camada de aplicação
             foreach (var type in settings.ApplicationTypes)
                 container.RegisterTransient(type.GetInterfaces().First(), type);

@@ -32,7 +32,7 @@ namespace Abstractor.Cqrs.AzureStorage.Blob
 
         private static TEntity CreateInstance(GenericFile file)
         {
-            return (TEntity)Activator.CreateInstance(typeof(TEntity), file);
+            return (TEntity) Activator.CreateInstance(typeof (TEntity), file);
         }
     }
 }

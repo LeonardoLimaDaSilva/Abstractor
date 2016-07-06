@@ -12,11 +12,11 @@ namespace Abstractor.Cqrs.UnitOfWork.Persistence
 {
     public class UnitOfWork : IUnitOfWork
     {
-        private readonly ILogger _logger;
         private readonly Func<AzureBlobContext> _blobContext;
-        private readonly Func<AzureTableContext> _tableContext;
-        private readonly Func<AzureQueueContext> _queueContext;
         private readonly Func<DbContext> _efContext;
+        private readonly ILogger _logger;
+        private readonly Func<AzureQueueContext> _queueContext;
+        private readonly Func<AzureTableContext> _tableContext;
 
         public UnitOfWork(
             ILogger logger,

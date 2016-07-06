@@ -68,7 +68,7 @@ namespace Abstractor.Cqrs.Infrastructure.Domain
             // conflitos entre os hashcodes das propriedades do objeto de valor
 
             return GetAttributesToIncludeInEqualityCheck()
-                .Aggregate(17, (current, o) => current*31 + (o?.GetHashCode() ?? 0));
+                .Aggregate(17, (current, o) => current * 31 + (o?.GetHashCode() ?? 0));
         }
     }
 }

@@ -8,7 +8,7 @@ namespace Abstractor.Cqrs.Test.Domain
     public class ValueObjectTests
     {
         [Fact]
-        internal void Equals_AllValuesAreEqual_ShouldBeTrue()
+        public void Equals_AllValuesAreEqual_ShouldBeTrue()
         {
             var vo1 = new ValueObject1
             {
@@ -29,7 +29,7 @@ namespace Abstractor.Cqrs.Test.Domain
         [InlineData(1, "xxx", 1, "xyz")]
         [InlineData(1, "xxx", 2, "xxx")]
         [InlineData(1, "xxx", 2, "xyz")]
-        internal void Equals_AnyValueIsDifferent_ShouldBeFalse(int p1Vo1, string p2Vo1, int p1Vo2, string p2Vo2)
+        public void Equals_AnyValueIsDifferent_ShouldBeFalse(int p1Vo1, string p2Vo1, int p1Vo2, string p2Vo2)
         {
             var vo1 = new ValueObject1
             {
@@ -47,7 +47,7 @@ namespace Abstractor.Cqrs.Test.Domain
         }
 
         [Fact]
-        internal void EqualsOperator_AllValuesAreEqual_ShouldBeTrue()
+        public void EqualsOperator_AllValuesAreEqual_ShouldBeTrue()
         {
             var vo1 = new ValueObject1
             {
@@ -68,7 +68,7 @@ namespace Abstractor.Cqrs.Test.Domain
         [InlineData(1, "xxx", 1, "xyz")]
         [InlineData(1, "xxx", 2, "xxx")]
         [InlineData(1, "xxx", 2, "xyz")]
-        internal void EqualsOperator_AnyValueIsDifferent_ShouldBeFalse(int p1Vo1, string p2Vo1, int p1Vo2, string p2Vo2)
+        public void EqualsOperator_AnyValueIsDifferent_ShouldBeFalse(int p1Vo1, string p2Vo1, int p1Vo2, string p2Vo2)
         {
             var vo1 = new ValueObject1
             {
@@ -86,7 +86,7 @@ namespace Abstractor.Cqrs.Test.Domain
         }
 
         [Fact]
-        internal void DifferenceOperator_AllValuesAreEqual_ShouldBeFalse()
+        public void DifferenceOperator_AllValuesAreEqual_ShouldBeFalse()
         {
             var vo1 = new ValueObject1
             {
@@ -107,7 +107,7 @@ namespace Abstractor.Cqrs.Test.Domain
         [InlineData(1, "xxx", 1, "xyz")]
         [InlineData(1, "xxx", 2, "xxx")]
         [InlineData(1, "xxx", 2, "xyz")]
-        internal void DifferenceOperator_AnyValueIsDifferent_ShouldBeTrue(
+        public void DifferenceOperator_AnyValueIsDifferent_ShouldBeTrue(
             int p1Vo1,
             string p2Vo1,
             int p1Vo2,
@@ -129,7 +129,7 @@ namespace Abstractor.Cqrs.Test.Domain
         }
 
         [Fact]
-        internal void GetHashCode_AllValuesAreEqual_ShouldHaveEqualHashCodes()
+        public void GetHashCode_AllValuesAreEqual_ShouldHaveEqualHashCodes()
         {
             var vo1 = new ValueObject1
             {
@@ -147,7 +147,7 @@ namespace Abstractor.Cqrs.Test.Domain
         }
 
         [Fact]
-        internal void GetHashCode_AnyValueIsDifferent_ShouldHaveDifferentHashCodes()
+        public void GetHashCode_AnyValueIsDifferent_ShouldHaveDifferentHashCodes()
         {
             var vo1 = new ValueObject1
             {

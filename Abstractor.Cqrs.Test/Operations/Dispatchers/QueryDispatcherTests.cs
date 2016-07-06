@@ -13,13 +13,13 @@ namespace Abstractor.Cqrs.Test.Operations.Dispatchers
     public class QueryDispatcherTests
     {
         [Theory, AutoMoqData]
-        internal void Dispatch_NullQuery_ThrowsArgumentNullException(QueryDispatcher dispatcher)
+        public void Dispatch_NullQuery_ThrowsArgumentNullException(QueryDispatcher dispatcher)
         {
             Assert.Throws<ArgumentNullException>(() => dispatcher.Dispatch((IQuery<object>) null));
         }
 
         [Theory, AutoMoqData]
-        internal void Dispatch_BuildGenericQueryHandlerAndGetFromContainer_ShouldHandleQuery(
+        public void Dispatch_BuildGenericQueryHandlerAndGetFromContainer_ShouldHandleQuery(
             [Frozen] Mock<IContainer> container,
             [Frozen] Mock<IQueryHandler<FakeQuery, object>> queryHandler,
             FakeQuery query,
@@ -44,13 +44,13 @@ namespace Abstractor.Cqrs.Test.Operations.Dispatchers
         }
 
         [Theory, AutoMoqData]
-        internal async void DispatchAsync_NullQuery_ThrowsArgumentNullException(QueryDispatcher dispatcher)
+        public async void DispatchAsync_NullQuery_ThrowsArgumentNullException(QueryDispatcher dispatcher)
         {
             await Assert.ThrowsAsync<ArgumentNullException>(() => dispatcher.DispatchAsync((IQuery<object>) null));
         }
 
         [Theory, AutoMoqData]
-        internal async void DispatchAsync_BuildGenericQueryHandlerAndGetFromContainer_ShouldHandleQueryOnANewThread(
+        public async void DispatchAsync_BuildGenericQueryHandlerAndGetFromContainer_ShouldHandleQueryOnANewThread(
             [Frozen] Mock<IContainer> container,
             [Frozen] Mock<IQueryAsyncHandler<FakeQuery, object>> queryHandler,
             FakeQuery query,
