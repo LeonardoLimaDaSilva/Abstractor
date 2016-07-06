@@ -7,10 +7,7 @@ namespace Abstractor.Cqrs.Test.Helpers
     {
         private TEntity _entity;
 
-        public IList<BaseDataSetOperation> InternalOperations
-        {
-            get { return Operations; }
-        }
+        public IList<BaseDataSetOperation> InternalOperations => Operations;
 
         public int Inserts { get; private set; }
 
