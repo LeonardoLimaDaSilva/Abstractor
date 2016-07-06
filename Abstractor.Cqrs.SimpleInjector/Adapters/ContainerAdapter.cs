@@ -72,12 +72,12 @@ namespace Abstractor.Cqrs.SimpleInjector.Adapters
             _container.RegisterDecorator(serviceType, decoratorType, Lifestyle.Transient);
         }
 
-        public void RegisterDecoratorSingleton(Type serviceType, Type decoratorType, Type customAttribute)
+        public void RegisterDecoratorTransient(Type serviceType, Type decoratorType, Type customAttribute)
         {
             _container.RegisterDecorator(
                 serviceType,
                 decoratorType,
-                Lifestyle.Singleton,
+                Lifestyle.Transient,
                 c => c.ImplementationType
                       .CustomAttributes
                       .Any(a => a.AttributeType == customAttribute));

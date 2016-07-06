@@ -1,5 +1,7 @@
 using System;
 using System.IO;
+using Abstractor.Cqrs.Infrastructure.CrossCuttingConcerns;
+using Abstractor.Cqrs.Infrastructure.Domain;
 
 namespace Abstractor.Cqrs.AzureStorage.Blob
 {
@@ -15,6 +17,23 @@ namespace Abstractor.Cqrs.AzureStorage.Blob
         public void Dispose()
         {
             Stream.Dispose();
+        }
+
+        public AzureBlob()
+        {
+        }
+
+        public AzureBlob(GenericFile file)
+        {
+            Guard.ArgumentIsNotNull(file, nameof(file));
+
+            FileName = file.FileName;
+            Stream = file.Stream;
+        }
+
+        public GenericFile ToGeneric()
+        {
+            return new GenericFile(FileName, Stream);
         }
     }
 }

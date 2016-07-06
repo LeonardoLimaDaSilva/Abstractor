@@ -5,7 +5,7 @@ namespace Abstractor.Cqrs.Infrastructure.CompositionRoot.Installers
     /// <summary>
     ///     Encapsula a infraestrutura do framework e registra os serviços no container de inversão de controle.
     /// </summary>
-    internal interface IShopDeliveryInstaller
+    internal interface IAbstractorInstaller
     {
         /// <summary>
         ///     Registra os serviços no <see cref="IContainer" />.

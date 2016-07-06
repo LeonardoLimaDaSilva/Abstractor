@@ -53,7 +53,7 @@
     <Compile Include="Infrastructure\CompositionRoot\Installers\CommandInstaller.cs" />
     <Compile Include="Infrastructure\CompositionRoot\Installers\EventInstaller.cs" />
     <Compile Include="Infrastructure\CompositionRoot\Installers\InfrastructureInstaller.cs" />
-    <Compile Include="Infrastructure\CompositionRoot\Installers\IShopDeliveryInstaller.cs" />
+    <Compile Include="Infrastructure\CompositionRoot\Installers\IAbstractorInstaller.cs" />
     <Compile Include="Infrastructure\CompositionRoot\Installers\QueryInstaller.cs" />
     <Compile Include="Infrastructure\CompositionRoot\PredicateBuilder.cs" />
     <Compile Include="Infrastructure\CrossCuttingConcerns\DataAnnotationsValidator.cs" />

@@ -19,7 +19,7 @@ namespace Abstractor.Cqrs.Interfaces.CompositionRoot
         void RegisterTransient(Type openGenericServiceType, IEnumerable<Assembly> assemblies);
         void RegisterSingleton<TService, TImplementation>();
         void RegisterDecoratorTransient(Type serviceType, Type decoratorType);
-        void RegisterDecoratorSingleton(Type serviceType, Type decoratorType, Type customAttribute);
+        void RegisterDecoratorTransient(Type serviceType, Type decoratorType, Type customAttribute);
         void RegisterDecoratorSingleton(Type serviceType, Type decoratorType);
 
         void RegisterLazySingleton<TService, TImplementation>()

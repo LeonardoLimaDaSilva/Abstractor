@@ -16,7 +16,7 @@ namespace Abstractor.Cqrs.Infrastructure.CompositionRoot.Extensions
         /// </summary>
         /// <param name="container">O container de inversão de controle.</param>
         /// <param name="settings">Configurações de composição.</param>
-        public static void RegisterShopDeliveryCqrs(this IContainer container, Action<CompositionRootSettings> settings)
+        public static void RegisterAbstractor(this IContainer container, Action<CompositionRootSettings> settings)
         {
             Guard.ArgumentIsNotNull(container, nameof(container));
             Guard.ArgumentIsNotNull(settings, nameof(settings));
@@ -26,7 +26,7 @@ namespace Abstractor.Cqrs.Infrastructure.CompositionRoot.Extensions
 
             container.AllowResolvingFuncFactories();
             container.Register(() => crs);
-            container.RegisterShopDeliveryCqrsInstallers(crs);
+            container.RegisterAbstractorInstallers(crs);
         }
 
         /// <summary>
@@ -34,15 +34,15 @@ namespace Abstractor.Cqrs.Infrastructure.CompositionRoot.Extensions
         /// </summary>
         /// <param name="container">Container de inversão de controle.</param>
         /// <param name="settings">Configurações de composição.</param>
-        private static void RegisterShopDeliveryCqrsInstallers(
+        private static void RegisterAbstractorInstallers(
             this IContainer container,
             CompositionRootSettings settings)
         {
             var packages = from assembly in AppDomain.CurrentDomain.GetAssemblies()
                 from type in assembly.GetSafeTypes()
-                where typeof (IShopDeliveryInstaller).IsAssignableFrom(type)
+                where typeof (IAbstractorInstaller).IsAssignableFrom(type)
                 where !type.IsAbstract
-                select (IShopDeliveryInstaller) Activator.CreateInstance(type);
+                select (IAbstractorInstaller) Activator.CreateInstance(type);
 
             packages.ToList().ForEach(p => p.RegisterServices(container, settings));
         }

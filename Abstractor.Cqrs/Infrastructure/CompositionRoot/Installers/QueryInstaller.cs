@@ -6,7 +6,7 @@ using Abstractor.Cqrs.Interfaces.Operations;
 
 namespace Abstractor.Cqrs.Infrastructure.CompositionRoot.Installers
 {
-    internal sealed class QueryInstaller : IShopDeliveryInstaller
+    internal sealed class QueryInstaller : IAbstractorInstaller
     {
         public void RegisterServices(IContainer container, CompositionRootSettings settings)
         {

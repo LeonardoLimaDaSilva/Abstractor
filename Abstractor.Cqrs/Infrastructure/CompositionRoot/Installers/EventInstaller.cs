@@ -5,7 +5,7 @@ using Abstractor.Cqrs.Interfaces.Events;
 
 namespace Abstractor.Cqrs.Infrastructure.CompositionRoot.Installers
 {
-    internal sealed class EventInstaller : IShopDeliveryInstaller
+    internal sealed class EventInstaller : IAbstractorInstaller
     {
         public void RegisterServices(IContainer container, CompositionRootSettings settings)
         {

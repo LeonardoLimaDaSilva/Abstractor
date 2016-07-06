@@ -1,11 +1,12 @@
-﻿using Abstractor.Cqrs.AzureStorage.Extensions;
+﻿using System;
+using Abstractor.Cqrs.AzureStorage.Extensions;
 using Abstractor.Cqrs.AzureStorage.Interfaces;
 using Abstractor.Cqrs.Infrastructure.Domain;
 using Abstractor.Cqrs.Interfaces.Domain;
 
 namespace Abstractor.Cqrs.AzureStorage.Blob
 {
-    public abstract class BaseBlobRepository<TEntity> : IFileRepository where TEntity : AzureBlob
+    public abstract class BaseBlobRepository<TEntity> : IFileRepository where TEntity : AzureBlob, new()
     {
         private readonly IAzureBlobRepository<TEntity> _repository;
 
@@ -16,12 +17,12 @@ namespace Abstractor.Cqrs.AzureStorage.Blob
 
         public void Save(GenericFile file)
         {
-            _repository.Save(ToEntity(file));
+            _repository.Save(CreateInstance(file));
         }
 
         public void Delete(GenericFile file)
         {
-            _repository.Delete(ToEntity(file));
+            _repository.Delete(CreateInstance(file));
         }
 
         public GenericFile Get(string fileName)
@@ -29,6 +30,9 @@ namespace Abstractor.Cqrs.AzureStorage.Blob
             return _repository.Get(fileName).ToGenericFile();
         }
 
-        protected abstract TEntity ToEntity(GenericFile file);
+        private static TEntity CreateInstance(GenericFile file)
+        {
+            return (TEntity)Activator.CreateInstance(typeof(TEntity), file);
+        }
     }
 }

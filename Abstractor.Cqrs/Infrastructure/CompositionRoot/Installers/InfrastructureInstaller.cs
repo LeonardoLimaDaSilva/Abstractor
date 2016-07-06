@@ -7,7 +7,7 @@ using Abstractor.Cqrs.Interfaces.Persistence;
 
 namespace Abstractor.Cqrs.Infrastructure.CompositionRoot.Installers
 {
-    internal sealed class InfrastructureInstaller : IShopDeliveryInstaller
+    internal sealed class InfrastructureInstaller : IAbstractorInstaller
     {
         public void RegisterServices(IContainer container, CompositionRootSettings settings)
         {

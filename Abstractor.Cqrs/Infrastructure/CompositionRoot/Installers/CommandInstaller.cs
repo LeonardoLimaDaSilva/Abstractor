@@ -7,7 +7,7 @@ using Abstractor.Cqrs.Interfaces.Operations;
 
 namespace Abstractor.Cqrs.Infrastructure.CompositionRoot.Installers
 {
-    internal sealed class CommandInstaller : IShopDeliveryInstaller
+    internal sealed class CommandInstaller : IAbstractorInstaller
     {
         public void RegisterServices(IContainer container, CompositionRootSettings settings)
         {
@@ -17,7 +17,7 @@ namespace Abstractor.Cqrs.Infrastructure.CompositionRoot.Installers
             container.RegisterTransient(typeof (ICommandHandler<>), settings.OperationAssemblies);
             container.RegisterScoped<ICommandPostAction, CommandPostAction>();
 
-            container.RegisterDecoratorSingleton(
+            container.RegisterDecoratorTransient(
                 typeof (ICommandHandler<>),
                 typeof (CommandTransactionDecorator<>),
                 typeof(TransactionAttribute));
