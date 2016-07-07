@@ -21,18 +21,14 @@ namespace Abstractor.Cqrs.EntityFramework.Persistence
         {
             Guard.ArgumentIsNotNull(entity, nameof(entity));
 
-            var context = _contextProvider();
-            if (context.Entry(entity).State == EntityState.Detached)
-                context.Set<TAggregate>().Add(entity);
+            _contextProvider().Entry(entity).State = EntityState.Added;
         }
 
         public void Delete(TAggregate entity)
         {
             Guard.ArgumentIsNotNull(entity, nameof(entity));
 
-            var context = _contextProvider();
-            if (context.Entry(entity).State != EntityState.Deleted)
-                context.Set<TAggregate>().Remove(entity);
+            _contextProvider().Entry(entity).State = EntityState.Deleted;
         }
 
         public void Update(TAggregate entity)
