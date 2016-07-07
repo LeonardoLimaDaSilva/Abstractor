@@ -3,22 +3,22 @@
 namespace Abstractor.Cqrs.Interfaces.Operations
 {
     /// <summary>
-    ///     Executa uma ação após a finalização de um comando.
+    ///     Registers an action event to be executed after a command.
     /// </summary>
     public interface ICommandPostAction
     {
         /// <summary>
-        ///     Ação que será executada após a finalização de um comando.
+        ///     Action event to be executed after a command.
         /// </summary>
         event Action Execute;
 
         /// <summary>
-        ///     Executa a ação registrada em <see cref="Execute" />.
+        ///     Executes the action event registered in <see cref="ICommandPostAction.Execute" />.
         /// </summary>
         void Act();
 
         /// <summary>
-        ///     Remove qualquer ação registrada em <see cref="Execute" />.
+        ///     Resets the <see cref="ICommandPostAction.Execute" /> with an empty action.
         /// </summary>
         void Reset();
     }

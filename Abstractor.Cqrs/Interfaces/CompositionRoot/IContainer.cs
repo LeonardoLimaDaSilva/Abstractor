@@ -17,6 +17,7 @@ namespace Abstractor.Cqrs.Interfaces.CompositionRoot
         void RegisterScoped(Type serviceType, Type implementationType);
         void RegisterTransient(Type serviceType, Type implementationType);
         void RegisterTransient(Type openGenericServiceType, IEnumerable<Assembly> assemblies);
+        void RegisterCollection(Type openGenericServiceType, IEnumerable<Assembly> assemblies);
         void RegisterSingleton<TService, TImplementation>();
         void RegisterDecoratorTransient(Type serviceType, Type decoratorType);
         void RegisterDecoratorTransient(Type serviceType, Type decoratorType, Type customAttribute);

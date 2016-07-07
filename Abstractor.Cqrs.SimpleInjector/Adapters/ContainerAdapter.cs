@@ -62,6 +62,11 @@ namespace Abstractor.Cqrs.SimpleInjector.Adapters
             _container.Register(openGenericServiceType, assemblies, Lifestyle.Transient);
         }
 
+        public void RegisterCollection(Type openGenericServiceType, IEnumerable<Assembly> assemblies)
+        {
+            _container.RegisterCollection(openGenericServiceType, assemblies);
+        }
+
         public void RegisterSingleton<TService, TImplementation>()
         {
             _container.Register(typeof (TService), typeof (TImplementation), Lifestyle.Singleton);

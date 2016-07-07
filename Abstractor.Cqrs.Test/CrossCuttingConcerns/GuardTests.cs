@@ -34,6 +34,12 @@ namespace Abstractor.Cqrs.Test.CrossCuttingConcerns
         }
 
         [Fact]
+        public void Guard_TypedEntityIsNotNull_ShouldPass()
+        {
+            Guard.EntityIsNotNull<string>("value", "primaryKey");
+        }
+
+        [Fact]
         public void Guard_TypedEntityIsNull_ThrowsEntityNotFoundException()
         {
             var ex = Assert.Throws<EntityNotFoundException>(() => Guard.EntityIsNotNull<string>(null, "primaryKey"));

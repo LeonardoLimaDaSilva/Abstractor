@@ -30,6 +30,30 @@ namespace Abstractor.Cqrs.Test.Domain
             entity.Equals(fake).Should().Be.False();
         }
 
+        private class ConcreteEntity : Entity<Guid>
+        {
+            public ConcreteEntity(Guid id)
+                : base(id)
+            {
+            }
+        }
+
+        private class ConcreteEntity2 : Entity<Guid>
+        {
+            public ConcreteEntity2(Guid id)
+                : base(id)
+            {
+            }
+        }
+
+        private class ConcreteEntity3 : ConcreteEntity2
+        {
+            public ConcreteEntity3(Guid id)
+                : base(id)
+            {
+            }
+        }
+
         [Fact]
         public void Equals_BothAreTransient_ShouldBeFalse()
         {
@@ -119,30 +143,6 @@ namespace Abstractor.Cqrs.Test.Domain
 
             entity1.Equals(entity2).Should().Be.True();
             entity2.Equals(entity1).Should().Be.True();
-        }
-
-        private class ConcreteEntity : Entity<Guid>
-        {
-            public ConcreteEntity(Guid id)
-                : base(id)
-            {
-            }
-        }
-
-        private class ConcreteEntity2 : Entity<Guid>
-        {
-            public ConcreteEntity2(Guid id)
-                : base(id)
-            {
-            }
-        }
-
-        private class ConcreteEntity3 : ConcreteEntity2
-        {
-            public ConcreteEntity3(Guid id)
-                : base(id)
-            {
-            }
         }
     }
 }

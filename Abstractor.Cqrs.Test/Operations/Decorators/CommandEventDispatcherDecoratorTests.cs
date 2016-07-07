@@ -23,8 +23,8 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
 
             var callOrder = 0;
 
-            commandHandler.Setup(d => d.Handle(commandEvent)).Callback(() => (callOrder++).Should().Be(0));
-            eventDispatcher.Setup(d => d.Dispatch(commandEvent)).Callback(() => (callOrder++).Should().Be(1));
+            commandHandler.Setup(d => d.Handle(commandEvent)).Callback(() => callOrder++.Should().Be(0));
+            eventDispatcher.Setup(d => d.Dispatch(commandEvent)).Callback(() => callOrder++.Should().Be(1));
 
             // Act
 

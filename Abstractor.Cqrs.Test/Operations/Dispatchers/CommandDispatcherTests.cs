@@ -27,10 +27,10 @@ namespace Abstractor.Cqrs.Test.Operations.Dispatchers
         {
             // Arrange
 
-            var genericTypeName = typeof (ICommandHandler<FakeCommand>).FullName;
+            var genericTypeName = typeof(ICommandHandler<FakeCommand>).FullName;
 
             container.Setup(c => c.GetInstance(It.Is<Type>(t => t.FullName == genericTypeName)))
-                     .Returns(commandHandler.Object);
+                .Returns(commandHandler.Object);
 
             // Act
 
@@ -57,10 +57,10 @@ namespace Abstractor.Cqrs.Test.Operations.Dispatchers
         {
             // Arrange
 
-            var genericTypeName = typeof (ICommandHandler<FakeCommand>).FullName;
+            var genericTypeName = typeof(ICommandHandler<FakeCommand>).FullName;
 
             container.Setup(c => c.GetInstance(It.Is<Type>(t => t.FullName == genericTypeName)))
-                     .Returns(commandHandler.Object);
+                .Returns(commandHandler.Object);
 
             // Act
 

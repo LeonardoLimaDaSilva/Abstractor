@@ -38,22 +38,23 @@ namespace Abstractor.Cqrs.Test.Events
         {
             var scheduler = new SynchronousTaskScheduler();
 
-            Task.Factory.StartNew(() =>
-            {
-                // Arrange
-
-                var registrations = new List<InstanceProducerAdapter>
+            Task.Factory.StartNew(
+                () =>
                 {
-                    new InstanceProducerAdapter(fakeEventHandler.Object),
-                    new InstanceProducerAdapter(fakeEventHandler.Object)
-                };
+                    // Arrange
 
-                container.Setup(c => c.GetCurrentRegistrations()).Returns(registrations);
+                    var registrations = new List<InstanceProducerAdapter>
+                    {
+                        new InstanceProducerAdapter(fakeEventHandler.Object),
+                        new InstanceProducerAdapter(fakeEventHandler.Object)
+                    };
 
-                // Act
+                    container.Setup(c => c.GetCurrentRegistrations()).Returns(registrations);
 
-                decorator.Trigger(@event);
-            },
+                    // Act
+
+                    decorator.Trigger(@event);
+                },
                 CancellationToken.None,
                 TaskCreationOptions.None,
                 scheduler);
@@ -75,24 +76,25 @@ namespace Abstractor.Cqrs.Test.Events
         {
             var scheduler = new SynchronousTaskScheduler();
 
-            Task.Factory.StartNew(() =>
-            {
-                // Arrange
-
-                var registrations = new List<InstanceProducerAdapter>
+            Task.Factory.StartNew(
+                () =>
                 {
-                    new InstanceProducerAdapter(fakeEventHandler.Object),
-                    new InstanceProducerAdapter(fakeEventHandler.Object)
-                };
+                    // Arrange
 
-                container.Setup(c => c.GetCurrentRegistrations()).Returns(registrations);
+                    var registrations = new List<InstanceProducerAdapter>
+                    {
+                        new InstanceProducerAdapter(fakeEventHandler.Object),
+                        new InstanceProducerAdapter(fakeEventHandler.Object)
+                    };
 
-                container.Setup(c => c.GetCurrentLifetimeScope()).Returns(null);
+                    container.Setup(c => c.GetCurrentRegistrations()).Returns(registrations);
 
-                // Act
+                    container.Setup(c => c.GetCurrentLifetimeScope()).Returns(null);
 
-                decorator.Trigger(@event);
-            },
+                    // Act
+
+                    decorator.Trigger(@event);
+                },
                 CancellationToken.None,
                 TaskCreationOptions.None,
                 scheduler);

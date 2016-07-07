@@ -12,7 +12,7 @@ namespace Abstractor.Cqrs.Infrastructure.CompositionRoot.Installers
             Guard.ArgumentIsNotNull(settings.EventAssemblies, nameof(settings.EventAssemblies));
 
             container.RegisterSingleton<IEventDispatcher, EventDispatcher>();
-            container.RegisterTransient(typeof (IEventHandler<>), settings.EventAssemblies);
+            container.RegisterCollection(typeof (IEventHandler<>), settings.EventAssemblies);
             container.RegisterTransient(typeof (IEventTrigger<>), typeof (MultipleDispatchEventTrigger<>));
 
             container.RegisterDecoratorTransient(

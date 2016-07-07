@@ -7,24 +7,6 @@ namespace Abstractor.Cqrs.Test.Domain
 {
     public class ValueObjectTests
     {
-        [Fact]
-        public void Equals_AllValuesAreEqual_ShouldBeTrue()
-        {
-            var vo1 = new ValueObject1
-            {
-                Property1 = 1,
-                Property2 = "xxx"
-            };
-
-            var vo2 = new ValueObject1
-            {
-                Property1 = 1,
-                Property2 = "xxx"
-            };
-
-            vo1.Equals(vo2).Should().Be.True();
-        }
-
         [Theory]
         [InlineData(1, "xxx", 1, "xyz")]
         [InlineData(1, "xxx", 2, "xxx")]
@@ -46,24 +28,6 @@ namespace Abstractor.Cqrs.Test.Domain
             vo1.Equals(vo2).Should().Be.False();
         }
 
-        [Fact]
-        public void EqualsOperator_AllValuesAreEqual_ShouldBeTrue()
-        {
-            var vo1 = new ValueObject1
-            {
-                Property1 = 1,
-                Property2 = "xxx"
-            };
-
-            var vo2 = new ValueObject1
-            {
-                Property1 = 1,
-                Property2 = "xxx"
-            };
-
-            (vo1 == vo2).Should().Be.True();
-        }
-
         [Theory]
         [InlineData(1, "xxx", 1, "xyz")]
         [InlineData(1, "xxx", 2, "xxx")]
@@ -83,24 +47,6 @@ namespace Abstractor.Cqrs.Test.Domain
             };
 
             (vo1 == vo2).Should().Be.False();
-        }
-
-        [Fact]
-        public void DifferenceOperator_AllValuesAreEqual_ShouldBeFalse()
-        {
-            var vo1 = new ValueObject1
-            {
-                Property1 = 1,
-                Property2 = "xxx"
-            };
-
-            var vo2 = new ValueObject1
-            {
-                Property1 = 1,
-                Property2 = "xxx"
-            };
-
-            (vo1 != vo2).Should().Be.False();
         }
 
         [Theory]
@@ -126,6 +72,73 @@ namespace Abstractor.Cqrs.Test.Domain
             };
 
             (vo1 != vo2).Should().Be.True();
+        }
+
+        private class ValueObject1 : ValueObject<ValueObject1>
+        {
+            public int Property1 { private get; set; }
+
+            public string Property2 { private get; set; }
+
+            protected override IEnumerable<object> GetAttributesToIncludeInEqualityCheck()
+            {
+                yield return Property1;
+                yield return Property2;
+            }
+        }
+
+        [Fact]
+        public void DifferenceOperator_AllValuesAreEqual_ShouldBeFalse()
+        {
+            var vo1 = new ValueObject1
+            {
+                Property1 = 1,
+                Property2 = "xxx"
+            };
+
+            var vo2 = new ValueObject1
+            {
+                Property1 = 1,
+                Property2 = "xxx"
+            };
+
+            (vo1 != vo2).Should().Be.False();
+        }
+
+        [Fact]
+        public void Equals_AllValuesAreEqual_ShouldBeTrue()
+        {
+            var vo1 = new ValueObject1
+            {
+                Property1 = 1,
+                Property2 = "xxx"
+            };
+
+            var vo2 = new ValueObject1
+            {
+                Property1 = 1,
+                Property2 = "xxx"
+            };
+
+            vo1.Equals(vo2).Should().Be.True();
+        }
+
+        [Fact]
+        public void EqualsOperator_AllValuesAreEqual_ShouldBeTrue()
+        {
+            var vo1 = new ValueObject1
+            {
+                Property1 = 1,
+                Property2 = "xxx"
+            };
+
+            var vo2 = new ValueObject1
+            {
+                Property1 = 1,
+                Property2 = "xxx"
+            };
+
+            (vo1 == vo2).Should().Be.True();
         }
 
         [Fact]
@@ -162,19 +175,6 @@ namespace Abstractor.Cqrs.Test.Domain
             };
 
             vo1.GetHashCode().Equals(vo2.GetHashCode()).Should().Be.False();
-        }
-
-        private class ValueObject1 : ValueObject<ValueObject1>
-        {
-            public int Property1 { private get; set; }
-
-            public string Property2 { private get; set; }
-
-            protected override IEnumerable<object> GetAttributesToIncludeInEqualityCheck()
-            {
-                yield return Property1;
-                yield return Property2;
-            }
         }
     }
 }

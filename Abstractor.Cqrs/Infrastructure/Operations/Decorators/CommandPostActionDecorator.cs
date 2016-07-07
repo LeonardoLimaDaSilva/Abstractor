@@ -5,10 +5,9 @@ using Abstractor.Cqrs.Interfaces.Operations;
 namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
 {
     /// <summary>
-    ///     Extende a funcionalidade do <see cref="ICommandHandler{TCommand}" /> garantindo que uma ação seja executada após a
-    ///     finalização do comando.
+    ///     Executes the action event registered in <see cref="ICommandPostAction.Execute"/> after the command is handled.
     /// </summary>
-    /// <typeparam name="TCommand">Comando que será executado.</typeparam>
+    /// <typeparam name="TCommand">Command to be executed.</typeparam>
     [DebuggerStepThrough]
     public sealed class CommandPostActionDecorator<TCommand> : ICommandHandler<TCommand>
         where TCommand : ICommand
@@ -25,9 +24,9 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
         }
 
         /// <summary>
-        ///     Executa uma ação após a execução do comando.
+        ///     Executes an action after the command is handled.
         /// </summary>
-        /// <param name="command"></param>
+        /// <param name="command">Command to be handled.</param>
         public void Handle(TCommand command)
         {
             try

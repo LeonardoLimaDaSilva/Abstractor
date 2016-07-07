@@ -41,8 +41,8 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
             var callOrder = 0;
 
             container.Setup(c => c.GetCurrentLifetimeScope()).Returns(null);
-            container.Setup(c => c.BeginLifetimeScope()).Callback(() => (callOrder++).Should().Be(0));
-            commandHandler.Setup(c => c.Handle(command)).Callback(() => (callOrder++).Should().Be(1));
+            container.Setup(c => c.BeginLifetimeScope()).Callback(() => callOrder++.Should().Be(0));
+            commandHandler.Setup(c => c.Handle(command)).Callback(() => callOrder++.Should().Be(1));
 
             // Act
 

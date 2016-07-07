@@ -23,8 +23,8 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
 
             var callOrder = 0;
 
-            validator.Setup(d => d.Validate(command)).Callback(() => (callOrder++).Should().Be(0));
-            commandHandler.Setup(d => d.Handle(command)).Callback(() => (callOrder++).Should().Be(1));
+            validator.Setup(d => d.Validate(command)).Callback(() => callOrder++.Should().Be(0));
+            commandHandler.Setup(d => d.Handle(command)).Callback(() => callOrder++.Should().Be(1));
 
             // Act
 

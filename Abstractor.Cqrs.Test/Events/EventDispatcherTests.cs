@@ -27,10 +27,10 @@ namespace Abstractor.Cqrs.Test.Events
         {
             // Arrange
 
-            var genericTypeName = typeof (IEventTrigger<FakeEvent>).FullName;
+            var genericTypeName = typeof(IEventTrigger<FakeEvent>).FullName;
 
             container.Setup(c => c.GetInstance(It.Is<Type>(t => t.FullName == genericTypeName)))
-                     .Returns(eventTrigger.Object);
+                .Returns(eventTrigger.Object);
 
             // Act
 

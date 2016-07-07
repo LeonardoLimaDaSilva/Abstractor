@@ -8,39 +8,6 @@ namespace Abstractor.Test.Command
 {
     public class CommandPostActionTests : BaseTest
     {
-        [Fact]
-        public void CommandHandledSuccessfully_ActionShouldBeExecuted()
-        {
-            // Arrange
-
-            var command = new PostActionCommand();
-
-            // Act
-
-            CommandDispatcher.Dispatch(command);
-
-            // Assert
-
-            command.ActionExecuted.Should().Be.True();
-        }
-
-        [Fact]
-        public void CommandHandlerThrowsException_ActionShouldNotBeExecuted()
-        {
-            // Arrange
-
-            var command = new PostActionCommand
-            {
-                ThrowException = true
-            };
-
-            // Act and assert
-
-            Assert.Throws<Exception>(() => CommandDispatcher.Dispatch(command));
-
-            command.ActionExecuted.Should().Be.False();
-        }
-
         public class PostActionCommand : ICommand
         {
             public bool ThrowException { get; set; }
@@ -63,6 +30,39 @@ namespace Abstractor.Test.Command
 
                 if (command.ThrowException) throw new Exception();
             }
+        }
+
+        [Fact]
+        public void Execute_CommandHandlerThrowsException_ActionShouldNotBeExecuted()
+        {
+            // Arrange
+
+            var command = new PostActionCommand
+            {
+                ThrowException = true
+            };
+
+            // Act and assert
+
+            Assert.Throws<Exception>(() => CommandDispatcher.Dispatch(command));
+
+            command.ActionExecuted.Should().Be.False();
+        }
+
+        [Fact]
+        public void Execute_CommandSucceeded_ActionShouldBeExecuted()
+        {
+            // Arrange
+
+            var command = new PostActionCommand();
+
+            // Act
+
+            CommandDispatcher.Dispatch(command);
+
+            // Assert
+
+            command.ActionExecuted.Should().Be.True();
         }
     }
 }

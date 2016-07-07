@@ -7,30 +7,6 @@ namespace Abstractor.Test.Command
 {
     public class CommandValidationTests : BaseTest
     {
-        [Fact]
-        public void ValidCommand_ShouldNotThrowException()
-        {
-            // Arrange
-
-            var command = new ValidationCommand {Property = "Property"};
-
-            // Act and assert
-
-            CommandDispatcher.Dispatch(command);
-        }
-
-        [Fact]
-        public void InvalidCommand_ShouldThrowValidationException()
-        {
-            // Arrange
-
-            var command = new ValidationCommand();
-
-            // Act and assert
-
-            Assert.Throws<ValidationException>(() => CommandDispatcher.Dispatch(command));
-        }
-
         public class ValidationCommand : ICommand
         {
             [Required]
@@ -42,6 +18,30 @@ namespace Abstractor.Test.Command
             public void Handle(ValidationCommand command)
             {
             }
+        }
+
+        [Fact]
+        public void Validate_InvalidCommand_ShouldThrowValidationException()
+        {
+            // Arrange
+
+            var command = new ValidationCommand();
+
+            // Act and assert
+
+            Assert.Throws<ValidationException>(() => CommandDispatcher.Dispatch(command));
+        }
+
+        [Fact]
+        public void Validate_ValidCommand_ShouldNotThrowException()
+        {
+            // Arrange
+
+            var command = new ValidationCommand {Property = "Property"};
+
+            // Act and assert
+
+            CommandDispatcher.Dispatch(command);
         }
     }
 }
