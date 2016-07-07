@@ -39,8 +39,7 @@ namespace Abstractor.Cqrs.EntityFramework.Persistence
         {
             Guard.ArgumentIsNotNull(entity, nameof(entity));
 
-            var entry = _contextProvider().Entry(entity);
-            entry.State = EntityState.Detached;
+            _contextProvider().Entry(entity).State = EntityState.Modified;
         }
 
         public IQueryable<TAggregate> Query()
