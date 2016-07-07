@@ -36,9 +36,9 @@ namespace Abstractor.Test.Command
         {
             public void Handle(FakeCommandEvent command)
             {
-                command.EventHandler1Executed = true;
-
                 if (command.EventHandler1ThrowsException) throw new Exception();
+
+                command.EventHandler1Executed = true;
             }
         }
 
@@ -46,9 +46,9 @@ namespace Abstractor.Test.Command
         {
             public void Handle(FakeCommandEvent command)
             {
-                command.EventHandler2Executed = true;
-
                 if (command.EventHandler2ThrowsException) throw new Exception();
+
+                command.EventHandler2Executed = true;
             }
         }
 
@@ -101,6 +101,7 @@ namespace Abstractor.Test.Command
             // Assert
 
             command.EventHandler1Executed.Should().Be.False();
+
             command.EventHandler2Executed.Should().Be.False();
         }
 
@@ -111,24 +112,24 @@ namespace Abstractor.Test.Command
 
             var scheduler = new SynchronousTaskScheduler();
 
+            var command = new FakeCommandEvent();
+
             Task.Factory.StartNew(
                 () =>
                 {
-                    var command = new FakeCommandEvent();
-
                     // Act
 
                     CommandDispatcher.Dispatch(command);
-
-                    // Assert
-
-                    command.EventHandler1Executed.Should().Be.True();
-
-                    command.EventHandler2Executed.Should().Be.True();
                 },
                 CancellationToken.None,
                 TaskCreationOptions.None,
                 scheduler);
+
+            // Assert
+
+            command.EventHandler1Executed.Should().Be.True();
+
+            command.EventHandler2Executed.Should().Be.True();
         }
 
         [Fact]
@@ -138,27 +139,31 @@ namespace Abstractor.Test.Command
 
             var scheduler = new SynchronousTaskScheduler();
 
+            var command = new FakeCommandEvent
+            {
+                EventHandler1ThrowsException = true
+            };
+
             Task.Factory.StartNew(
                 () =>
                 {
-                    var command = new FakeCommandEvent
-                    {
-                        EventHandler1ThrowsException = true
-                    };
-
                     // Act
 
                     CommandDispatcher.Dispatch(command);
-
-                    // Assert
-
-                    command.EventHandler1Executed.Should().Be.True();
-
-                    command.EventHandler2Executed.Should().Be.True();
                 },
                 CancellationToken.None,
                 TaskCreationOptions.None,
                 scheduler);
+
+            // Assert
+
+            // TODO: 
+            // Each event handlers should be executed on a new thread or
+            // an exception on one handler should prevent others to be executed?
+
+            command.EventHandler1Executed.Should().Be.False();
+
+            command.EventHandler2Executed.Should().Be.True();
         }
 
         [Fact]
@@ -168,27 +173,27 @@ namespace Abstractor.Test.Command
 
             var scheduler = new SynchronousTaskScheduler();
 
+            var command = new FakeCommandEvent
+            {
+                EventHandler2ThrowsException = true
+            };
+
             Task.Factory.StartNew(
                 () =>
                 {
-                    var command = new FakeCommandEvent
-                    {
-                        EventHandler2ThrowsException = true
-                    };
-
                     // Act
 
                     CommandDispatcher.Dispatch(command);
-
-                    // Assert
-
-                    command.EventHandler1Executed.Should().Be.True();
-
-                    command.EventHandler2Executed.Should().Be.True();
                 },
                 CancellationToken.None,
                 TaskCreationOptions.None,
                 scheduler);
+
+            // Assert
+
+            command.EventHandler1Executed.Should().Be.True();
+
+            command.EventHandler2Executed.Should().Be.False();
         }
     }
 }

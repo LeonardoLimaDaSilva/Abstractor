@@ -61,22 +61,22 @@ namespace Abstractor.Test.Command
 
             var scheduler = new SynchronousTaskScheduler();
 
+            var command = new FakeCommand();
+
             Task.Factory.StartNew(
                 () =>
                 {
-                    var command = new FakeCommand();
-
                     // Act
 
                     CommandDispatcher.DispatchAsync(command);
-
-                    // Assert
-
-                    command.HandlerExecuted.Should().Be.True();
                 },
                 CancellationToken.None,
                 TaskCreationOptions.None,
                 scheduler);
+
+            // Assert
+
+            command.HandlerExecuted.Should().Be.True();
         }
     }
 }
