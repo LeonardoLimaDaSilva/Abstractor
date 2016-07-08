@@ -6,7 +6,8 @@ using Abstractor.Cqrs.Interfaces.Operations;
 namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
 {
     /// <summary>
-    ///     Delegates the command to the event dispatcher after the execution of <see cref="ICommandHandler{TCommand}" />.
+    ///     Delegates the command, marked as an event listener, to the event dispatcher after the execution of
+    ///     <see cref="ICommandHandler{TCommand}" />.
     /// </summary>
     /// <typeparam name="TCommand">Command to be handled.</typeparam>
     [DebuggerStepThrough]
@@ -25,7 +26,7 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
         }
 
         /// <summary>
-        ///     Delegates the command to the event dispatcher.
+        ///     Delegates the command, marked as an event listener, to the event dispatcher.
         /// </summary>
         /// <param name="command">Command to be handled.</param>
         public void Handle(TCommand command)

@@ -26,8 +26,7 @@ namespace Abstractor.Cqrs.Test.Operations.Dispatchers
             [Frozen] Mock<IContainer> container,
             [Frozen] Mock<ICommandHandler<FakeCommand>> commandHandler,
             FakeCommand command,
-            CommandDispatcher dispatcher
-            )
+            CommandDispatcher dispatcher)
         {
             // Arrange
 
@@ -56,8 +55,7 @@ namespace Abstractor.Cqrs.Test.Operations.Dispatchers
             [Frozen] Mock<IContainer> container,
             [Frozen] Mock<ICommandHandler<FakeCommand>> commandHandler,
             FakeCommand command,
-            CommandDispatcher dispatcher
-            )
+            CommandDispatcher dispatcher)
         {
             // Arrange
 

@@ -1,5 +1,6 @@
 ﻿using Abstractor.Cqrs.Infrastructure.CrossCuttingConcerns;
-using Abstractor.Cqrs.Infrastructure.Events;
+using Abstractor.Cqrs.Infrastructure.Operations.Decorators;
+using Abstractor.Cqrs.Infrastructure.Operations.Dispatchers;
 using Abstractor.Cqrs.Interfaces.CompositionRoot;
 using Abstractor.Cqrs.Interfaces.Events;
 
@@ -13,7 +14,10 @@ namespace Abstractor.Cqrs.Infrastructure.CompositionRoot.Installers
 
             container.RegisterSingleton<IEventDispatcher, EventDispatcher>();
             container.RegisterCollection(typeof (IEventHandler<>), settings.EventAssemblies);
-            container.RegisterTransient(typeof (IEventTrigger<>), typeof (MultipleDispatchEventTrigger<>));
+
+            container.RegisterDecoratorSingleton(
+                typeof(IEventHandler<>),
+                typeof(EventLoggerDecorator<>));
         }
     }
 }

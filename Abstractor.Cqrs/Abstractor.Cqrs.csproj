@@ -35,6 +35,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
@@ -66,8 +70,11 @@
     <Compile Include="Infrastructure\Domain\GenericFile.cs" />
     <Compile Include="Infrastructure\Domain\QueueMessage.cs" />
     <Compile Include="Infrastructure\Domain\ValueObject.cs" />
-    <Compile Include="Infrastructure\Events\EventDispatcher.cs" />
-    <Compile Include="Infrastructure\Events\MultipleDispatchEventTrigger.cs" />
+    <Compile Include="Infrastructure\Operations\Decorators\CommandLoggerDecorator.cs" />
+    <Compile Include="Infrastructure\Operations\Decorators\EventLoggerDecorator.cs" />
+    <Compile Include="Infrastructure\Operations\Decorators\QueryAsyncLoggerDecorator.cs" />
+    <Compile Include="Infrastructure\Operations\Decorators\QueryLoggerDecorator.cs" />
+    <Compile Include="Infrastructure\Operations\Dispatchers\EventDispatcher.cs" />
     <Compile Include="Infrastructure\Operations\CommandPostAction.cs" />
     <Compile Include="Infrastructure\Operations\Decorators\CommandEventDispatcherDecorator.cs" />
     <Compile Include="Infrastructure\Operations\Decorators\CommandLifetimeScopeDecorator.cs" />
@@ -97,7 +104,6 @@
     <Compile Include="Interfaces\Events\IEventListener.cs" />
     <Compile Include="Interfaces\Events\IEventDispatcher.cs" />
     <Compile Include="Interfaces\Events\IEventHandler.cs" />
-    <Compile Include="Interfaces\Events\IEventTrigger.cs" />
     <Compile Include="Interfaces\Operations\ICommand.cs" />
     <Compile Include="Interfaces\Operations\ICommandDispatcher.cs" />
     <Compile Include="Interfaces\Operations\ICommandHandler.cs" />

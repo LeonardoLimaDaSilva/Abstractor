@@ -86,8 +86,11 @@
     <Compile Include="CrossCuttingConcerns\GuardTests.cs" />
     <Compile Include="Domain\EntityTests.cs" />
     <Compile Include="Domain\ValueObjectTests.cs" />
-    <Compile Include="Events\EventDispatcherTests.cs" />
-    <Compile Include="Events\MultipleDispatchEventTriggerTests.cs" />
+    <Compile Include="Operations\Decorators\CommandLoggerDecoratorTests.cs" />
+    <Compile Include="Operations\Decorators\EventLoggerDecoratorTests.cs" />
+    <Compile Include="Operations\Decorators\QueryAsyncLoggerDecoratorTests.cs" />
+    <Compile Include="Operations\Decorators\QueryLoggerDecoratorTests.cs" />
+    <Compile Include="Operations\Dispatchers\EventDispatcherTests.cs" />
     <Compile Include="Helpers\AutoMoqDataAttribute.cs" />
     <Compile Include="Helpers\FakeDataContext.cs" />
     <Compile Include="Helpers\FakeDataSet.cs" />

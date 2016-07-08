@@ -10,6 +10,7 @@ namespace Abstractor.Cqrs.Interfaces.CompositionRoot
     public interface IContainer
     {
         object GetInstance(Type type);
+        IEnumerable<object> GetAllInstances(Type type);
         object GetCurrentLifetimeScope();
         IDisposable BeginLifetimeScope();
         IEnumerable<IInstanceProducer> GetCurrentRegistrations();

@@ -21,8 +21,16 @@ namespace Abstractor.Cqrs.Infrastructure.CompositionRoot.Installers
                 typeof (QueryLifetimeScopeDecorator<,>));
 
             container.RegisterDecoratorSingleton(
+                typeof(IQueryHandler<,>),
+                typeof(QueryLoggerDecorator<,>));
+
+            container.RegisterDecoratorSingleton(
                 typeof (IQueryAsyncHandler<,>),
                 typeof (QueryAsyncLifetimeScopeDecorator<,>));
+
+            container.RegisterDecoratorSingleton(
+                typeof(IQueryAsyncHandler<,>),
+                typeof(QueryAsyncLoggerDecorator<,>));
         }
     }
 }

@@ -172,13 +172,12 @@ namespace Abstractor.Test.Command
 
             var command = new FakeCommand();
 
-            Task.Factory.StartNew(
-                () =>
-                {
-                    // Act
+            Task.Factory.StartNew(() =>
+            {
+                // Act
 
-                    CommandDispatcher.Dispatch(command);
-                },
+                CommandDispatcher.Dispatch(command);
+            },
                 CancellationToken.None,
                 TaskCreationOptions.None,
                 scheduler);

@@ -23,6 +23,11 @@ namespace Abstractor.Cqrs.SimpleInjector.Adapters
             return _container.GetInstance(type);
         }
 
+        public IEnumerable<object> GetAllInstances(Type type)
+        {
+            return _container.GetAllInstances(type);
+        }
+
         public object GetCurrentLifetimeScope()
         {
             return _container.GetCurrentLifetimeScope();
