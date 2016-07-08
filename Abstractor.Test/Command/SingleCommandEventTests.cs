@@ -9,26 +9,38 @@ using Xunit;
 
 namespace Abstractor.Test.Command
 {
+    /// <summary>
+    ///     Tests for commands that has a single event handler subscribed to.
+    /// </summary>
     public class SingleCommandEventTests : BaseTest
     {
-        public class FakeCommandEvent : ICommand, IEvent
+        /// <summary>
+        ///     Command that is marked as an event listener.
+        /// </summary>
+        public class FakeCommand : ICommand, IEventListener
         {
             public bool CommandThrowsException { get; set; }
 
             public bool EventHandlerExecuted { get; set; }
         }
 
-        public class FakeCommandEventHandler : ICommandHandler<FakeCommandEvent>
+        /// <summary>
+        ///     Handler of FakeCommand
+        /// </summary>
+        public class FakeCommandHandler : ICommandHandler<FakeCommand>
         {
-            public void Handle(FakeCommandEvent command)
+            public void Handle(FakeCommand command)
             {
                 if (command.CommandThrowsException) throw new Exception();
             }
         }
 
-        public class FakeEventHandler : IEventHandler<FakeCommandEvent>
+        /// <summary>
+        ///     EventHandler1 that subscribes to FakeCommand.
+        /// </summary>
+        public class OnFakeCommandHandled : IEventHandler<FakeCommand>
         {
-            public void Handle(FakeCommandEvent command)
+            public void Handle(FakeCommand command)
             {
                 command.EventHandlerExecuted = true;
             }
@@ -39,7 +51,7 @@ namespace Abstractor.Test.Command
         {
             // Arrange
 
-            var command = new FakeCommandEvent();
+            var command = new FakeCommand();
 
             // Act
 
@@ -55,7 +67,7 @@ namespace Abstractor.Test.Command
         {
             // Arrange
 
-            var command = new FakeCommandEvent
+            var command = new FakeCommand
             {
                 CommandThrowsException = true
             };
@@ -76,7 +88,7 @@ namespace Abstractor.Test.Command
 
             var scheduler = new SynchronousTaskScheduler();
 
-            var command = new FakeCommandEvent();
+            var command = new FakeCommand();
 
             Task.Factory.StartNew(
                 () =>

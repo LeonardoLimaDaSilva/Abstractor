@@ -6,13 +6,12 @@ using Abstractor.Cqrs.Interfaces.Operations;
 namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
 {
     /// <summary>
-    ///     Dispatches the event registered for the current command after the execution of
-    ///     <see cref="ICommandHandler{TCommand}" />.
+    ///     Delegates the command to the event dispatcher after the execution of <see cref="ICommandHandler{TCommand}" />.
     /// </summary>
-    /// <typeparam name="TCommand">Comando que será executado.</typeparam>
+    /// <typeparam name="TCommand">Command to be handled.</typeparam>
     [DebuggerStepThrough]
     public sealed class CommandEventDispatcherDecorator<TCommand> : ICommandHandler<TCommand>
-        where TCommand : ICommand, IEvent
+        where TCommand : ICommand, IEventListener
     {
         private readonly IEventDispatcher _eventDispatcher;
         private readonly Func<ICommandHandler<TCommand>> _handlerFactory;
@@ -26,9 +25,9 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
         }
 
         /// <summary>
-        ///     Dispatches the event after the command execution.
+        ///     Delegates the command to the event dispatcher.
         /// </summary>
-        /// <param name="command"></param>
+        /// <param name="command">Command to be handled.</param>
         public void Handle(TCommand command)
         {
             _handlerFactory().Handle(command);

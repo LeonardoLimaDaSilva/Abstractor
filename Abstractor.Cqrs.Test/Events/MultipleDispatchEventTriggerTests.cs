@@ -16,11 +16,11 @@ namespace Abstractor.Cqrs.Test.Events
         [Theory, AutoMoqData]
         public void Trigger_MultipleEventHandlersRegisteredInContainer_ShouldHandleAll(
             [Frozen] Mock<IContainer> container,
-            Mock<IEventHandler<IEvent>> fakeEventHandler1,
-            Mock<IEventHandler<IEvent>> fakeEventHandler2,
+            Mock<IEventHandler<IEventListener>> fakeEventHandler1,
+            Mock<IEventHandler<IEventListener>> fakeEventHandler2,
             [Frozen] Mock<object> fakeService,
-            IEvent @event,
-            MultipleDispatchEventTrigger<IEvent> trigger)
+            IEventListener eventListener,
+            MultipleDispatchEventTrigger<IEventListener> trigger)
         {
             // Arrange
 
@@ -40,7 +40,7 @@ namespace Abstractor.Cqrs.Test.Events
                 {
                     // Act
 
-                    trigger.Trigger(@event);
+                    trigger.Trigger(eventListener);
                 },
                 CancellationToken.None,
                 TaskCreationOptions.None,
@@ -48,15 +48,15 @@ namespace Abstractor.Cqrs.Test.Events
 
             // Assert
 
-            fakeEventHandler1.Verify(h => h.Handle(@event), Times.Once);
-            fakeEventHandler2.Verify(h => h.Handle(@event), Times.Once);
+            fakeEventHandler1.Verify(h => h.Handle(eventListener), Times.Once);
+            fakeEventHandler2.Verify(h => h.Handle(eventListener), Times.Once);
         }
 
         [Theory, AutoMoqData]
         public void Trigger_NoEventHandlersRegistered_ShouldDoNothing(
             [Frozen] Mock<IContainer> container,
-            IEvent @event,
-            MultipleDispatchEventTrigger<IEvent> trigger)
+            IEventListener eventListener,
+            MultipleDispatchEventTrigger<IEventListener> trigger)
         {
             // Arrange
 
@@ -64,7 +64,7 @@ namespace Abstractor.Cqrs.Test.Events
 
             // Act
 
-            trigger.Trigger(@event);
+            trigger.Trigger(eventListener);
         }
     }
 }

@@ -1,11 +1,15 @@
 ﻿namespace Abstractor.Cqrs.Interfaces.Events
 {
-    public interface IEventTrigger<in TEvent> where TEvent : IEvent
+    /// <summary>
+    ///     Abstraction for the event trigger.
+    /// </summary>
+    /// <typeparam name="TEventListener"></typeparam>
+    public interface IEventTrigger<in TEventListener> where TEventListener : IEventListener
     {
         /// <summary>
-        ///     Dispara um <see cref="IEventHandler{TEvent}" />.
+        ///     Triggers all event handlers registered for the current event listener.
         /// </summary>
-        /// <param name="event">Evento que será disparado.</param>
-        void Trigger(TEvent @event);
+        /// <param name="eventListener">Listener for the event handlers.</param>
+        void Trigger(TEventListener eventListener);
     }
 }

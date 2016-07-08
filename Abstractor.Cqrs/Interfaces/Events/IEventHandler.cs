@@ -1,16 +1,15 @@
 ﻿namespace Abstractor.Cqrs.Interfaces.Events
 {
     /// <summary>
-    ///     Manipula o <typeparamref name="TEvent" />.
+    ///     Handler for the event that subscribes to the <see cref="IEventListener" />.
     /// </summary>
-    /// <typeparam name="TEvent">Evento que será manipulado.</typeparam>
-    public interface IEventHandler<in TEvent> where TEvent : IEvent
+    /// <typeparam name="TEventListener">Listener that the event subscribes to.</typeparam>
+    public interface IEventHandler<in TEventListener> where TEventListener : IEventListener
     {
         /// <summary>
-        ///     Manipula o <typeparamref name="TEvent" />.
+        ///     Handle the event subscribed to the <see cref="IEventListener" />.
         /// </summary>
-        /// <param name="event"><typeparamref name="TEvent" /> que será manipulado.</param>
-        /// <returns>Retorna uma task.</returns>
-        void Handle(TEvent @event);
+        /// <param name="eventListener">Listener that the event subscribes to.</param>
+        void Handle(TEventListener eventListener);
     }
 }

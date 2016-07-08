@@ -11,6 +11,10 @@ namespace Abstractor.Cqrs.Test.Events
 {
     public class EventDispatcherTests
     {
+        public class FakeEventListener : IEventListener
+        {
+        }
+
         [Theory, AutoMoqData]
         public void Dispatch_NullEvent_ThrowsArgumentNullException(EventDispatcher dispatcher)
         {
@@ -20,29 +24,25 @@ namespace Abstractor.Cqrs.Test.Events
         [Theory, AutoMoqData]
         public void Dispatch_BuildGenericEventTriggerAndGetFromContainer_ShouldExecuteTriggerPassingEvent(
             [Frozen] Mock<IContainer> container,
-            [Frozen] Mock<IEventTrigger<FakeEvent>> eventTrigger,
-            FakeEvent @event,
+            [Frozen] Mock<IEventTrigger<FakeEventListener>> eventTrigger,
+            FakeEventListener eventListener,
             EventDispatcher dispatcher
             )
         {
             // Arrange
 
-            var genericTypeName = typeof(IEventTrigger<FakeEvent>).FullName;
+            var genericTypeName = typeof (IEventTrigger<FakeEventListener>).FullName;
 
             container.Setup(c => c.GetInstance(It.Is<Type>(t => t.FullName == genericTypeName)))
-                .Returns(eventTrigger.Object);
+                     .Returns(eventTrigger.Object);
 
             // Act
 
-            dispatcher.Dispatch(@event);
+            dispatcher.Dispatch(eventListener);
 
             // Assert
 
-            eventTrigger.Verify(t => t.Trigger(@event), Times.Once);
-        }
-
-        public class FakeEvent : IEvent
-        {
+            eventTrigger.Verify(t => t.Trigger(eventListener), Times.Once);
         }
     }
 }

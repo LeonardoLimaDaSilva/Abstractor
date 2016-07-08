@@ -6,7 +6,7 @@ using Abstractor.Cqrs.Interfaces.Events;
 namespace Abstractor.Cqrs.Infrastructure.Events
 {
     /// <summary>
-    ///     Processador de eventos.
+    ///     Dispatches the event listener.
     /// </summary>
     [DebuggerStepThrough]
     public sealed class EventDispatcher : IEventDispatcher
@@ -19,17 +19,17 @@ namespace Abstractor.Cqrs.Infrastructure.Events
         }
 
         /// <summary>
-        ///     Dispara um <see cref="IEventTrigger{IEvent}" /> registrado em <see cref="IContainer" />.
+        ///     Delegates the event listener to the multiple events trigger.
         /// </summary>
-        /// <param name="event"></param>
-        public void Dispatch(IEvent @event)
+        /// <param name="eventListener"></param>
+        public void Dispatch(IEventListener eventListener)
         {
-            Guard.ArgumentIsNotNull(@event, nameof(@event));
+            Guard.ArgumentIsNotNull(eventListener, nameof(eventListener));
 
-            var triggerType = typeof (IEventTrigger<>).MakeGenericType(@event.GetType());
+            var triggerType = typeof (IEventTrigger<>).MakeGenericType(eventListener.GetType());
             dynamic trigger = _container.GetInstance(triggerType);
 
-            trigger.Trigger((dynamic) @event);
+            trigger.Trigger((dynamic)eventListener);
         }
     }
 }

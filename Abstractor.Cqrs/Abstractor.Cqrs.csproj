@@ -94,7 +94,7 @@
     <Compile Include="Interfaces\Domain\IMemento.cs" />
     <Compile Include="Interfaces\Domain\IQueueRepository.cs" />
     <Compile Include="Interfaces\Domain\IRestorable.cs" />
-    <Compile Include="Interfaces\Events\IEvent.cs" />
+    <Compile Include="Interfaces\Events\IEventListener.cs" />
     <Compile Include="Interfaces\Events\IEventDispatcher.cs" />
     <Compile Include="Interfaces\Events\IEventHandler.cs" />
     <Compile Include="Interfaces\Events\IEventTrigger.cs" />

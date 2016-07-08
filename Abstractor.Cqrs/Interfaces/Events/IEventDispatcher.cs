@@ -1,14 +1,14 @@
 ﻿namespace Abstractor.Cqrs.Interfaces.Events
 {
     /// <summary>
-    ///     Processa eventos.
+    ///     Dispatches the event listener.
     /// </summary>
     public interface IEventDispatcher
     {
         /// <summary>
-        ///     Dispara o evento.
+        ///     Delegates the event listener to the multiple events trigger.
         /// </summary>
-        /// <param name="event">Evento que será disparado.</param>
-        void Dispatch(IEvent @event);
+        /// <param name="eventListener"></param>
+        void Dispatch(IEventListener eventListener);
     }
 }

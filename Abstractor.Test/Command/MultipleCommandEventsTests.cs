@@ -9,9 +9,15 @@ using Xunit;
 
 namespace Abstractor.Test.Command
 {
+    /// <summary>
+    ///     Tests for commands that has multiples event handlers subscribed to.
+    /// </summary>
     public class MultipleCommandEventsTests : BaseTest
     {
-        public class FakeCommandEvent : ICommand, IEvent
+        /// <summary>
+        ///     Command that is marked as an event listener.
+        /// </summary>
+        public class FakeCommand : ICommand, IEventListener
         {
             public bool CommandThrowsException { get; set; }
 
@@ -28,17 +34,23 @@ namespace Abstractor.Test.Command
             public bool EventHandler2Succeeded { get; set; }
         }
 
-        public class FakeCommandEventHandler : ICommandHandler<FakeCommandEvent>
+        /// <summary>
+        ///     Handler of FakeCommand
+        /// </summary>
+        public class FakeCommandHandler : ICommandHandler<FakeCommand>
         {
-            public void Handle(FakeCommandEvent command)
+            public void Handle(FakeCommand command)
             {
                 if (command.CommandThrowsException) throw new Exception();
             }
         }
 
-        public class FakeEventHandler1 : IEventHandler<FakeCommandEvent>
+        /// <summary>
+        ///     EventHandler1 that subscribes to FakeCommand.
+        /// </summary>
+        public class OnFakeCommandHandled1 : IEventHandler<FakeCommand>
         {
-            public void Handle(FakeCommandEvent command)
+            public void Handle(FakeCommand command)
             {
                 command.EventHandler1Executed = true;
 
@@ -48,9 +60,12 @@ namespace Abstractor.Test.Command
             }
         }
 
-        public class FakeEventHandler2 : IEventHandler<FakeCommandEvent>
+        /// <summary>
+        ///     EventHandler2 that subscribes to FakeCommand.
+        /// </summary>
+        public class OnFakeCommandHandled2 : IEventHandler<FakeCommand>
         {
-            public void Handle(FakeCommandEvent command)
+            public void Handle(FakeCommand command)
             {
                 command.EventHandler2Executed = true;
 
@@ -65,7 +80,7 @@ namespace Abstractor.Test.Command
         {
             // Arrange
 
-            var command = new FakeCommandEvent();
+            var command = new FakeCommand();
 
             // Act
 
@@ -81,7 +96,7 @@ namespace Abstractor.Test.Command
         {
             // Arrange
 
-            var command = new FakeCommandEvent();
+            var command = new FakeCommand();
 
             // Act
 
@@ -97,7 +112,7 @@ namespace Abstractor.Test.Command
         {
             // Arrange
 
-            var command = new FakeCommandEvent
+            var command = new FakeCommand
             {
                 CommandThrowsException = true
             };
@@ -120,7 +135,7 @@ namespace Abstractor.Test.Command
 
             var scheduler = new SynchronousTaskScheduler();
 
-            var command = new FakeCommandEvent
+            var command = new FakeCommand
             {
                 EventHandler1ThrowsException = true,
                 EventHandler2ThrowsException = true
@@ -155,7 +170,7 @@ namespace Abstractor.Test.Command
 
             var scheduler = new SynchronousTaskScheduler();
 
-            var command = new FakeCommandEvent();
+            var command = new FakeCommand();
 
             Task.Factory.StartNew(
                 () =>
@@ -182,7 +197,7 @@ namespace Abstractor.Test.Command
 
             var scheduler = new SynchronousTaskScheduler();
 
-            var command = new FakeCommandEvent
+            var command = new FakeCommand
             {
                 EventHandler1ThrowsException = true
             };

@@ -11,9 +11,9 @@ namespace Abstractor.Cqrs.Infrastructure.Events
     /// <summary>
     ///     Dispatcher for multiple event handlers.
     /// </summary>
-    /// <typeparam name="TEvent">Listener for the event handlers.</typeparam>
-    public sealed class MultipleDispatchEventTrigger<TEvent> : IEventTrigger<TEvent>
-        where TEvent : IEvent
+    /// <typeparam name="TEventListener">Listener for the event handlers.</typeparam>
+    public sealed class MultipleDispatchEventTrigger<TEventListener> : IEventTrigger<TEventListener>
+        where TEventListener : IEventListener
     {
         private readonly IContainer _container;
         private readonly ILogger _logger;
@@ -29,8 +29,8 @@ namespace Abstractor.Cqrs.Infrastructure.Events
         /// <summary>
         ///     Triggers all event handlers registered for the current event listener.
         /// </summary>
-        /// <param name="event">Listener for the event handlers.</param>
-        public void Trigger(TEvent @event)
+        /// <param name="eventListener">Listener for the event handlers.</param>
+        public void Trigger(TEventListener eventListener)
         {
             var handlers = GetHandlers(_container);
             if (handlers == null || !handlers.Any()) return;
@@ -44,7 +44,7 @@ namespace Abstractor.Cqrs.Infrastructure.Events
                         {
                             try
                             {
-                                handler.Handle(@event);
+                                handler.Handle(eventListener);
                             }
                             catch (Exception ex)
                             {
@@ -57,7 +57,7 @@ namespace Abstractor.Cqrs.Infrastructure.Events
                             {
                                 try
                                 {
-                                    handler.Handle(@event);
+                                    handler.Handle(eventListener);
                                 }
                                 catch (Exception ex)
                                 {
@@ -75,14 +75,14 @@ namespace Abstractor.Cqrs.Infrastructure.Events
         /// </summary>
         /// <param name="container">Inversion of control container.</param>
         /// <returns>List of registered <see cref="IEventHandler{TEvent}" />.</returns>
-        private static IList<IEventHandler<TEvent>> GetHandlers(IContainer container)
+        private static IList<IEventHandler<TEventListener>> GetHandlers(IContainer container)
         {
-            var handlersType = typeof(IEventHandler<TEvent>);
+            var handlersType = typeof (IEventHandler<TEventListener>);
 
             return container.GetCurrentRegistrations()
-                .Where(x => handlersType.IsAssignableFrom(x.ServiceType))
-                .Select(x => x.GetInstance()).Cast<IEventHandler<TEvent>>()
-                .ToList();
+                            .Where(x => handlersType.IsAssignableFrom(x.ServiceType))
+                            .Select(x => x.GetInstance()).Cast<IEventHandler<TEventListener>>()
+                            .ToList();
         }
     }
 }
