@@ -88,7 +88,6 @@
     <Compile Include="Domain\ValueObjectTests.cs" />
     <Compile Include="Events\EventDispatcherTests.cs" />
     <Compile Include="Events\MultipleDispatchEventTriggerTests.cs" />
-    <Compile Include="Events\TriggerRegisteredEventsDecoratorTests.cs" />
     <Compile Include="Helpers\AutoMoqDataAttribute.cs" />
     <Compile Include="Helpers\FakeDataContext.cs" />
     <Compile Include="Helpers\FakeDataSet.cs" />

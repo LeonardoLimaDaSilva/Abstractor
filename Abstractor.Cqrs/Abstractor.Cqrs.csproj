@@ -68,7 +68,6 @@
     <Compile Include="Infrastructure\Domain\ValueObject.cs" />
     <Compile Include="Infrastructure\Events\EventDispatcher.cs" />
     <Compile Include="Infrastructure\Events\MultipleDispatchEventTrigger.cs" />
-    <Compile Include="Infrastructure\Events\TriggerRegisteredEventsDecorator.cs" />
     <Compile Include="Infrastructure\Operations\CommandPostAction.cs" />
     <Compile Include="Infrastructure\Operations\Decorators\CommandEventDispatcherDecorator.cs" />
     <Compile Include="Infrastructure\Operations\Decorators\CommandLifetimeScopeDecorator.cs" />

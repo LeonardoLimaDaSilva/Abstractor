@@ -22,6 +22,10 @@ namespace Abstractor.Test.Command
             public bool EventHandler1Executed { get; set; }
 
             public bool EventHandler2Executed { get; set; }
+
+            public bool EventHandler1Succeeded { get; set; }
+
+            public bool EventHandler2Succeeded { get; set; }
         }
 
         public class FakeCommandEventHandler : ICommandHandler<FakeCommandEvent>
@@ -36,9 +40,11 @@ namespace Abstractor.Test.Command
         {
             public void Handle(FakeCommandEvent command)
             {
-                if (command.EventHandler1ThrowsException) throw new Exception();
-
                 command.EventHandler1Executed = true;
+
+                if (command.EventHandler1ThrowsException) throw new Exception("Event 1 failed.");
+
+                command.EventHandler1Succeeded = true;
             }
         }
 
@@ -46,9 +52,11 @@ namespace Abstractor.Test.Command
         {
             public void Handle(FakeCommandEvent command)
             {
-                if (command.EventHandler2ThrowsException) throw new Exception();
-
                 command.EventHandler2Executed = true;
+
+                if (command.EventHandler2ThrowsException) throw new Exception("Event 2 failed.");
+
+                command.EventHandler2Succeeded = true;
             }
         }
 
@@ -106,6 +114,41 @@ namespace Abstractor.Test.Command
         }
 
         [Fact]
+        public void SyncContext_AllEventHandlersThrowsException_AllEventHandlersShouldBeExecutedIndependently()
+        {
+            // Arrange
+
+            var scheduler = new SynchronousTaskScheduler();
+
+            var command = new FakeCommandEvent
+            {
+                EventHandler1ThrowsException = true,
+                EventHandler2ThrowsException = true
+            };
+
+            Task.Factory.StartNew(
+                () =>
+                {
+                    // Act
+
+                    CommandDispatcher.Dispatch(command);
+                },
+                CancellationToken.None,
+                TaskCreationOptions.None,
+                scheduler);
+
+            // Assert
+
+            command.EventHandler1Executed.Should().Be.True();
+
+            command.EventHandler1Succeeded.Should().Be.False();
+
+            command.EventHandler2Executed.Should().Be.True();
+
+            command.EventHandler2Succeeded.Should().Be.False();
+        }
+
+        [Fact]
         public void SyncContext_CommandSucceeded_AllEventHandlersRegisteredForThisCommandShouldBeExecuted()
         {
             // Arrange
@@ -157,43 +200,13 @@ namespace Abstractor.Test.Command
 
             // Assert
 
-            // TODO: 
-            // Each event handlers should be executed on a new thread or
-            // an exception on one handler should prevent others to be executed?
-
-            command.EventHandler1Executed.Should().Be.False();
-
-            command.EventHandler2Executed.Should().Be.True();
-        }
-
-        [Fact]
-        public void SyncContext_EventHandler2ThrowsException_EventHandler1ShouldBeExecutedIndependently()
-        {
-            // Arrange
-
-            var scheduler = new SynchronousTaskScheduler();
-
-            var command = new FakeCommandEvent
-            {
-                EventHandler2ThrowsException = true
-            };
-
-            Task.Factory.StartNew(
-                () =>
-                {
-                    // Act
-
-                    CommandDispatcher.Dispatch(command);
-                },
-                CancellationToken.None,
-                TaskCreationOptions.None,
-                scheduler);
-
-            // Assert
-
             command.EventHandler1Executed.Should().Be.True();
 
-            command.EventHandler2Executed.Should().Be.False();
+            command.EventHandler1Succeeded.Should().Be.False();
+
+            command.EventHandler2Executed.Should().Be.True();
+
+            command.EventHandler2Succeeded.Should().Be.True();
         }
     }
 }
