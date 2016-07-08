@@ -11,7 +11,7 @@ namespace Abstractor.Test.Command
 {
     public class SingleCommandEventTests : BaseTest
     {
-        public class FakeCommandEvent : ICommandEvent
+        public class FakeCommandEvent : ICommand, IEvent
         {
             public bool CommandThrowsException { get; set; }
 

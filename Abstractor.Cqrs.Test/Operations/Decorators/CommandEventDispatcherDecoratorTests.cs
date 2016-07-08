@@ -12,6 +12,10 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
 {
     public class CommandEventDispatcherDecoratorTests
     {
+        public interface ICommandEvent : ICommand, IEvent
+        {
+        }
+
         [Theory, AutoMoqData]
         public void Handle_Success_ShouldDispatchEventAfterCommandHandled(
             [Frozen] Mock<ICommandHandler<ICommandEvent>> commandHandler,
