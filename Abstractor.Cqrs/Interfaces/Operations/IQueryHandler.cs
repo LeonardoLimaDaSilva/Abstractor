@@ -1,17 +1,17 @@
 ﻿namespace Abstractor.Cqrs.Interfaces.Operations
 {
     /// <summary>
-    ///     Manipula a <typeparamref name="TQuery" /> com o retorno <typeparamref name="TResult" />.
+    ///     Handler for the query that implements <see cref="IQuery{TResult}" />
     /// </summary>
-    /// <typeparam name="TQuery">A consulta.</typeparam>
-    /// <typeparam name="TResult">O tipo de retorno da <typeparamref name="TQuery" />.</typeparam>
+    /// <typeparam name="TQuery">Query to be handled.</typeparam>
+    /// <typeparam name="TResult">Return type.</typeparam>
     public interface IQueryHandler<in TQuery, out TResult> where TQuery : IQuery<TResult>
     {
         /// <summary>
-        ///     Manipula a <typeparamref name="TQuery" />.
+        ///     Handles the <see cref="IQuery{TResult}" />.
         /// </summary>
-        /// <param name="query">A consulta.</param>
-        /// <returns>Retorna o <typeparamref name="TResult" />.</returns>
+        /// <param name="query">Query to be handled.</param>
+        /// <returns>Returns an object of type <typeparamref name="TResult" />.</returns>
         TResult Handle(TQuery query);
     }
 }

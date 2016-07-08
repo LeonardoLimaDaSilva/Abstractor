@@ -7,6 +7,19 @@ namespace Abstractor.Cqrs.Test.Domain
 {
     public class ValueObjectTests
     {
+        private class ValueObject1 : ValueObject<ValueObject1>
+        {
+            public int Property1 { private get; set; }
+
+            public string Property2 { private get; set; }
+
+            protected override IEnumerable<object> GetAttributesToIncludeInEqualityCheck()
+            {
+                yield return Property1;
+                yield return Property2;
+            }
+        }
+
         [Theory]
         [InlineData(1, "xxx", 1, "xyz")]
         [InlineData(1, "xxx", 2, "xxx")]
@@ -72,19 +85,6 @@ namespace Abstractor.Cqrs.Test.Domain
             };
 
             (vo1 != vo2).Should().Be.True();
-        }
-
-        private class ValueObject1 : ValueObject<ValueObject1>
-        {
-            public int Property1 { private get; set; }
-
-            public string Property2 { private get; set; }
-
-            protected override IEnumerable<object> GetAttributesToIncludeInEqualityCheck()
-            {
-                yield return Property1;
-                yield return Property2;
-            }
         }
 
         [Fact]

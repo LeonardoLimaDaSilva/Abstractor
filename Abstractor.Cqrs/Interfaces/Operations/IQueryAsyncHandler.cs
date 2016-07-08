@@ -3,17 +3,17 @@
 namespace Abstractor.Cqrs.Interfaces.Operations
 {
     /// <summary>
-    ///     Manipula a <typeparamref name="TQuery" /> com o retorno <typeparamref name="TResult" /> de forma assíncrona.
+    ///     Handler for the query that implements <see cref="IQuery{TResult}" />.
     /// </summary>
-    /// <typeparam name="TQuery">A consulta.</typeparam>
-    /// <typeparam name="TResult">O tipo de retorno da <typeparamref name="TQuery" />.</typeparam>
+    /// <typeparam name="TQuery">Query to be handled.</typeparam>
+    /// <typeparam name="TResult">Return type.</typeparam>
     public interface IQueryAsyncHandler<in TQuery, TResult> where TQuery : IQuery<TResult>
     {
         /// <summary>
-        ///     Manipula a <typeparamref name="TQuery" /> de forma assíncrona.
+        ///     Handles the <see cref="IQuery{TResult}" /> asynchronously.
         /// </summary>
-        /// <param name="query">A consulta.</param>
-        /// <returns>Retorna o uma tarefa do tipo <typeparamref name="TResult" />.</returns>
+        /// <param name="query">Query to be handled.</param>
+        /// <returns>Returns an Task of type <typeparamref name="TResult" />.</returns>
         Task<TResult> HandleAsync(TQuery query);
     }
 }

@@ -29,7 +29,7 @@ namespace Abstractor.Cqrs.Infrastructure.Events
             var triggerType = typeof (IEventTrigger<>).MakeGenericType(eventListener.GetType());
             dynamic trigger = _container.GetInstance(triggerType);
 
-            trigger.Trigger((dynamic)eventListener);
+            trigger.Trigger((dynamic) eventListener);
         }
     }
 }

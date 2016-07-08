@@ -5,7 +5,7 @@ using Abstractor.Cqrs.Interfaces.Operations;
 namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
 {
     /// <summary>
-    ///     Executes the action event registered in <see cref="ICommandPostAction.Execute"/> after the command is handled.
+    ///     Executes the action event registered in <see cref="ICommandPostAction.Execute" /> after the command is handled.
     /// </summary>
     /// <typeparam name="TCommand">Command to be executed.</typeparam>
     [DebuggerStepThrough]

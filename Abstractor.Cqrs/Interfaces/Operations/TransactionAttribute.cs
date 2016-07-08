@@ -3,7 +3,7 @@
 namespace Abstractor.Cqrs.Interfaces.Operations
 {
     /// <summary>
-    ///     Especifica que um comando deve ser executado em uma transação.
+    ///     Marks that a command should be executed transactionally.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class, Inherited = false)]
     public class TransactionAttribute : Attribute

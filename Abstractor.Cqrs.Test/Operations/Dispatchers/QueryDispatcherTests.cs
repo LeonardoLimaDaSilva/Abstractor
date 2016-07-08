@@ -12,6 +12,10 @@ namespace Abstractor.Cqrs.Test.Operations.Dispatchers
 {
     public class QueryDispatcherTests
     {
+        public class FakeQuery : IQuery<object>
+        {
+        }
+
         [Theory, AutoMoqData]
         public void Dispatch_NullQuery_ThrowsArgumentNullException(QueryDispatcher dispatcher)
         {
@@ -27,10 +31,10 @@ namespace Abstractor.Cqrs.Test.Operations.Dispatchers
         {
             // Arrange
 
-            var genericTypeName = typeof(IQueryHandler<FakeQuery, object>).FullName;
+            var genericTypeName = typeof (IQueryHandler<FakeQuery, object>).FullName;
 
             container.Setup(c => c.GetInstance(It.Is<Type>(t => t.FullName == genericTypeName)))
-                .Returns(queryHandler.Object);
+                     .Returns(queryHandler.Object);
 
             // Act
 
@@ -58,10 +62,10 @@ namespace Abstractor.Cqrs.Test.Operations.Dispatchers
         {
             // Arrange
 
-            var genericTypeName = typeof(IQueryAsyncHandler<FakeQuery, object>).FullName;
+            var genericTypeName = typeof (IQueryAsyncHandler<FakeQuery, object>).FullName;
 
             container.Setup(c => c.GetInstance(It.Is<Type>(t => t.FullName == genericTypeName)))
-                .Returns(queryHandler.Object);
+                     .Returns(queryHandler.Object);
 
             // Act
 
@@ -70,10 +74,6 @@ namespace Abstractor.Cqrs.Test.Operations.Dispatchers
             // Assert
 
             queryHandler.Verify(t => t.HandleAsync(query), Times.Once);
-        }
-
-        public class FakeQuery : IQuery<object>
-        {
         }
     }
 }

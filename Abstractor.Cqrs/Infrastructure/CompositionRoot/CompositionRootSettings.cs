@@ -19,7 +19,7 @@ namespace Abstractor.Cqrs.Infrastructure.CompositionRoot
         public IEnumerable<Assembly> OperationAssemblies { get; set; }
 
         /// <summary>
-        ///     Local onde se encontra os handlers que implementam <see cref="IEventHandler{TEvent}" />.
+        ///     Local onde se encontra os handlers que implementam <see cref="IEventHandler{TEventListener}" />.
         /// </summary>
         public IEnumerable<Assembly> EventAssemblies { get; set; }
 

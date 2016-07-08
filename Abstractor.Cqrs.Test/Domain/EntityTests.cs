@@ -8,28 +8,6 @@ namespace Abstractor.Cqrs.Test.Domain
 {
     public class EntityTests
     {
-        [Theory]
-        [InlineData("c480311c-3838-4449-bf99-e37e32a4b376", "c480311c-3838-4449-bf99-e37e32a4b376")]
-        public void Id_Constructor_ShouldBe(string id, string expected)
-        {
-            new ConcreteEntity(Guid.Parse(id)).Id.Should().Be(Guid.Parse(expected));
-        }
-
-        [Theory]
-        [InlineData("c480311c-3838-4449-bf99-e37e32a4b376", 532182307)]
-        [InlineData("00000000-0000-0000-0000-000000000000", 0)]
-        public void GetHashCode_ShouldBe(string id, int expected)
-        {
-            new ConcreteEntity(Guid.Parse(id)).GetHashCode().Should().Be(expected);
-        }
-
-        [Theory, AutoMoqData]
-        public void Equals_OtherObject_ShouldBeFalse(object fake)
-        {
-            var entity = new ConcreteEntity(Guid.Empty);
-            entity.Equals(fake).Should().Be.False();
-        }
-
         private class ConcreteEntity : Entity<Guid>
         {
             public ConcreteEntity(Guid id)
@@ -52,6 +30,28 @@ namespace Abstractor.Cqrs.Test.Domain
                 : base(id)
             {
             }
+        }
+
+        [Theory]
+        [InlineData("c480311c-3838-4449-bf99-e37e32a4b376", "c480311c-3838-4449-bf99-e37e32a4b376")]
+        public void Id_Constructor_ShouldBe(string id, string expected)
+        {
+            new ConcreteEntity(Guid.Parse(id)).Id.Should().Be(Guid.Parse(expected));
+        }
+
+        [Theory]
+        [InlineData("c480311c-3838-4449-bf99-e37e32a4b376", 532182307)]
+        [InlineData("00000000-0000-0000-0000-000000000000", 0)]
+        public void GetHashCode_ShouldBe(string id, int expected)
+        {
+            new ConcreteEntity(Guid.Parse(id)).GetHashCode().Should().Be(expected);
+        }
+
+        [Theory, AutoMoqData]
+        public void Equals_OtherObject_ShouldBeFalse(object fake)
+        {
+            var entity = new ConcreteEntity(Guid.Empty);
+            entity.Equals(fake).Should().Be.False();
         }
 
         [Fact]

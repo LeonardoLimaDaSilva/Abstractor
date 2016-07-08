@@ -11,6 +11,10 @@ namespace Abstractor.Cqrs.Test.Operations.Dispatchers
 {
     public class CommandDispatcherTests
     {
+        public class FakeCommand : ICommand
+        {
+        }
+
         [Theory, AutoMoqData]
         public void Dispatch_NullCommand_ThrowsArgumentNullException(CommandDispatcher dispatcher)
         {
@@ -27,10 +31,10 @@ namespace Abstractor.Cqrs.Test.Operations.Dispatchers
         {
             // Arrange
 
-            var genericTypeName = typeof(ICommandHandler<FakeCommand>).FullName;
+            var genericTypeName = typeof (ICommandHandler<FakeCommand>).FullName;
 
             container.Setup(c => c.GetInstance(It.Is<Type>(t => t.FullName == genericTypeName)))
-                .Returns(commandHandler.Object);
+                     .Returns(commandHandler.Object);
 
             // Act
 
@@ -57,10 +61,10 @@ namespace Abstractor.Cqrs.Test.Operations.Dispatchers
         {
             // Arrange
 
-            var genericTypeName = typeof(ICommandHandler<FakeCommand>).FullName;
+            var genericTypeName = typeof (ICommandHandler<FakeCommand>).FullName;
 
             container.Setup(c => c.GetInstance(It.Is<Type>(t => t.FullName == genericTypeName)))
-                .Returns(commandHandler.Object);
+                     .Returns(commandHandler.Object);
 
             // Act
 
@@ -69,10 +73,6 @@ namespace Abstractor.Cqrs.Test.Operations.Dispatchers
             // Assert
 
             commandHandler.Verify(t => t.Handle(command), Times.Once);
-        }
-
-        public class FakeCommand : ICommand
-        {
         }
     }
 }

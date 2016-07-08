@@ -1,16 +1,15 @@
 ﻿namespace Abstractor.Cqrs.Interfaces.Operations
 {
     /// <summary>
-    ///     Manipula o <typeparamref name="TCommand" />.
+    ///     Handler for the command that implements <see cref="ICommand" />.
     /// </summary>
-    /// <typeparam name="TCommand">Comando que será manipulado.</typeparam>
+    /// <typeparam name="TCommand">Command to be handled.</typeparam>
     public interface ICommandHandler<in TCommand> where TCommand : ICommand
     {
         /// <summary>
-        ///     Manipula o <typeparamref name="TCommand" />.
+        ///     Handles the <see cref="ICommand" />.
         /// </summary>
-        /// <param name="command">The command.</param>
-        /// <returns>Uma tarefa assíncrona que pode ser aguardada (await).</returns>
+        /// <param name="command">Command to be handled.</param>
         void Handle(TCommand command);
     }
 }

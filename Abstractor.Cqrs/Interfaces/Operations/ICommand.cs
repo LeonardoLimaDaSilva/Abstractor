@@ -1,7 +1,7 @@
 ﻿namespace Abstractor.Cqrs.Interfaces.Operations
 {
     /// <summary>
-    ///     Especifica que a classe é um comando.
+    ///     Marks a class as a command.
     /// </summary>
     public interface ICommand
     {
