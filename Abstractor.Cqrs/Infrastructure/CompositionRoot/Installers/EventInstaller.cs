@@ -14,10 +14,6 @@ namespace Abstractor.Cqrs.Infrastructure.CompositionRoot.Installers
             container.RegisterSingleton<IEventDispatcher, EventDispatcher>();
             container.RegisterCollection(typeof (IEventHandler<>), settings.EventAssemblies);
             container.RegisterTransient(typeof (IEventTrigger<>), typeof (MultipleDispatchEventTrigger<>));
-
-            container.RegisterDecoratorTransient(
-                typeof (IEventTrigger<>),
-                typeof (TriggerRegisteredEventsDecorator<>));
         }
     }
 }

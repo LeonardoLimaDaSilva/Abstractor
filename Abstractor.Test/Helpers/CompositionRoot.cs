@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using Abstractor.Cqrs.Infrastructure.CompositionRoot;
 using Abstractor.Cqrs.Infrastructure.CompositionRoot.Extensions;
+using Abstractor.Cqrs.Interfaces.CrossCuttingConcerns;
 using Abstractor.Cqrs.SimpleInjector.Adapters;
 using SimpleInjector;
 using SimpleInjector.Extensions.LifetimeScoping;
@@ -51,6 +52,8 @@ namespace Abstractor.Test.Helpers
                         settings.PersistenceTypes = concreteTypes;
                         settings.ApplicationTypes = concreteTypes;
                     });
+
+                    containerAdapter.RegisterSingleton<ILogger, InMemoryLogger>();
 
                     _container.Verify();
                 }

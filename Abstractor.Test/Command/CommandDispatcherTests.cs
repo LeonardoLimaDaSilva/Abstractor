@@ -1,5 +1,3 @@
-using System.Threading;
-using System.Threading.Tasks;
 using Abstractor.Cqrs.Interfaces.Operations;
 using Abstractor.Test.Helpers;
 using SharpTestsEx;
@@ -55,24 +53,13 @@ namespace Abstractor.Test.Command
         }
 
         [Fact]
-        public void DispatchAsync_SyncContext_ShouldExecuteHandler()
+        public async void DispatchAsync_SyncContext_ShouldExecuteHandler()
         {
             // Arrange
 
-            var scheduler = new SynchronousTaskScheduler();
-
             var command = new FakeCommand();
 
-            Task.Factory.StartNew(
-                () =>
-                {
-                    // Act
-
-                    CommandDispatcher.DispatchAsync(command);
-                },
-                CancellationToken.None,
-                TaskCreationOptions.None,
-                scheduler);
+            await CommandDispatcher.DispatchAsync(command);
 
             // Assert
 

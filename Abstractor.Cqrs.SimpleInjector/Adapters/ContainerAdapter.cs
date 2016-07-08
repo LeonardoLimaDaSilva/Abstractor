@@ -120,7 +120,7 @@ namespace Abstractor.Cqrs.SimpleInjector.Adapters
                 var registration = _container.GetRegistration(serviceType, true);
                 var funcType = typeof (Func<>).MakeGenericType(serviceType);
 
-                // Constrói o delegate e o registra no container
+                // Constructs the Func<> delegate and registers into the container
                 var factoryDelegate = Expression.Lambda(funcType, registration.BuildExpression()).Compile();
                 e.Register(Expression.Constant(factoryDelegate));
             };

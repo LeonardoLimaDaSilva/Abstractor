@@ -97,6 +97,7 @@
     <Compile Include="Helpers\BaseTest.cs" />
     <Compile Include="Command\CommandDispatcherTests.cs" />
     <Compile Include="Helpers\AutoMoqDataAttribute.cs" />
+    <Compile Include="Helpers\InMemoryLogger.cs" />
     <Compile Include="Helpers\SynchronousTaskScheduler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

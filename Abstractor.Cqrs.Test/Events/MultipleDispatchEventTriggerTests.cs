@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using Abstractor.Cqrs.Infrastructure.Events;
 using Abstractor.Cqrs.Interfaces.CompositionRoot;
 using Abstractor.Cqrs.Interfaces.Events;
@@ -22,6 +24,8 @@ namespace Abstractor.Cqrs.Test.Events
         {
             // Arrange
 
+            var scheduler = new SynchronousTaskScheduler();
+
             var registrations = new List<InstanceProducerAdapter>
             {
                 new InstanceProducerAdapter(fakeEventHandler1.Object),
@@ -31,9 +35,16 @@ namespace Abstractor.Cqrs.Test.Events
 
             container.Setup(c => c.GetCurrentRegistrations()).Returns(registrations);
 
-            // Act
+            Task.Factory.StartNew(
+                () =>
+                {
+                    // Act
 
-            trigger.Trigger(@event);
+                    trigger.Trigger(@event);
+                },
+                CancellationToken.None,
+                TaskCreationOptions.None,
+                scheduler);
 
             // Assert
 
