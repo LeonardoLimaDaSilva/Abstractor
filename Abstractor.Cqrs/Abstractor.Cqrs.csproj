@@ -100,7 +100,6 @@
     <Compile Include="Interfaces\Events\IEventTrigger.cs" />
     <Compile Include="Interfaces\Operations\ICommand.cs" />
     <Compile Include="Interfaces\Operations\ICommandDispatcher.cs" />
-    <Compile Include="Interfaces\Operations\ICommandEvent.cs" />
     <Compile Include="Interfaces\Operations\ICommandHandler.cs" />
     <Compile Include="Interfaces\Operations\ICommandPostAction.cs" />
     <Compile Include="Interfaces\Operations\IQuery.cs" />

@@ -4,17 +4,17 @@ using Abstractor.Cqrs.Interfaces.Operations;
 namespace Abstractor.Cqrs.Infrastructure.Operations
 {
     /// <summary>
-    ///     Executa uma ação após a finalização de um comando.
+    ///     Registers an action event to be executed after a command.
     /// </summary>
     public sealed class CommandPostAction : ICommandPostAction
     {
         /// <summary>
-        ///     Ação que será executada após a finalização de um comando.
+        ///     Action event to be executed after a command.
         /// </summary>
         public event Action Execute = () => { };
 
         /// <summary>
-        ///     Executa a ação registrada em <see cref="Execute" />.
+        ///     Executes the action event registered in <see cref="ICommandPostAction.Execute" />.
         /// </summary>
         public void Act()
         {
@@ -22,7 +22,7 @@ namespace Abstractor.Cqrs.Infrastructure.Operations
         }
 
         /// <summary>
-        ///     Remove qualquer ação registrada em <see cref="Execute" />.
+        ///     Resets the <see cref="ICommandPostAction.Execute" /> with an empty action.
         /// </summary>
         public void Reset()
         {
