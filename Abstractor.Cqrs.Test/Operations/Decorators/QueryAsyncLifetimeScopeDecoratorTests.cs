@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Abstractor.Cqrs.Infrastructure.Operations.Decorators;
 using Abstractor.Cqrs.Interfaces.CompositionRoot;
 using Abstractor.Cqrs.Interfaces.Operations;
@@ -16,11 +17,16 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
             [Frozen] Mock<IContainer> container,
             [Frozen] Mock<IQueryAsyncHandler<IQuery<object>, object>> queryHandler,
             IQuery<object> query,
+            Task<object> queryResult,
             QueryAsyncLifetimeScopeDecorator<IQuery<object>, object> decorator)
         {
+            // Arrange
+
+            queryHandler.Setup(h => h.HandleAsync(query)).Returns(queryResult);
+
             // Act
 
-            var result = decorator.HandleAsync(query);
+            var result = decorator.HandleAsync(query).Result;
 
             // Assert
 
