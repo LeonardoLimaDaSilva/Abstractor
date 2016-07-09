@@ -12,7 +12,7 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
     /// </summary>
     /// <typeparam name="TQuery">Query to be handled.</typeparam>
     /// <typeparam name="TResult">Return type.</typeparam>
-    [DebuggerStepThrough]
+    //[DebuggerStepThrough]
     public sealed class QueryAsyncLoggerDecorator<TQuery, TResult> : IQueryAsyncHandler<TQuery, TResult>
         where TQuery : IQuery<TResult>
     {
@@ -37,11 +37,9 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
             var sw = Stopwatch.StartNew();
             sw.Start();
 
-            var handler = _handlerFactory();
-
             try
             {
-                _logger.Log($"Executing query {handler.GetType().Name} with the parameters:");
+                _logger.Log($"Executing query \"{query.GetType().Name}\" with the parameters:");
 
                 try
                 {
@@ -67,7 +65,7 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
             {
                 sw.Stop();
 
-                _logger.Log($"Query \"{handler.GetType().Name}\" executed in {sw.Elapsed}.");
+                _logger.Log($"Query \"{query.GetType().Name}\" executed in {sw.Elapsed}.");
             }
         }
     }

@@ -10,7 +10,7 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
     ///     Logs the execution of the event handler and supresses any possible exception.
     /// </summary>
     /// <typeparam name="TEventListener">Listener that the event subscribes to.</typeparam>
-    [DebuggerStepThrough]
+    //[DebuggerStepThrough]
     public sealed class EventLoggerDecorator<TEventListener> : IEventHandler<TEventListener>
         where TEventListener : IEventListener
     {
@@ -38,7 +38,7 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
 
             try
             {
-                _logger.Log($"Executing event {handler.GetType().Name} with the listener parameters:");
+                _logger.Log($"Executing event \"{handler.GetType().Name}\" with the listener parameters:");
 
                 try
                 {

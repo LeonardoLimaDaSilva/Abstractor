@@ -34,11 +34,9 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
             var sw = Stopwatch.StartNew();
             sw.Start();
 
-            var handler = _handlerFactory();
-
             try
             {
-                _logger.Log($"Executing command {handler.GetType().Name} with the parameters:");
+                _logger.Log($"Executing command \"{command.GetType().Name}\" with the parameters:");
 
                 try
                 {
@@ -64,7 +62,7 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
             {
                 sw.Stop();
 
-                _logger.Log($"Command \"{handler.GetType().Name}\" executed in {sw.Elapsed}.");
+                _logger.Log($"Command \"{command.GetType().Name}\" executed in {sw.Elapsed}.");
             }
         }
     }
