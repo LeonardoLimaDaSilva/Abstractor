@@ -15,13 +15,19 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
         where TCommand : ICommand
     {
         private readonly Func<ICommandHandler<TCommand>> _handlerFactory;
+        private readonly IStopwatch _stopwatch;
+        private readonly ILoggerSerializer _loggerSerializer;
         private readonly ILogger _logger;
 
         public CommandLoggerDecorator(
             Func<ICommandHandler<TCommand>> handlerFactory,
+            IStopwatch stopwatch,
+            ILoggerSerializer loggerSerializer,
             ILogger logger)
         {
             _handlerFactory = handlerFactory;
+            _stopwatch = stopwatch;
+            _loggerSerializer = loggerSerializer;
             _logger = logger;
         }
 
@@ -31,8 +37,7 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
         /// <param name="command">Command to be handled.</param>
         public void Handle(TCommand command)
         {
-            var sw = Stopwatch.StartNew();
-            sw.Start();
+            _stopwatch.Start();
 
             try
             {
@@ -40,7 +45,8 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
 
                 try
                 {
-                    _logger.Log(JsonConvert.SerializeObject(command, Formatting.Indented));
+                    var parameters = _loggerSerializer.Serialize(command);
+                    _logger.Log(parameters);
                 }
                 catch (Exception ex)
                 {
@@ -60,9 +66,9 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
             }
             finally
             {
-                sw.Stop();
+                _stopwatch.Stop();
 
-                _logger.Log($"Command \"{command.GetType().Name}\" executed in {sw.Elapsed}.");
+                _logger.Log($"Command \"{command.GetType().Name}\" executed in {_stopwatch.GetElapsed()}.");
             }
         }
     }

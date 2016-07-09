@@ -11,18 +11,24 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
     /// </summary>
     /// <typeparam name="TQuery">Query to be handled.</typeparam>
     /// <typeparam name="TResult">Return type.</typeparam>
-    //[DebuggerStepThrough]
+    [DebuggerStepThrough]
     public sealed class QueryLoggerDecorator<TQuery, TResult> : IQueryHandler<TQuery, TResult>
         where TQuery : IQuery<TResult>
     {
         private readonly Func<IQueryHandler<TQuery, TResult>> _handlerFactory;
+        private readonly IStopwatch _stopwatch;
+        private readonly ILoggerSerializer _loggerSerializer;
         private readonly ILogger _logger;
 
         public QueryLoggerDecorator(
             Func<IQueryHandler<TQuery, TResult>> handlerFactory,
+            IStopwatch stopwatch,
+            ILoggerSerializer loggerSerializer,
             ILogger logger)
         {
             _handlerFactory = handlerFactory;
+            _stopwatch = stopwatch;
+            _loggerSerializer = loggerSerializer;
             _logger = logger;
         }
 
@@ -33,8 +39,7 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
         /// <returns>Returns an object of type <typeparamref name="TResult" />.</returns>
         public TResult Handle(TQuery query)
         {
-            var sw = Stopwatch.StartNew();
-            sw.Start();
+            _stopwatch.Start();
 
             try
             {
@@ -42,7 +47,8 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
 
                 try
                 {
-                    _logger.Log(JsonConvert.SerializeObject(query, Formatting.Indented));
+                    var parameters = _loggerSerializer.Serialize(query);
+                    _logger.Log(parameters);
                 }
                 catch (Exception ex)
                 {
@@ -62,9 +68,9 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
             }
             finally
             {
-                sw.Stop();
+                _stopwatch.Stop();
 
-                _logger.Log($"Query \"{query.GetType().Name}\" executed in {sw.Elapsed}.");
+                _logger.Log($"Query \"{query.GetType().Name}\" executed in {_stopwatch.GetElapsed()}.");
             }
         }
     }

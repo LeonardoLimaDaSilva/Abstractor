@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using Abstractor.Cqrs.Interfaces.CrossCuttingConcerns;
 using Abstractor.Cqrs.Interfaces.Operations;
-using Newtonsoft.Json;
 
 namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
 {
@@ -12,18 +11,24 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
     /// </summary>
     /// <typeparam name="TQuery">Query to be handled.</typeparam>
     /// <typeparam name="TResult">Return type.</typeparam>
-    //[DebuggerStepThrough]
+    [DebuggerStepThrough]
     public sealed class QueryAsyncLoggerDecorator<TQuery, TResult> : IQueryAsyncHandler<TQuery, TResult>
         where TQuery : IQuery<TResult>
     {
         private readonly Func<IQueryAsyncHandler<TQuery, TResult>> _handlerFactory;
         private readonly ILogger _logger;
+        private readonly ILoggerSerializer _loggerSerializer;
+        private readonly IStopwatch _stopwatch;
 
         public QueryAsyncLoggerDecorator(
             Func<IQueryAsyncHandler<TQuery, TResult>> handlerFactory,
+            IStopwatch stopwatch,
+            ILoggerSerializer loggerSerializer,
             ILogger logger)
         {
             _handlerFactory = handlerFactory;
+            _stopwatch = stopwatch;
+            _loggerSerializer = loggerSerializer;
             _logger = logger;
         }
 
@@ -34,8 +39,7 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
         /// <returns>Returns an Task of type <typeparamref name="TResult" />.</returns>
         public Task<TResult> HandleAsync(TQuery query)
         {
-            var sw = Stopwatch.StartNew();
-            sw.Start();
+            _stopwatch.Start();
 
             try
             {
@@ -43,7 +47,8 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
 
                 try
                 {
-                    _logger.Log(JsonConvert.SerializeObject(query, Formatting.Indented));
+                    var parameters = _loggerSerializer.Serialize(query);
+                    _logger.Log(parameters);
                 }
                 catch (Exception ex)
                 {
@@ -63,9 +68,9 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
             }
             finally
             {
-                sw.Stop();
+                _stopwatch.Stop();
 
-                _logger.Log($"Query \"{query.GetType().Name}\" executed in {sw.Elapsed}.");
+                _logger.Log($"Query \"{query.GetType().Name}\" executed in {_stopwatch.GetElapsed()}.");
             }
         }
     }

@@ -61,9 +61,11 @@
     <Compile Include="Infrastructure\CompositionRoot\Installers\QueryInstaller.cs" />
     <Compile Include="Infrastructure\CompositionRoot\PredicateBuilder.cs" />
     <Compile Include="Infrastructure\CrossCuttingConcerns\DataAnnotationsValidator.cs" />
+    <Compile Include="Infrastructure\CrossCuttingConcerns\DefaultStopwatch.cs" />
     <Compile Include="Infrastructure\CrossCuttingConcerns\EmptyLogger.cs" />
     <Compile Include="Infrastructure\CrossCuttingConcerns\EntityNotFoundException.cs" />
     <Compile Include="Infrastructure\CrossCuttingConcerns\Guard.cs" />
+    <Compile Include="Infrastructure\CrossCuttingConcerns\JsonLoggerSerializer.cs" />
     <Compile Include="Infrastructure\CrossCuttingConcerns\SystemClock.cs" />
     <Compile Include="Infrastructure\Domain\AggregateRoot.cs" />
     <Compile Include="Infrastructure\Domain\Entity.cs" />
@@ -95,6 +97,8 @@
     <Compile Include="Interfaces\CompositionRoot\IInstanceProducer.cs" />
     <Compile Include="Interfaces\CrossCuttingConcerns\IClock.cs" />
     <Compile Include="Interfaces\CrossCuttingConcerns\ILogger.cs" />
+    <Compile Include="Interfaces\CrossCuttingConcerns\ILoggerSerializer.cs" />
+    <Compile Include="Interfaces\CrossCuttingConcerns\IStopwatch.cs" />
     <Compile Include="Interfaces\CrossCuttingConcerns\IValidator.cs" />
     <Compile Include="Interfaces\Domain\IAggregateRoot.cs" />
     <Compile Include="Interfaces\Domain\IFileRepository.cs" />

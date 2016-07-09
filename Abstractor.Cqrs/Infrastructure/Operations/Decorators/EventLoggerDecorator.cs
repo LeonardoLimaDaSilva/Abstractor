@@ -2,7 +2,6 @@
 using System.Diagnostics;
 using Abstractor.Cqrs.Interfaces.CrossCuttingConcerns;
 using Abstractor.Cqrs.Interfaces.Events;
-using Newtonsoft.Json;
 
 namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
 {
@@ -10,18 +9,24 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
     ///     Logs the execution of the event handler and supresses any possible exception.
     /// </summary>
     /// <typeparam name="TEventListener">Listener that the event subscribes to.</typeparam>
-    //[DebuggerStepThrough]
+    [DebuggerStepThrough]
     public sealed class EventLoggerDecorator<TEventListener> : IEventHandler<TEventListener>
         where TEventListener : IEventListener
     {
         private readonly Func<IEventHandler<TEventListener>> _handlerFactory;
         private readonly ILogger _logger;
+        private readonly ILoggerSerializer _loggerSerializer;
+        private readonly IStopwatch _stopwatch;
 
         public EventLoggerDecorator(
             Func<IEventHandler<TEventListener>> handlerFactory,
+            IStopwatch stopwatch,
+            ILoggerSerializer loggerSerializer,
             ILogger logger)
         {
             _handlerFactory = handlerFactory;
+            _stopwatch = stopwatch;
+            _loggerSerializer = loggerSerializer;
             _logger = logger;
         }
 
@@ -31,8 +36,7 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
         /// <param name="eventListener">Listener that the event subscribes to.</param>
         public void Handle(TEventListener eventListener)
         {
-            var sw = Stopwatch.StartNew();
-            sw.Start();
+            _stopwatch.Start();
 
             var handler = _handlerFactory();
 
@@ -42,7 +46,8 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
 
                 try
                 {
-                    _logger.Log(JsonConvert.SerializeObject(eventListener, Formatting.Indented));
+                    var parameters = _loggerSerializer.Serialize(eventListener);
+                    _logger.Log(parameters);
                 }
                 catch (Exception ex)
                 {
@@ -60,9 +65,9 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
             }
             finally
             {
-                sw.Stop();
+                _stopwatch.Stop();
 
-                _logger.Log($"Event \"{handler.GetType().Name}\" executed in {sw.Elapsed}.");
+                _logger.Log($"Event \"{handler.GetType().Name}\" executed in {_stopwatch.GetElapsed()}.");
             }
         }
     }

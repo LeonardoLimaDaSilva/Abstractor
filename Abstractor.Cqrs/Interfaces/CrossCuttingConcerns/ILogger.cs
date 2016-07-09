@@ -1,14 +1,14 @@
 ﻿namespace Abstractor.Cqrs.Interfaces.CrossCuttingConcerns
 {
     /// <summary>
-    ///     Registrador de mensagens de log.
+    ///     Abstraction of the logger used by the framework.
     /// </summary>
     public interface ILogger
     {
         /// <summary>
-        ///     Registra a mensagem de log.
+        ///     Logs a message.
         /// </summary>
-        /// <param name="message">Mensagem a ser registrada.</param>
+        /// <param name="message">Message to be logged.</param>
         void Log(string message);
     }
 }

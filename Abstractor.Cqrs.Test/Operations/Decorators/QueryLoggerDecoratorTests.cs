@@ -14,137 +14,193 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
     {
         public class FakeQuery : IQuery<FakeResult>
         {
-            public string Property { get; } = "Value";
         }
 
         public class FakeResult
         {
         }
 
-        [Theory, AutoMoqData]
-        public void Handle_Success_LoggerShouldBeCalled2TimesBeforeQueryHandlerAnd1TimeAfter(
-            [Frozen] Mock<ILogger> logger,
-            [Frozen] Mock<IQueryHandler<FakeQuery, FakeResult>> queryHandler,
-            FakeQuery query,
-            QueryLoggerDecorator<FakeQuery, FakeResult> decorator)
+        public class FakeQueryHandler : IQueryHandler<FakeQuery, FakeResult>
         {
-            // Arrange and assert
+            public bool Executed { get; private set; }
+            public bool ThrowsException { get; set; }
+            public bool HasInnerException { get; set; }
 
-            var callOrder = 0;
+            public FakeResult Handle(FakeQuery query)
+            {
+                Executed = true;
 
-            logger.Setup(l => l.Log(It.Is<string>(s => s == "Executing query \"FakeQuery\" with the parameters:")))
-                .Callback(() => { callOrder++.Should().Be(0); });
+                if (!ThrowsException) return new FakeResult();
 
-            logger.Setup(l => l.Log(It.Is<string>(s => s == "{\r\n  \"Property\": \"Value\"\r\n}")))
-                .Callback(() => { callOrder++.Should().Be(1); });
+                if (!HasInnerException) throw new Exception("FakeQueryHandlerException.");
 
-            queryHandler.Setup(h => h.Handle(query)).Callback(() => { callOrder++.Should().Be(2); });
-
-            logger.Setup(l => l.Log(It.Is<string>(s => s.StartsWith("Query \"FakeQuery\" executed in"))))
-                .Callback(() => { callOrder++.Should().Be(3); });
-
-            // Act
-
-            decorator.Handle(query);
+                throw new Exception("FakeQueryHandlerException.", new Exception("FakeQueryHandlerInnerException."));
+            }
         }
 
         [Theory, AutoMoqData]
-        public void Handle_ThrowsExceptionOnSerialize_ShouldLogTheException(
+        public void Handle_Success_ShouldLogMessagesAndCallMethods(
             [Frozen] Mock<ILogger> logger,
-            [Frozen] Mock<IQueryHandler<FakeQuery, FakeResult>> queryHandler,
-            FakeQuery query,
-            QueryLoggerDecorator<FakeQuery, FakeResult> decorator)
+            [Frozen] Mock<IStopwatch> stopwatch,
+            [Frozen] Mock<ILoggerSerializer> loggerSerializer,
+            FakeQuery query)
         {
-            // Arrange and assert
+            // Arrange
 
-            var callOrder = 0;
+            var queryHandler = new FakeQueryHandler();
 
-            logger.Setup(l => l.Log(It.Is<string>(s => s == "Executing query \"FakeQuery\" with the parameters:")))
-                .Callback(() => { callOrder++.Should().Be(0); });
+            var decorator = new QueryLoggerDecorator<FakeQuery,FakeResult>(
+                () => queryHandler,
+                stopwatch.Object,
+                loggerSerializer.Object,
+                logger.Object);
 
-            logger.Setup(l => l.Log(It.Is<string>(s => s == "{\r\n  \"Property\": \"Value\"\r\n}")))
-                .Throws(new Exception("Serialization exception."));
+            loggerSerializer.Setup(s => s.Serialize(query)).Returns("Serialized parameters");
 
-            logger.Setup(
-                l => l.Log(It.Is<string>(s => s == "Could not serialize the parameters: Serialization exception.")))
-                .Callback(() => { callOrder++.Should().Be(1); });
-
-            queryHandler.Setup(h => h.Handle(query)).Callback(() => { callOrder++.Should().Be(2); });
-
-            logger.Setup(l => l.Log(It.Is<string>(s => s.StartsWith("Query \"FakeQuery\" executed in"))))
-                .Callback(() => { callOrder++.Should().Be(3); });
+            stopwatch.Setup(s => s.GetElapsed()).Returns(TimeSpan.FromSeconds(1));
 
             // Act
 
-            decorator.Handle(query);
+            decorator.Handle(query).Should().Not.Be.Null();
+
+            // Assert
+
+            stopwatch.Verify(s => s.Start(), Times.Once());
+            stopwatch.Verify(s => s.Stop(), Times.Once());
+
+            logger.Verify(l => l.Log("Executing query \"FakeQuery\" with the parameters:"), Times.Once);
+            logger.Verify(l => l.Log("Serialized parameters"), Times.Once);
+            logger.Verify(l => l.Log("Query \"FakeQuery\" executed in 00:00:01."), Times.Once);
+
+            queryHandler.Executed.Should().Be.True();
+        }
+
+        [Theory, AutoMoqData]
+        public void Handle_ThrowsOnSerialize_ShouldLogException(
+            [Frozen] Mock<ILogger> logger,
+            [Frozen] Mock<IStopwatch> stopwatch,
+            [Frozen] Mock<ILoggerSerializer> loggerSerializer,
+            FakeQuery query)
+        {
+            // Arrange
+
+            var queryHandler = new FakeQueryHandler();
+
+            var decorator = new QueryLoggerDecorator<FakeQuery, FakeResult>(
+                () => queryHandler,
+                stopwatch.Object,
+                loggerSerializer.Object,
+                logger.Object);
+
+            loggerSerializer.Setup(s => s.Serialize(query)).Returns("Serialized parameters");
+
+            stopwatch.Setup(s => s.GetElapsed()).Returns(TimeSpan.FromSeconds(1));
+
+            loggerSerializer.Setup(s => s.Serialize(It.IsAny<object>()))
+                .Throws(new Exception("Serialization exception."));
+
+            // Act
+
+            decorator.Handle(query).Should().Not.Be.Null();
+
+            // Assert
+
+            stopwatch.Verify(s => s.Start(), Times.Once());
+            stopwatch.Verify(s => s.Stop(), Times.Once());
+
+            logger.Verify(l => l.Log("Executing query \"FakeQuery\" with the parameters:"), Times.Once);
+            logger.Verify(
+                l => l.Log("Could not serialize the parameters: Serialization exception."),
+                Times.Once);
+            logger.Verify(l => l.Log("Query \"FakeQuery\" executed in 00:00:01."), Times.Once);
+
+            queryHandler.Executed.Should().Be.True();
         }
 
         [Theory, AutoMoqData]
         public void Handle_QueryHandlerThrowsException_ShouldLogTheExceptionAndRethrow(
             [Frozen] Mock<ILogger> logger,
-            [Frozen] Mock<IQueryHandler<FakeQuery, FakeResult>> queryHandler,
-            FakeQuery query,
-            QueryLoggerDecorator<FakeQuery, FakeResult> decorator)
+            [Frozen] Mock<IStopwatch> stopwatch,
+            [Frozen] Mock<ILoggerSerializer> loggerSerializer,
+            FakeQuery query)
         {
-            // Arrange and assert
+            // Arrange
 
-            var callOrder = 0;
+            var queryHandler = new FakeQueryHandler { ThrowsException = true };
 
-            logger.Setup(l => l.Log(It.Is<string>(s => s == "Executing query \"FakeQuery\" with the parameters:")))
-                .Callback(() => { callOrder++.Should().Be(0); });
+            var decorator = new QueryLoggerDecorator<FakeQuery, FakeResult>(
+                () => queryHandler,
+                stopwatch.Object,
+                loggerSerializer.Object,
+                logger.Object);
 
-            logger.Setup(l => l.Log(It.Is<string>(s => s == "{\r\n  \"Property\": \"Value\"\r\n}")))
-                .Callback(() => { callOrder++.Should().Be(1); });
+            loggerSerializer.Setup(s => s.Serialize(query)).Returns("Serialized parameters");
 
-            queryHandler.Setup(h => h.Handle(query)).Throws(new Exception("QueryHandler exception."));
+            stopwatch.Setup(s => s.GetElapsed()).Returns(TimeSpan.FromSeconds(1));
 
-            logger.Setup(l => l.Log(It.Is<string>(s => s == "Exception caught: QueryHandler exception.")))
-                .Callback(() => { callOrder++.Should().Be(2); });
+            // Act
 
-            logger.Setup(l => l.Log(It.Is<string>(s => s.StartsWith("Query \"FakeQuery\" executed in"))))
-                .Callback(() => { callOrder++.Should().Be(3); });
+            var exception = Assert.Throws<Exception>(() => decorator.Handle(query));
 
-            // Act and assert
+            // Assert
 
-            var ex = Assert.Throws<Exception>(() => decorator.Handle(query));
-            ex.Message.Should().Be("QueryHandler exception.");
+            stopwatch.Verify(s => s.Start(), Times.Once());
+            stopwatch.Verify(s => s.Stop(), Times.Once());
+
+            logger.Verify(l => l.Log("Executing query \"FakeQuery\" with the parameters:"), Times.Once);
+            logger.Verify(l => l.Log("Serialized parameters"), Times.Once);
+            logger.Verify(l => l.Log("Exception caught: FakeQueryHandlerException."), Times.Once);
+            logger.Verify(l => l.Log("Query \"FakeQuery\" executed in 00:00:01."), Times.Once);
+
+            queryHandler.Executed.Should().Be.True();
+
+            exception.Message.Should().Be("FakeQueryHandlerException.");
         }
 
         [Theory, AutoMoqData]
         public void Handle_QueryHandlerThrowsExceptionWithInnerException_ShouldLogTheExceptionsAndRethrow(
             [Frozen] Mock<ILogger> logger,
-            [Frozen] Mock<IQueryHandler<FakeQuery, FakeResult>> queryHandler,
-            FakeQuery query,
-            QueryLoggerDecorator<FakeQuery, FakeResult> decorator)
+            [Frozen] Mock<IStopwatch> stopwatch,
+            [Frozen] Mock<ILoggerSerializer> loggerSerializer,
+            FakeQuery query)
         {
-            // Arrange and assert
+            // Arrange
 
-            var callOrder = 0;
+            var queryHandler = new FakeQueryHandler
+            {
+                ThrowsException = true,
+                HasInnerException = true
+            };
 
-            logger.Setup(l => l.Log(It.Is<string>(s => s == "Executing query \"FakeQuery\" with the parameters:")))
-                .Callback(() => { callOrder++.Should().Be(0); });
+            var decorator = new QueryLoggerDecorator<FakeQuery, FakeResult>(
+                () => queryHandler,
+                stopwatch.Object,
+                loggerSerializer.Object,
+                logger.Object);
 
-            logger.Setup(l => l.Log(It.Is<string>(s => s == "{\r\n  \"Property\": \"Value\"\r\n}")))
-                .Callback(() => { callOrder++.Should().Be(1); });
+            loggerSerializer.Setup(s => s.Serialize(query)).Returns("Serialized parameters");
 
-            queryHandler.Setup(h => h.Handle(query))
-                .Throws(new Exception("QueryHandler exception.", new Exception("Inner exception.")));
+            stopwatch.Setup(s => s.GetElapsed()).Returns(TimeSpan.FromSeconds(1));
 
-            logger.Setup(l => l.Log(It.Is<string>(s => s == "Exception caught: QueryHandler exception.")))
-                .Callback(() => { callOrder++.Should().Be(2); });
+            // Act
 
-            logger.Setup(l => l.Log(It.Is<string>(s => s == "Inner exception caught: Inner exception.")))
-                .Callback(() => { callOrder++.Should().Be(3); });
+            var exception = Assert.Throws<Exception>(() => decorator.Handle(query));
 
-            logger.Setup(l => l.Log(It.Is<string>(s => s.StartsWith("Query \"FakeQuery\" executed in"))))
-                .Callback(() => { callOrder++.Should().Be(4); });
+            // Assert
 
-            // Act and assert
+            stopwatch.Verify(s => s.Start(), Times.Once());
+            stopwatch.Verify(s => s.Stop(), Times.Once());
 
-            var ex = Assert.Throws<Exception>(() => decorator.Handle(query));
+            logger.Verify(l => l.Log("Executing query \"FakeQuery\" with the parameters:"), Times.Once);
+            logger.Verify(l => l.Log("Serialized parameters"), Times.Once);
+            logger.Verify(l => l.Log("Exception caught: FakeQueryHandlerException."), Times.Once);
+            logger.Verify(l => l.Log("Inner exception caught: FakeQueryHandlerInnerException."), Times.Once);
+            logger.Verify(l => l.Log("Query \"FakeQuery\" executed in 00:00:01."), Times.Once);
 
-            ex.Message.Should().Be("QueryHandler exception.");
-            ex.InnerException.Message.Should().Be("Inner exception.");
+            queryHandler.Executed.Should().Be.True();
+
+            exception.Message.Should().Be("FakeQueryHandlerException.");
+            exception.InnerException.Message.Should().Be("FakeQueryHandlerInnerException.");
         }
     }
 }

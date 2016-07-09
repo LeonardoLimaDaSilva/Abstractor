@@ -10,134 +10,188 @@ using Xunit;
 
 namespace Abstractor.Cqrs.Test.Operations.Decorators
 {
-    //TODO Verificar por que quando roda todos os testes, esse falha apenas na segunda vez
     public class EventLoggerDecoratorTests
     {
         public class FakeEventListener : IEventListener
         {
-            public string Property { get; } = "Value";
+        }
+
+        public class FakeEventHandler : IEventHandler<FakeEventListener>
+        {
+            public bool Executed { get; private set; }
+            public bool ThrowsException { get; set; }
+            public bool HasInnerException { get; set; }
+
+            public void Handle(FakeEventListener eventListener)
+            {
+                Executed = true;
+
+                if (!ThrowsException) return;
+
+                if (!HasInnerException) throw new Exception("FakeEventHandlerException.");
+
+                throw new Exception("FakeEventHandlerException.", new Exception("FakeEventHandlerInnerException."));
+            }
         }
 
         [Theory, AutoMoqData]
-        public void Handle_Success_LoggerShouldBeCalled2TimesBeforeEventHandlerAnd1TimeAfter(
+        public void Handle_Success_ShouldLogMessagesAndCallMethods(
             [Frozen] Mock<ILogger> logger,
-            [Frozen] Mock<IEventHandler<FakeEventListener>> eventHandler,
-            FakeEventListener eventListener,
-            EventLoggerDecorator<FakeEventListener> decorator)
+            [Frozen] Mock<IStopwatch> stopwatch,
+            [Frozen] Mock<ILoggerSerializer> loggerSerializer,
+            FakeEventListener eventListener)
         {
-            // Arrange and assert
+            // Arrange
 
-            var callOrder = 0;
+            var eventHandler = new FakeEventHandler();
 
-            logger.Setup(l => l.Log(It.Is<string>(s => s == "Executing event \"IEventHandler`1Proxy\" with the listener parameters:")))
-                .Callback(() => { callOrder++.Should().Be(0); });
+            var decorator = new EventLoggerDecorator<FakeEventListener>(
+                () => eventHandler,
+                stopwatch.Object,
+                loggerSerializer.Object,
+                logger.Object);
 
-            logger.Setup(l => l.Log(It.Is<string>(s => s == "{\r\n  \"Property\": \"Value\"\r\n}")))
-                .Callback(() => { callOrder++.Should().Be(1); });
+            loggerSerializer.Setup(s => s.Serialize(eventListener)).Returns("Serialized parameters");
 
-            eventHandler.Setup(h => h.Handle(eventListener)).Callback(() => { callOrder++.Should().Be(2); });
-
-            logger.Setup(l => l.Log(It.Is<string>(s => s.StartsWith("Event \"IEventHandler`1Proxy\" executed in"))))
-                .Callback(() => { callOrder++.Should().Be(3); });
+            stopwatch.Setup(s => s.GetElapsed()).Returns(TimeSpan.FromSeconds(1));
 
             // Act
 
             decorator.Handle(eventListener);
+
+            // Assert
+
+            stopwatch.Verify(s => s.Start(), Times.Once());
+            stopwatch.Verify(s => s.Stop(), Times.Once());
+
+            logger.Verify(l => l.Log("Executing event \"FakeEventHandler\" with the listener parameters:"), Times.Once);
+            logger.Verify(l => l.Log("Serialized parameters"), Times.Once);
+            logger.Verify(l => l.Log("Event \"FakeEventHandler\" executed in 00:00:01."), Times.Once);
+
+            eventHandler.Executed.Should().Be.True();
         }
 
         [Theory, AutoMoqData]
-        public void Handle_ThrowsExceptionOnSerialize_ShouldLogTheException(
+        public void Handle_ThrowsOnSerialize_ShouldLogException(
             [Frozen] Mock<ILogger> logger,
-            [Frozen] Mock<IEventHandler<FakeEventListener>> eventHandler,
-            FakeEventListener eventListener,
-            EventLoggerDecorator<FakeEventListener> decorator)
+            [Frozen] Mock<IStopwatch> stopwatch,
+            [Frozen] Mock<ILoggerSerializer> loggerSerializer,
+            FakeEventListener eventListener)
         {
-            // Arrange and assert
+            // Arrange
 
-            var callOrder = 0;
+            var eventHandler = new FakeEventHandler();
 
-            logger.Setup(l => l.Log(It.Is<string>(s => s == "Executing event \"IEventHandler`1Proxy\" with the listener parameters:")))
-                .Callback(() => { callOrder++.Should().Be(0); });
+            var decorator = new EventLoggerDecorator<FakeEventListener>(
+                () => eventHandler,
+                stopwatch.Object,
+                loggerSerializer.Object,
+                logger.Object);
 
-            logger.Setup(l => l.Log(It.Is<string>(s => s == "{\r\n  \"Property\": \"Value\"\r\n}")))
+            loggerSerializer.Setup(s => s.Serialize(eventListener)).Returns("Serialized parameters");
+
+            stopwatch.Setup(s => s.GetElapsed()).Returns(TimeSpan.FromSeconds(1));
+
+            loggerSerializer.Setup(s => s.Serialize(It.IsAny<object>()))
                 .Throws(new Exception("Serialization exception."));
 
-            logger.Setup(
-                l => l.Log(It.Is<string>(s => s == "Could not serialize the listener parameters: Serialization exception.")))
-                .Callback(() => { callOrder++.Should().Be(1); });
-
-            eventHandler.Setup(h => h.Handle(eventListener)).Callback(() => { callOrder++.Should().Be(2); });
-
-            logger.Setup(l => l.Log(It.Is<string>(s => s.StartsWith("Event \"IEventHandler`1Proxy\" executed in"))))
-                .Callback(() => { callOrder++.Should().Be(3); });
-
             // Act
 
             decorator.Handle(eventListener);
+
+            // Assert
+
+            stopwatch.Verify(s => s.Start(), Times.Once());
+            stopwatch.Verify(s => s.Stop(), Times.Once());
+
+            logger.Verify(l => l.Log("Executing event \"FakeEventHandler\" with the listener parameters:"), Times.Once);
+            logger.Verify(
+                l => l.Log("Could not serialize the listener parameters: Serialization exception."),
+                Times.Once);
+            logger.Verify(l => l.Log("Event \"FakeEventHandler\" executed in 00:00:01."), Times.Once);
+
+            eventHandler.Executed.Should().Be.True();
         }
 
         [Theory, AutoMoqData]
         public void Handle_EventHandlerThrowsException_ShouldLogTheExceptionAndSupress(
             [Frozen] Mock<ILogger> logger,
-            [Frozen] Mock<IEventHandler<FakeEventListener>> eventHandler,
-            FakeEventListener eventListener,
-            EventLoggerDecorator<FakeEventListener> decorator)
+            [Frozen] Mock<IStopwatch> stopwatch,
+            [Frozen] Mock<ILoggerSerializer> loggerSerializer,
+            FakeEventListener eventListener)
         {
-            // Arrange and assert
+            // Arrange
 
-            var callOrder = 0;
+            var eventHandler = new FakeEventHandler {ThrowsException = true};
 
-            logger.Setup(l => l.Log(It.Is<string>(s => s == "Executing event \"IEventHandler`1Proxy\" with the listener parameters:")))
-                .Callback(() => { callOrder++.Should().Be(0); });
+            var decorator = new EventLoggerDecorator<FakeEventListener>(
+                () => eventHandler,
+                stopwatch.Object,
+                loggerSerializer.Object,
+                logger.Object);
 
-            logger.Setup(l => l.Log(It.Is<string>(s => s == "{\r\n  \"Property\": \"Value\"\r\n}")))
-                .Callback(() => { callOrder++.Should().Be(1); });
+            loggerSerializer.Setup(s => s.Serialize(eventListener)).Returns("Serialized parameters");
 
-            eventHandler.Setup(h => h.Handle(eventListener)).Throws(new Exception("EventHandler exception."));
-
-            logger.Setup(l => l.Log(It.Is<string>(s => s == "Exception caught: EventHandler exception.")))
-                .Callback(() => { callOrder++.Should().Be(2); });
-
-            logger.Setup(l => l.Log(It.Is<string>(s => s.StartsWith("Event \"IEventHandler`1Proxy\" executed in"))))
-                .Callback(() => { callOrder++.Should().Be(3); });
+            stopwatch.Setup(s => s.GetElapsed()).Returns(TimeSpan.FromSeconds(1));
 
             // Act
 
             decorator.Handle(eventListener);
+
+            // Assert
+
+            stopwatch.Verify(s => s.Start(), Times.Once());
+            stopwatch.Verify(s => s.Stop(), Times.Once());
+
+            logger.Verify(l => l.Log("Executing event \"FakeEventHandler\" with the listener parameters:"), Times.Once);
+            logger.Verify(l => l.Log("Serialized parameters"), Times.Once);
+            logger.Verify(l => l.Log("Exception caught: FakeEventHandlerException."), Times.Once);
+            logger.Verify(l => l.Log("Event \"FakeEventHandler\" executed in 00:00:01."), Times.Once);
+
+            eventHandler.Executed.Should().Be.True();
         }
 
         [Theory, AutoMoqData]
         public void Handle_EventHandlerThrowsExceptionWithInnerException_ShouldLogTheExceptionsAndSupress(
             [Frozen] Mock<ILogger> logger,
-            [Frozen] Mock<IEventHandler<FakeEventListener>> eventHandler,
-            FakeEventListener eventListener,
-            EventLoggerDecorator<FakeEventListener> decorator)
+            [Frozen] Mock<IStopwatch> stopwatch,
+            [Frozen] Mock<ILoggerSerializer> loggerSerializer,
+            FakeEventListener eventListener)
         {
-            // Arrange and assert
+            // Arrange
 
-            var callOrder = 0;
+            var eventHandler = new FakeEventHandler
+            {
+                ThrowsException = true,
+                HasInnerException = true
+            };
 
-            logger.Setup(l => l.Log(It.Is<string>(s => s == "Executing event \"IEventHandler`1Proxy\" with the listener parameters:")))
-                .Callback(() => { callOrder++.Should().Be(0); });
+            var decorator = new EventLoggerDecorator<FakeEventListener>(
+                () => eventHandler,
+                stopwatch.Object,
+                loggerSerializer.Object,
+                logger.Object);
 
-            logger.Setup(l => l.Log(It.Is<string>(s => s == "{\r\n  \"Property\": \"Value\"\r\n}")))
-                .Callback(() => { callOrder++.Should().Be(1); });
+            loggerSerializer.Setup(s => s.Serialize(eventListener)).Returns("Serialized parameters");
 
-            eventHandler.Setup(h => h.Handle(eventListener))
-                .Throws(new Exception("EventHandler exception.", new Exception("Inner exception.")));
-
-            logger.Setup(l => l.Log(It.Is<string>(s => s == "Exception caught: EventHandler exception.")))
-                .Callback(() => { callOrder++.Should().Be(2); });
-
-            logger.Setup(l => l.Log(It.Is<string>(s => s == "Inner exception caught: Inner exception.")))
-                .Callback(() => { callOrder++.Should().Be(3); });
-
-            logger.Setup(l => l.Log(It.Is<string>(s => s.StartsWith("Event \"IEventHandler`1Proxy\" executed in"))))
-                .Callback(() => { callOrder++.Should().Be(4); });
+            stopwatch.Setup(s => s.GetElapsed()).Returns(TimeSpan.FromSeconds(1));
 
             // Act
 
             decorator.Handle(eventListener);
+
+            // Assert
+
+            stopwatch.Verify(s => s.Start(), Times.Once());
+            stopwatch.Verify(s => s.Stop(), Times.Once());
+
+            logger.Verify(l => l.Log("Executing event \"FakeEventHandler\" with the listener parameters:"), Times.Once);
+            logger.Verify(l => l.Log("Serialized parameters"), Times.Once);
+            logger.Verify(l => l.Log("Exception caught: FakeEventHandlerException."), Times.Once);
+            logger.Verify(l => l.Log("Inner exception caught: FakeEventHandlerInnerException."), Times.Once);
+            logger.Verify(l => l.Log("Event \"FakeEventHandler\" executed in 00:00:01."), Times.Once);
+
+            eventHandler.Executed.Should().Be.True();
         }
     }
 }

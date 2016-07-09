@@ -14,133 +14,189 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
     {
         public class FakeCommand : ICommand
         {
-            public string Property { get; } = "Value";
+        }
+
+        public class FakeCommandHandler : ICommandHandler<FakeCommand>
+        {
+            public bool Executed { get; private set; }
+            public bool ThrowsException { get; set; }
+            public bool HasInnerException { get; set; }
+
+            public void Handle(FakeCommand command)
+            {
+                Executed = true;
+
+                if (!ThrowsException) return;
+
+                if (!HasInnerException) throw new Exception("FakeCommandHandlerException.");
+
+                throw new Exception("FakeCommandHandlerException.", new Exception("FakeCommandHandlerInnerException."));
+            }
         }
 
         [Theory, AutoMoqData]
-        public void Handle_Success_LoggerShouldBeCalled2TimesBeforeCommandHandlerAnd1TimeAfter(
+        public void Handle_Success_ShouldLogMessagesAndCallMethods(
             [Frozen] Mock<ILogger> logger,
-            [Frozen] Mock<ICommandHandler<FakeCommand>> commandHandler,
-            FakeCommand command,
-            CommandLoggerDecorator<FakeCommand> decorator)
+            [Frozen] Mock<IStopwatch> stopwatch,
+            [Frozen] Mock<ILoggerSerializer> loggerSerializer,
+            FakeCommand command)
         {
-            // Arrange and assert
+            // Arrange
 
-            var callOrder = 0;
+            var commandHandler = new FakeCommandHandler();
 
-            logger.Setup(l => l.Log(It.Is<string>(s => s == "Executing command \"FakeCommand\" with the parameters:")))
-                .Callback(() => { callOrder++.Should().Be(0); });
+            var decorator = new CommandLoggerDecorator<FakeCommand>(
+                () => commandHandler,
+                stopwatch.Object,
+                loggerSerializer.Object,
+                logger.Object);
 
-            logger.Setup(l => l.Log(It.Is<string>(s => s == "{\r\n  \"Property\": \"Value\"\r\n}")))
-                .Callback(() => { callOrder++.Should().Be(1); });
+            loggerSerializer.Setup(s => s.Serialize(command)).Returns("Serialized parameters");
 
-            commandHandler.Setup(h => h.Handle(command)).Callback(() => { callOrder++.Should().Be(2); });
-
-            logger.Setup(l => l.Log(It.Is<string>(s => s.StartsWith("Command \"FakeCommand\" executed in"))))
-                .Callback(() => { callOrder++.Should().Be(3); });
+            stopwatch.Setup(s => s.GetElapsed()).Returns(TimeSpan.FromSeconds(1));
 
             // Act
 
             decorator.Handle(command);
+
+            // Assert
+
+            stopwatch.Verify(s => s.Start(), Times.Once());
+            stopwatch.Verify(s => s.Stop(), Times.Once());
+
+            logger.Verify(l => l.Log("Executing command \"FakeCommand\" with the parameters:"), Times.Once);
+            logger.Verify(l => l.Log("Serialized parameters"), Times.Once);
+            logger.Verify(l => l.Log("Command \"FakeCommand\" executed in 00:00:01."), Times.Once);
+
+            commandHandler.Executed.Should().Be.True();
         }
 
         [Theory, AutoMoqData]
-        public void Handle_ThrowsExceptionOnSerialize_ShouldLogTheException(
+        public void Handle_ThrowsOnSerialize_ShouldLogException(
             [Frozen] Mock<ILogger> logger,
-            [Frozen] Mock<ICommandHandler<FakeCommand>> commandHandler,
-            FakeCommand command,
-            CommandLoggerDecorator<FakeCommand> decorator)
+            [Frozen] Mock<IStopwatch> stopwatch,
+            [Frozen] Mock<ILoggerSerializer> loggerSerializer,
+            FakeCommand command)
         {
-            // Arrange and assert
+            // Arrange
 
-            var callOrder = 0;
+            var commandHandler = new FakeCommandHandler();
 
-            logger.Setup(l => l.Log(It.Is<string>(s => s == "Executing command \"FakeCommand\" with the parameters:")))
-                .Callback(() => { callOrder++.Should().Be(0); });
+            var decorator = new CommandLoggerDecorator<FakeCommand>(
+                () => commandHandler,
+                stopwatch.Object,
+                loggerSerializer.Object,
+                logger.Object);
 
-            logger.Setup(l => l.Log(It.Is<string>(s => s == "{\r\n  \"Property\": \"Value\"\r\n}")))
+            loggerSerializer.Setup(s => s.Serialize(command)).Returns("Serialized parameters");
+
+            stopwatch.Setup(s => s.GetElapsed()).Returns(TimeSpan.FromSeconds(1));
+
+            loggerSerializer.Setup(s => s.Serialize(It.IsAny<object>()))
                 .Throws(new Exception("Serialization exception."));
 
-            logger.Setup(
-                l => l.Log(It.Is<string>(s => s == "Could not serialize the parameters: Serialization exception.")))
-                .Callback(() => { callOrder++.Should().Be(1); });
-
-            commandHandler.Setup(h => h.Handle(command)).Callback(() => { callOrder++.Should().Be(2); });
-
-            logger.Setup(l => l.Log(It.Is<string>(s => s.StartsWith("Command \"FakeCommand\" executed in"))))
-                .Callback(() => { callOrder++.Should().Be(3); });
-
             // Act
 
             decorator.Handle(command);
+
+            // Assert
+
+            stopwatch.Verify(s => s.Start(), Times.Once());
+            stopwatch.Verify(s => s.Stop(), Times.Once());
+
+            logger.Verify(l => l.Log("Executing command \"FakeCommand\" with the parameters:"), Times.Once);
+            logger.Verify(
+                l => l.Log("Could not serialize the parameters: Serialization exception."),
+                Times.Once);
+            logger.Verify(l => l.Log("Command \"FakeCommand\" executed in 00:00:01."), Times.Once);
+
+            commandHandler.Executed.Should().Be.True();
         }
 
         [Theory, AutoMoqData]
         public void Handle_CommandHandlerThrowsException_ShouldLogTheExceptionAndRethrow(
             [Frozen] Mock<ILogger> logger,
-            [Frozen] Mock<ICommandHandler<FakeCommand>> commandHandler,
-            FakeCommand command,
-            CommandLoggerDecorator<FakeCommand> decorator)
+            [Frozen] Mock<IStopwatch> stopwatch,
+            [Frozen] Mock<ILoggerSerializer> loggerSerializer,
+            FakeCommand command)
         {
-            // Arrange and assert
+            // Arrange
 
-            var callOrder = 0;
+            var commandHandler = new FakeCommandHandler { ThrowsException = true };
 
-            logger.Setup(l => l.Log(It.Is<string>(s => s == "Executing command \"FakeCommand\" with the parameters:")))
-                .Callback(() => { callOrder++.Should().Be(0); });
+            var decorator = new CommandLoggerDecorator<FakeCommand>(
+                () => commandHandler,
+                stopwatch.Object,
+                loggerSerializer.Object,
+                logger.Object);
 
-            logger.Setup(l => l.Log(It.Is<string>(s => s == "{\r\n  \"Property\": \"Value\"\r\n}")))
-                .Callback(() => { callOrder++.Should().Be(1); });
+            loggerSerializer.Setup(s => s.Serialize(command)).Returns("Serialized parameters");
 
-            commandHandler.Setup(h => h.Handle(command)).Throws(new Exception("CommandHandler exception."));
+            stopwatch.Setup(s => s.GetElapsed()).Returns(TimeSpan.FromSeconds(1));
 
-            logger.Setup(l => l.Log(It.Is<string>(s => s == "Exception caught: CommandHandler exception.")))
-                .Callback(() => { callOrder++.Should().Be(2); });
+            // Act
 
-            logger.Setup(l => l.Log(It.Is<string>(s => s.StartsWith("Command \"FakeCommand\" executed in"))))
-                .Callback(() => { callOrder++.Should().Be(3); });
+            var exception = Assert.Throws<Exception>(() => decorator.Handle(command));
 
-            // Act and assert
+            // Assert
 
-            var ex = Assert.Throws<Exception>(() => decorator.Handle(command));
-            ex.Message.Should().Be("CommandHandler exception.");
+            stopwatch.Verify(s => s.Start(), Times.Once());
+            stopwatch.Verify(s => s.Stop(), Times.Once());
+
+            logger.Verify(l => l.Log("Executing command \"FakeCommand\" with the parameters:"), Times.Once);
+            logger.Verify(l => l.Log("Serialized parameters"), Times.Once);
+            logger.Verify(l => l.Log("Exception caught: FakeCommandHandlerException."), Times.Once);
+            logger.Verify(l => l.Log("Command \"FakeCommand\" executed in 00:00:01."), Times.Once);
+
+            commandHandler.Executed.Should().Be.True();
+
+            exception.Message.Should().Be("FakeCommandHandlerException.");
         }
 
         [Theory, AutoMoqData]
         public void Handle_CommandHandlerThrowsExceptionWithInnerException_ShouldLogTheExceptionsAndRethrow(
             [Frozen] Mock<ILogger> logger,
-            [Frozen] Mock<ICommandHandler<FakeCommand>> commandHandler,
-            FakeCommand command,
-            CommandLoggerDecorator<FakeCommand> decorator)
+            [Frozen] Mock<IStopwatch> stopwatch,
+            [Frozen] Mock<ILoggerSerializer> loggerSerializer,
+            FakeCommand command)
         {
-            // Arrange and assert
+            // Arrange
 
-            var callOrder = 0;
+            var commandHandler = new FakeCommandHandler
+            {
+                ThrowsException = true,
+                HasInnerException = true
+            };
 
-            logger.Setup(l => l.Log(It.Is<string>(s => s == "Executing command \"FakeCommand\" with the parameters:")))
-                .Callback(() => { callOrder++.Should().Be(0); });
+            var decorator = new CommandLoggerDecorator<FakeCommand>(
+                () => commandHandler,
+                stopwatch.Object,
+                loggerSerializer.Object,
+                logger.Object);
 
-            logger.Setup(l => l.Log(It.Is<string>(s => s == "{\r\n  \"Property\": \"Value\"\r\n}")))
-                .Callback(() => { callOrder++.Should().Be(1); });
+            loggerSerializer.Setup(s => s.Serialize(command)).Returns("Serialized parameters");
 
-            commandHandler.Setup(h => h.Handle(command))
-                .Throws(new Exception("CommandHandler exception.", new Exception("Inner exception.")));
+            stopwatch.Setup(s => s.GetElapsed()).Returns(TimeSpan.FromSeconds(1));
 
-            logger.Setup(l => l.Log(It.Is<string>(s => s == "Exception caught: CommandHandler exception.")))
-                .Callback(() => { callOrder++.Should().Be(2); });
+            // Act
 
-            logger.Setup(l => l.Log(It.Is<string>(s => s == "Inner exception caught: Inner exception.")))
-                .Callback(() => { callOrder++.Should().Be(3); });
+            var exception = Assert.Throws<Exception>(() => decorator.Handle(command));
 
-            logger.Setup(l => l.Log(It.Is<string>(s => s.StartsWith("Command \"FakeCommand\" executed in"))))
-                .Callback(() => { callOrder++.Should().Be(4); });
+            // Assert
 
-            // Act and assert
+            stopwatch.Verify(s => s.Start(), Times.Once());
+            stopwatch.Verify(s => s.Stop(), Times.Once());
 
-            var ex = Assert.Throws<Exception>(() => decorator.Handle(command));
+            logger.Verify(l => l.Log("Executing command \"FakeCommand\" with the parameters:"), Times.Once);
+            logger.Verify(l => l.Log("Serialized parameters"), Times.Once);
+            logger.Verify(l => l.Log("Exception caught: FakeCommandHandlerException."), Times.Once);
+            logger.Verify(l => l.Log("Inner exception caught: FakeCommandHandlerInnerException."), Times.Once);
+            logger.Verify(l => l.Log("Command \"FakeCommand\" executed in 00:00:01."), Times.Once);
 
-            ex.Message.Should().Be("CommandHandler exception.");
-            ex.InnerException.Message.Should().Be("Inner exception.");
+            commandHandler.Executed.Should().Be.True();
+
+            exception.Message.Should().Be("FakeCommandHandlerException.");
+            exception.InnerException.Message.Should().Be("FakeCommandHandlerInnerException.");
         }
     }
 }
