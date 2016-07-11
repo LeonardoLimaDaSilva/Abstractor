@@ -3,10 +3,13 @@
 namespace Abstractor.Cqrs.Infrastructure.Persistence
 {
     /// <summary>
-    ///     Unidade de trabalho vazia utilizada quando nenhuma outra implementação for explicitamente definida.
+    ///     Default unit of work, used when there is no explicit implementation defined.
     /// </summary>
     public class EmptyUnitOfWork : IUnitOfWork
     {
+        /// <summary>
+        /// Does nothing.
+        /// </summary>
         public void Commit()
         {
         }

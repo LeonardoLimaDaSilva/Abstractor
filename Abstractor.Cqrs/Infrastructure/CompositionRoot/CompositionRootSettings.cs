@@ -1,35 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
-using Abstractor.Cqrs.Interfaces.Events;
-using Abstractor.Cqrs.Interfaces.Operations;
 
 namespace Abstractor.Cqrs.Infrastructure.CompositionRoot
 {
     /// <summary>
-    ///     Configurações da raiz de composição do framework. Expões os assemblies necessários para compor as funcionalidades
-    ///     da aplicação.
+    ///     Exposes the assemblies required for composing the application.
     /// </summary>
     public sealed class CompositionRootSettings
     {
         /// <summary>
-        ///     Local onde se encontram os handlers que implementam <see cref="ICommandHandler{TCommand}" /> e
-        ///     <see cref="IQueryHandler{TQuery,TResult}" />.
+        ///     Application assemblies that contains the operations handlers.
         /// </summary>
         public IEnumerable<Assembly> OperationAssemblies { get; set; }
 
         /// <summary>
-        ///     Local onde se encontra os handlers que implementam <see cref="IEventHandler{TEventListener}" />.
-        /// </summary>
-        public IEnumerable<Assembly> EventAssemblies { get; set; }
-
-        /// <summary>
-        ///     Tipos das implementações da camada de persistência.
+        ///     Implementation types from the persistence layer.
         /// </summary>
         public IEnumerable<Type> PersistenceTypes { get; set; }
 
         /// <summary>
-        ///     Tipos das implementações da camada de aplicação.
+        ///     Implementation types from the application layer.
         /// </summary>
         public IEnumerable<Type> ApplicationTypes { get; set; }
     }

@@ -2,7 +2,6 @@ using System;
 using System.Diagnostics;
 using Abstractor.Cqrs.Interfaces.CrossCuttingConcerns;
 using Abstractor.Cqrs.Interfaces.Operations;
-using Newtonsoft.Json;
 
 namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
 {

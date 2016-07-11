@@ -4,14 +4,14 @@ using Abstractor.Cqrs.Interfaces.CrossCuttingConcerns;
 namespace Abstractor.Cqrs.Infrastructure.CrossCuttingConcerns
 {
     /// <summary>
-    ///     Representa o mecanismo de data e hora do sistema.
+    ///     Represents the current system date/time mechanism.
     /// </summary>
     public class SystemClock : IClock
     {
         /// <summary>
-        ///     Obtém um DateTime que representa a data e hora corrente do sistema, no formato de hora local.
+        ///     Gets a DateTime that represents the current date and time of the system, in local time format.
         /// </summary>
-        /// <returns>Data e hora corrente no formato de hora local.</returns>
+        /// <returns>Current date and time.</returns>
         public virtual DateTime Now()
         {
             return DateTime.Now;

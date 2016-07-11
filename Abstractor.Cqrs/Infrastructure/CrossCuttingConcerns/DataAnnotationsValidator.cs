@@ -4,7 +4,7 @@ using Abstractor.Cqrs.Interfaces.CrossCuttingConcerns;
 namespace Abstractor.Cqrs.Infrastructure.CrossCuttingConcerns
 {
     /// <summary>
-    ///     Valida um objeto usando DataAnnotations.
+    ///     Validates an object using the default DataAnnotations <see cref="Validator"/>.
     /// </summary>
     public sealed class DataAnnotationsValidator : IValidator
     {

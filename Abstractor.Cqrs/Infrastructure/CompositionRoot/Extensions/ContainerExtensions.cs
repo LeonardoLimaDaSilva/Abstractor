@@ -7,15 +7,15 @@ using Abstractor.Cqrs.Interfaces.CompositionRoot;
 namespace Abstractor.Cqrs.Infrastructure.CompositionRoot.Extensions
 {
     /// <summary>
-    ///     Raiz de composição do framework.
+    ///     Extensions for the inversion of control container abstraction.
     /// </summary>
     public static class ContainerExtensions
     {
         /// <summary>
-        ///     Registra o framework no container de inversão de controle.
+        ///     Registers the framework dependencies into the inversion of control container.
         /// </summary>
-        /// <param name="container">O container de inversão de controle.</param>
-        /// <param name="settings">Configurações de composição.</param>
+        /// <param name="container">Inversion of control container.</param>
+        /// <param name="settings">Composition settings.</param>
         public static void RegisterAbstractor(this IContainer container, Action<CompositionRootSettings> settings)
         {
             Guard.ArgumentIsNotNull(container, nameof(container));
@@ -30,10 +30,10 @@ namespace Abstractor.Cqrs.Infrastructure.CompositionRoot.Extensions
         }
 
         /// <summary>
-        ///     Obtém as instâncias definidas nos instaladores do framework e registra os serviços.
+        ///     Discovers all framework installers and registers the services.
         /// </summary>
-        /// <param name="container">Container de inversão de controle.</param>
-        /// <param name="settings">Configurações de composição.</param>
+        /// <param name="container">Inversion of control container.</param>
+        /// <param name="settings">Composition settings.</param>
         private static void RegisterAbstractorInstallers(
             this IContainer container,
             CompositionRootSettings settings)

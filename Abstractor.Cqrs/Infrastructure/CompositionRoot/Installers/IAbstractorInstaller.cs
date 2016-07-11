@@ -3,15 +3,15 @@
 namespace Abstractor.Cqrs.Infrastructure.CompositionRoot.Installers
 {
     /// <summary>
-    ///     Encapsula a infraestrutura do framework e registra os serviços no container de inversão de controle.
+    ///     Abstracts the framework installers.
     /// </summary>
     internal interface IAbstractorInstaller
     {
         /// <summary>
-        ///     Registra os serviços no <see cref="IContainer" />.
+        ///     Registers the services into the <see cref="IContainer" />.
         /// </summary>
-        /// <param name="container">Container de inversão de controle.</param>
-        /// <param name="settings">Configurações de composição.</param>
+        /// <param name="container">Inversion of control container.</param>
+        /// <param name="settings">Composition settings.</param>
         void RegisterServices(IContainer container, CompositionRootSettings settings);
     }
 }

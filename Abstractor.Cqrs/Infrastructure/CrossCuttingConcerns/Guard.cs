@@ -4,17 +4,16 @@ using System.Diagnostics;
 namespace Abstractor.Cqrs.Infrastructure.CrossCuttingConcerns
 {
     /// <summary>
-    ///     Disponibiliza métodos comuns para verificar a integridade de pré-condições utilizadas
-    ///     para evitar erros durante a execução.
+    ///     Provides common methods to check the integrity of pre-conditions used to avoid errors during execution.
     /// </summary>
     public static class Guard
     {
         /// <summary>
-        ///     Lança uma exceção do tipo <see cref="ArgumentNullException" /> caso o argumento seja nulo.
+        ///     Throws an <see cref="ArgumentNullException" /> if the argument is null.
         /// </summary>
-        /// <param name="value"></param>
-        /// <param name="argument"></param>
-        /// <param name="message">Mensagem da exceção.</param>
+        /// <param name="value">Object value.</param>
+        /// <param name="argument">Argument name.</param>
+        /// <param name="message">Optional exception message.</param>
         [DebuggerHidden]
         public static void ArgumentIsNotNull(object value, string argument, string message = null)
         {
@@ -26,9 +25,9 @@ namespace Abstractor.Cqrs.Infrastructure.CrossCuttingConcerns
         }
 
         /// <summary>
-        ///     Lança uma exceção do tipo <see cref="EntityNotFoundException" /> caso a entidade seja nula.
+        ///     Throws an <see cref="EntityNotFoundException" /> if an entity is null.
         /// </summary>
-        /// <param name="value">Objeto da entidade.</param>
+        /// <param name="value">Entity object.</param>
         [DebuggerHidden]
         public static void EntityIsNotNull(object value)
         {
@@ -38,12 +37,11 @@ namespace Abstractor.Cqrs.Infrastructure.CrossCuttingConcerns
         }
 
         /// <summary>
-        ///     Lança uma exceção do tipo <see cref="EntityNotFoundException" /> caso a entidade seja nula, informando o tipo da
-        ///     entidade e a chave primária utilizada.
+        ///     Throws an <see cref="EntityNotFoundException" /> if an entity is null, stating the entity type and the primary key.
         /// </summary>
-        /// <typeparam name="T">Tipo da entidade.</typeparam>
-        /// <param name="value">Objeto da entidade.</param>
-        /// <param name="primaryKey">Chave primária.</param>
+        /// <typeparam name="T">Entity type.</typeparam>
+        /// <param name="value">Entity object.</param>
+        /// <param name="primaryKey">Entity's primary key.</param>
         [DebuggerHidden]
         public static void EntityIsNotNull<T>(object value, object primaryKey)
         {

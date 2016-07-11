@@ -7,7 +7,7 @@ using Abstractor.Cqrs.Interfaces.Operations;
 namespace Abstractor.Cqrs.Infrastructure.Operations.Dispatchers
 {
     /// <summary>
-    ///     Processador de comandos.
+    ///     Dispatcher for a command handler.
     /// </summary>
     [DebuggerStepThrough]
     public sealed class CommandDispatcher : ICommandDispatcher
@@ -20,9 +20,9 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Dispatchers
         }
 
         /// <summary>
-        ///     Dispara um <see cref="ICommandHandler{ICommand}" /> registrado em <see cref="IContainer" />.
+        ///     Delegates the command parameters to the handler that implements <see cref="ICommandHandler{ICommand}" />.
         /// </summary>
-        /// <param name="command">Objeto de comando.</param>
+        /// <param name="command">Command to be dispatched.</param>
         public void Dispatch(ICommand command)
         {
             Guard.ArgumentIsNotNull(command, nameof(command));
@@ -34,10 +34,10 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Dispatchers
         }
 
         /// <summary>
-        ///     Dispara, de forma assíncrona, um <see cref="ICommandHandler{ICommand}" /> registrado em <see cref="IContainer" />.
+        ///     Delegates the command parameters asynchronously to the handler that implements <see cref="ICommandHandler{ICommand}" />.
         /// </summary>
-        /// <param name="command">Objeto de comando.</param>
-        /// <returns>Task assíncrona.</returns>
+        /// <param name="command">Command to be dispatched.</param>
+        /// <returns>Asynchronous task.</returns>
         public async Task DispatchAsync(ICommand command)
         {
             Guard.ArgumentIsNotNull(command, nameof(command));

@@ -1,7 +1,7 @@
 namespace Abstractor.Cqrs.Infrastructure.Domain
 {
     /// <summary>
-    ///     Representação genérica de uma mensagem de fila.
+    ///     Minimal representation of a queue message.
     /// </summary>
     public class QueueMessage
     {

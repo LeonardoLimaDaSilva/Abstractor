@@ -1,19 +1,14 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
-
-namespace Abstractor.Cqrs.Interfaces.CrossCuttingConcerns
+﻿namespace Abstractor.Cqrs.Interfaces.CrossCuttingConcerns
 {
     /// <summary>
-    ///     Validador de instâncias de objetos.
+    ///     Abstracts a validator of objects.
     /// </summary>
     public interface IValidator
     {
         /// <summary>
-        ///     Valida uma instância.
+        ///     Throws an exception if the instance of an object is invalid.
         /// </summary>
         /// <param name="instance">The instance to validate.</param>
-        /// <exception cref="ArgumentNullException">Se a instância for nula.</exception>
-        /// <exception cref="ValidationException">Se a instância for inválida.</exception>
         void Validate(object instance);
     }
 }

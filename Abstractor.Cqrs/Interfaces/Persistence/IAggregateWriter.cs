@@ -3,28 +3,28 @@
 namespace Abstractor.Cqrs.Interfaces.Persistence
 {
     /// <summary>
-    ///     Especifica um repositório de dados a aceitar um conjunto de instâncias de agregação com permissão de escrita.
+    ///     Represents a data repository of an aggregate type with write operations.
     /// </summary>
-    /// <typeparam name="TAggregate">A agregação</typeparam>
+    /// <typeparam name="TAggregate">Aggregation type to be written.</typeparam>
     public interface IAggregateWriter<in TAggregate>
         where TAggregate : IAggregateRoot
     {
         /// <summary>
-        ///     Adiciona uma nova instância de agregação no conjunto de instâncias.
+        ///     Adds a new instance to the set.
         /// </summary>
-        /// <param name="aggregate">Agregação que será adicionada.</param>
+        /// <param name="aggregate">Aggregate to be created.</param>
         void Create(TAggregate aggregate);
 
         /// <summary>
-        ///     Remove permanentemente uma agregação existente do seu conjunto de instâncias de agregação.
+        ///     Removes an existing aggregation from the set.
         /// </summary>
-        /// <param name="aggregate">Agregação que será removida.</param>
+        /// <param name="aggregate">Aggregate to be removed.</param>
         void Delete(TAggregate aggregate);
 
         /// <summary>
-        ///     Informa ao repositório de dados que a instância de uma agregação existente pode ter sido alterada.
+        ///     Modifies the state of an existing aggregate.
         /// </summary>
-        /// <param name="aggregate">Agregação que o estado dos dados podem ter sido alterados.</param>
+        /// <param name="aggregate">Aggregate to be modified.</param>
         void Update(TAggregate aggregate);
     }
 }

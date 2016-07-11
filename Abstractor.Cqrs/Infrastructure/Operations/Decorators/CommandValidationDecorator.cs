@@ -6,9 +6,9 @@ using Abstractor.Cqrs.Interfaces.Operations;
 namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
 {
     /// <summary>
-    ///     Valida o comando <see cref="TCommand" /> utilizando o validador <see cref="IValidator" />.
+    ///     Validates the command <see cref="TCommand" /> using the <see cref="IValidator" />.
     /// </summary>
-    /// <typeparam name="TCommand">Comando que será executado.</typeparam>
+    /// <typeparam name="TCommand">Command to be handled.</typeparam>
     [DebuggerStepThrough]
     public sealed class CommandValidationDecorator<TCommand> : ICommandHandler<TCommand>
         where TCommand : ICommand
@@ -25,9 +25,9 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
         }
 
         /// <summary>
-        ///     Valida o comando antes de executá-lo.
+        ///     Validates the command before his execution.
         /// </summary>
-        /// <param name="command"></param>
+        /// <param name="command">Command to be handled.</param>
         public void Handle(TCommand command)
         {
             _validator.Validate(command);

@@ -5,7 +5,7 @@ using Abstractor.Cqrs.Infrastructure.CrossCuttingConcerns;
 namespace Abstractor.Cqrs.Infrastructure.Domain
 {
     /// <summary>
-    ///     Representação genérica de um arquivo.
+    ///     Minimal representation of a file.
     /// </summary>
     public class GenericFile : IDisposable
     {

@@ -3,7 +3,7 @@ using Abstractor.Cqrs.Infrastructure.Domain;
 namespace Abstractor.Cqrs.Interfaces.Domain
 {
     /// <summary>
-    ///     Define um repositório genérico de arquivos.
+    ///     Defines a generic file repository.
     /// </summary>
     public interface IFileRepository
     {

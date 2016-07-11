@@ -7,6 +7,9 @@ using Abstractor.Cqrs.Interfaces.Operations;
 
 namespace Abstractor.Cqrs.Infrastructure.CompositionRoot.Installers
 {
+    /// <summary>
+    ///     Registers the services and decorators needed by the commands operations.
+    /// </summary>
     internal sealed class CommandInstaller : IAbstractorInstaller
     {
         public void RegisterServices(IContainer container, CompositionRootSettings settings)
@@ -39,8 +42,8 @@ namespace Abstractor.Cqrs.Infrastructure.CompositionRoot.Installers
                 typeof (CommandValidationDecorator<>));
 
             container.RegisterDecoratorSingleton(
-                typeof(ICommandHandler<>),
-                typeof(CommandLoggerDecorator<>));
+                typeof (ICommandHandler<>),
+                typeof (CommandLoggerDecorator<>));
         }
     }
 }

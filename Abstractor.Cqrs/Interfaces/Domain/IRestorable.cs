@@ -1,21 +1,21 @@
 ﻿namespace Abstractor.Cqrs.Interfaces.Domain
 {
     /// <summary>
-    ///     Especifica que uma entidade pode ter seu estado interno restaurado.
+    ///     Specifies that an object could have your internal state restored.
     /// </summary>
-    /// <typeparam name="T">Tipo da implementação memento.</typeparam>
+    /// <typeparam name="T">Type of the internal state.</typeparam>
     public interface IRestorable<T> where T : IMemento
     {
         /// <summary>
-        ///     Altera o estado interno de uma entidade através do <paramref name="memento" />.
+        ///     Restores the internal state of the object.
         /// </summary>
-        /// <param name="memento">Representa o estado interno da entidade.</param>
+        /// <param name="memento">Represents the internal state.</param>
         void Restore(T memento);
 
         /// <summary>
-        ///     Retorna o memento que representa o estado interno da entidade.
+        ///     Returns the internal state.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Internal state.</returns>
         T Snapshot();
     }
 }

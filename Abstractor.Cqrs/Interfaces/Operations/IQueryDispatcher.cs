@@ -4,26 +4,24 @@ using System.Threading.Tasks;
 namespace Abstractor.Cqrs.Interfaces.Operations
 {
     /// <summary>
-    ///     Processa consultas.
+    ///     Dispatcher for a query handler.
     /// </summary>
     public interface IQueryDispatcher
     {
         /// <summary>
-        ///     Executa a consulta.
+        ///     Delegates the query parameters to the handler that implements <see cref="IQueryHandler{TQuery,TResult}" />.
         /// </summary>
-        /// <typeparam name="TResult">Retorno da consulta.</typeparam>
-        /// <param name="query">Consulta.</param>
-        /// <returns>O objeto de retorno da consulta.</returns>
-        /// <exception cref="ArgumentNullException">Se a consulta for nula.</exception>
+        /// <typeparam name="TResult">Return type.</typeparam>
+        /// <param name="query">Query to be dispatched.</param>
+        /// <returns>Query result.</returns>
         TResult Dispatch<TResult>(IQuery<TResult> query);
 
         /// <summary>
-        ///     Executa a consulta de forma assíncrona.
+        ///     Delegates the query parameters to the handler that implements <see cref="IQueryHandler{TQuery,TResult}" />.
         /// </summary>
-        /// <typeparam name="TResult">Retorno da consulta.</typeparam>
-        /// <param name="query">Consulta.</param>
-        /// <returns>Uma tarefa do objeto de retorno da consulta.</returns>
-        /// <exception cref="ArgumentNullException">Se a consulta for nula.</exception>
+        /// <typeparam name="TResult">Return type.</typeparam>
+        /// <param name="query">Query to be dispatched.</param>
+        /// <returns>Asynchronous task containing the query result.</returns>
         Task<TResult> DispatchAsync<TResult>(IQuery<TResult> query);
     }
 }

@@ -7,10 +7,10 @@ using Abstractor.Cqrs.Interfaces.Operations;
 namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
 {
     /// <summary>
-    ///     Inicia um novo escopo do ciclo de vida da consulta assíncrona, caso não exista nenhum.
+    ///     Ensures that there is a lifetime scope before the query execution.
     /// </summary>
-    /// <typeparam name="TQuery">Consulta que será executada.</typeparam>
-    /// <typeparam name="TResult">Retorno da consulta.</typeparam>
+    /// <typeparam name="TQuery">Query to be handled.</typeparam>
+    /// <typeparam name="TResult">Return type.</typeparam>
     [DebuggerStepThrough]
     public sealed class QueryAsyncLifetimeScopeDecorator<TQuery, TResult> : IQueryAsyncHandler<TQuery, TResult>
         where TQuery : IQuery<TResult>
@@ -27,10 +27,10 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
         }
 
         /// <summary>
-        ///     Inicia um novo escopo do ciclo de vida antes de executar a consulta assíncrona.
+        ///     Ensures that there is a lifetime scope before the query execution.
         /// </summary>
-        /// <param name="query"></param>
-        /// <returns></returns>
+        /// <param name="query">Query to be handled.</param>
+        /// <returns>Query result as an task.</returns>
         public Task<TResult> HandleAsync(TQuery query)
         {
             if (_container.GetCurrentLifetimeScope() != null)

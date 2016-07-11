@@ -3,9 +3,9 @@
 namespace Abstractor.Cqrs.Interfaces.Persistence
 {
     /// <summary>
-    ///     Especifica um repositório de dados a ser retornado para o tipo de agregação informada.
+    ///     Represents a data repository of an aggregate type.
     /// </summary>
-    /// <typeparam name="TAggregate">A agregação que define o tipo do repositório.</typeparam>
+    /// <typeparam name="TAggregate">Aggregate type.</typeparam>
     public interface IRepository<TAggregate> : IAggregateWriter<TAggregate>, IAggregateReader<TAggregate>
         where TAggregate : IAggregateRoot
     {

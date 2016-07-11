@@ -6,14 +6,17 @@ using Abstractor.Cqrs.Interfaces.Events;
 
 namespace Abstractor.Cqrs.Infrastructure.CompositionRoot.Installers
 {
+    /// <summary>
+    ///     Registers the services and decorators needed by the events operations.
+    /// </summary>
     internal sealed class EventInstaller : IAbstractorInstaller
     {
         public void RegisterServices(IContainer container, CompositionRootSettings settings)
         {
-            Guard.ArgumentIsNotNull(settings.EventAssemblies, nameof(settings.EventAssemblies));
+            Guard.ArgumentIsNotNull(settings.OperationAssemblies, nameof(settings.OperationAssemblies));
 
             container.RegisterSingleton<IEventDispatcher, EventDispatcher>();
-            container.RegisterCollection(typeof (IEventHandler<>), settings.EventAssemblies);
+            container.RegisterCollection(typeof (IEventHandler<>), settings.OperationAssemblies);
 
             container.RegisterDecoratorSingleton(
                 typeof(IEventHandler<>),

@@ -4,32 +4,32 @@ using System.Linq;
 namespace Abstractor.Cqrs.Infrastructure.Domain
 {
     /// <summary>
-    ///     Um objeto de valor que pode ser comparado através das suas propriedades.
+    /// A value object that can be compared through their properties.
     /// </summary>
-    /// <typeparam name="T">Tipo do objeto de valor.</typeparam>
+    /// <typeparam name="T">Value object type.</typeparam>
     public abstract class ValueObject<T> where T : ValueObject<T>
     {
         /// <summary>
-        ///     Atributos que serão comparados para determinar igualdade.
+        ///     Attributes that will be compared to determine equality.
         /// </summary>
         /// <returns></returns>
         protected abstract IEnumerable<object> GetAttributesToIncludeInEqualityCheck();
 
         /// <summary>
-        ///     Determina se o objeto possui o mesmo valor que o outro.
+        ///     Determines whether the object has the same value as the other.
         /// </summary>
-        /// <param name="other">Objeto que será comparado à instância atual.</param>
-        /// <returns>Verdadeiro se os objetos possuem o mesmo valor.</returns>
+        /// <param name="other">Object to be compared to the current instance.</param>
+        /// <returns>True if the objects have the same value.</returns>
         public override bool Equals(object other)
         {
             return Equals(other as T);
         }
 
         /// <summary>
-        ///     Determina se o objeto possui o mesmo valor que o outro.
+        ///     Determines whether the object has the same value as the other.
         /// </summary>
-        /// <param name="other">Objeto que será comparado à instância atual.</param>
-        /// <returns>Verdadeiro se os objetos possuem o mesmo valor.</returns>
+        /// <param name="other">Object to be compared to the current instance.</param>
+        /// <returns>True if the objects have the same value.</returns>
         public bool Equals(T other)
         {
             return other != null && GetAttributesToIncludeInEqualityCheck()
@@ -37,35 +37,35 @@ namespace Abstractor.Cqrs.Infrastructure.Domain
         }
 
         /// <summary>
-        ///     Determina se os objetos possuem o mesmo valor.
+        ///     Determines whether the object has the same value as the other.
         /// </summary>
-        /// <param name="left">Objeto da esquerda.</param>
-        /// <param name="right">Objeto da direita.</param>
-        /// <returns></returns>
+        /// <param name="left">Left side of operation.</param>
+        /// <param name="right">Right side of operation.</param>
+        /// <returns>True if the objects have the same value.</returns>
         public static bool operator ==(ValueObject<T> left, ValueObject<T> right)
         {
             return Equals(left, right);
         }
 
         /// <summary>
-        ///     Determina se os objetos não possuem o mesmo valor.
+        ///     Determines whether the object do not have the same value as the other.
         /// </summary>
-        /// <param name="left">Objeto da esquerda.</param>
-        /// <param name="right">Objeto da direita.</param>
-        /// <returns></returns>
+        /// <param name="left">Left side of operation.</param>
+        /// <param name="right">Right side of operation.</param>
+        /// <returns>True if the objects do not have the same value.</returns>
         public static bool operator !=(ValueObject<T> left, ValueObject<T> right)
         {
             return !(left == right);
         }
 
         /// <summary>
-        ///     Retorna o hash code desta instância.
+        ///     Returns the hash code of this instance.
         /// </summary>
-        /// <returns>Hash code da instância.</returns>
+        /// <returns>Instance hash code.</returns>
         public override int GetHashCode()
         {
-            // algoritmo que utiliza a múltiplicação de números primos para minimizar a ocorrência de 
-            // conflitos entre os hashcodes das propriedades do objeto de valor
+            // algorithm that uses the multiplication of prime numbers to minimize the occurrence of conflicts 
+            // between the hashcodes of the object properties
 
             return GetAttributesToIncludeInEqualityCheck()
                 .Aggregate(17, (current, o) => current * 31 + (o?.GetHashCode() ?? 0));

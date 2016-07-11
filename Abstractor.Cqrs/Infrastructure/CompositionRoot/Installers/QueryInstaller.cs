@@ -6,6 +6,9 @@ using Abstractor.Cqrs.Interfaces.Operations;
 
 namespace Abstractor.Cqrs.Infrastructure.CompositionRoot.Installers
 {
+    /// <summary>
+    ///     Registers the services and decorators needed by the queries operations.
+    /// </summary>
     internal sealed class QueryInstaller : IAbstractorInstaller
     {
         public void RegisterServices(IContainer container, CompositionRootSettings settings)

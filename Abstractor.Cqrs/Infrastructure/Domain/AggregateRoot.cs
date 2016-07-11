@@ -3,7 +3,7 @@
 namespace Abstractor.Cqrs.Infrastructure.Domain
 {
     /// <summary>
-    ///     Classe abstrata que representa uma raiz de agregação.
+    ///     Abstract class that marks an entity as an aggregate root to be materialized by the persistence mechanism.
     /// </summary>
     public abstract class AggregateRoot : IAggregateRoot
     {

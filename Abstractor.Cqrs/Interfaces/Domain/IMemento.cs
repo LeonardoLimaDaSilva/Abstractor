@@ -1,7 +1,7 @@
 ﻿namespace Abstractor.Cqrs.Interfaces.Domain
 {
     /// <summary>
-    ///     Representa o estado interno de uma entidade.
+    ///     Marks a class as a representation of the internal state of an object.
     /// </summary>
     public interface IMemento
     {

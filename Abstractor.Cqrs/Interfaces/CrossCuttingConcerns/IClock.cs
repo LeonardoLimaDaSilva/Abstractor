@@ -3,14 +3,14 @@
 namespace Abstractor.Cqrs.Interfaces.CrossCuttingConcerns
 {
     /// <summary>
-    ///     Representa um mecanismo de data e hora.
+    ///     Represents a date/time mechanism.
     /// </summary>
     public interface IClock
     {
         /// <summary>
-        ///     Obtém um DateTime que representa data e hora corrente.
+        ///     Gets a DateTime that represents the current date and time .
         /// </summary>
-        /// <returns>Data e hora corrente.</returns>
+        /// <returns>Current date and time.</returns>
         DateTime Now();
     }
 }

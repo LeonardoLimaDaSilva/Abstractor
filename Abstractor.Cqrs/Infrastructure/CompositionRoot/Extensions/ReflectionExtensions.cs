@@ -6,15 +6,15 @@ using System.Reflection;
 namespace Abstractor.Cqrs.Infrastructure.CompositionRoot.Extensions
 {
     /// <summary>
-    ///     Extensões auxiliares para reflection.
+    ///     Auxiliary extensions for reflection.
     /// </summary>
     public static class ReflectionExtensions
     {
         /// <summary>
-        ///     Garante o retorno apenas dos tipos que podem ser carregados de um assembly.
+        ///     Ensures the return of types that can be loaded from an assembly.
         /// </summary>
-        /// <param name="assembly">O assembly que será analisado.</param>
-        /// <returns>Um array de tipos.</returns>
+        /// <param name="assembly">Assembly to be analized.</param>
+        /// <returns></returns>
         internal static Type[] GetSafeTypes(this Assembly assembly)
         {
             try
@@ -28,11 +28,11 @@ namespace Abstractor.Cqrs.Infrastructure.CompositionRoot.Extensions
         }
 
         /// <summary>
-        ///     Retorna os tipos de implementação contidos nos assemblies. Os tipos são encontrados através de convenções.
+        ///     Discovers by convention and returns the implementation types inside the assemblies.
         /// </summary>
-        /// <param name="assemblies">Lista de assemblies em que a busca será feita</param>
-        /// <param name="convention">Convenção usada para a busca.</param>
-        /// <param name="names">Lista de nomes usados na busca.</param>
+        /// <param name="assemblies">Assemblies where the search will be made.</param>
+        /// <param name="convention">Convention algorith for the search.</param>
+        /// <param name="names">Names to be searched.</param>
         /// <returns></returns>
         public static IEnumerable<Type> GetImplementations(
             this IEnumerable<Assembly> assemblies,

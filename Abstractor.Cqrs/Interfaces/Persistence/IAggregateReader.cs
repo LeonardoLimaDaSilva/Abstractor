@@ -4,23 +4,23 @@ using Abstractor.Cqrs.Interfaces.Domain;
 namespace Abstractor.Cqrs.Interfaces.Persistence
 {
     /// <summary>
-    ///     Especifica um repositório de dados a retornar um conjunto de instâncias de agregação.
+    ///     Represents a data repository of an aggregate type with read operations.
     /// </summary>
-    /// <typeparam name="TAggregate">O tipo da agregação que será retornada.</typeparam>
+    /// <typeparam name="TAggregate">Aggregation type to be read.</typeparam>
     public interface IAggregateReader<out TAggregate>
         where TAggregate : IAggregateRoot
     {
         /// <summary>
-        ///     Retorna um conjunto de instâncias de agregação.
+        ///     Returns a queryable list of instances of aggregate.
         /// </summary>
-        /// <returns>IQueryable do conjunto de instâncias de agregação.</returns>
+        /// <returns>Queryable list of aggregates.</returns>
         IQueryable<TAggregate> Query();
 
         /// <summary>
-        ///     Retorna uma instância única da agregação.
+        ///     Returns a single instance of the aggregate.
         /// </summary>
-        /// <param name="primaryKey">Valores de chave primária da instância da agregação.</param>
-        /// <returns>Instância única da agregação.</returns>
-        TAggregate Get(params object[] primaryKey);
+        /// <param name="identifiers">List of values used to identify an aggregate.</param>
+        /// <returns>Single instance of the aggregate.</returns>
+        TAggregate Get(params object[] identifiers);
     }
 }

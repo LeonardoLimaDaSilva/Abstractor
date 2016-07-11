@@ -2,8 +2,8 @@
 
 namespace Abstractor.Cqrs.Infrastructure.CrossCuttingConcerns
 {
-    /// <summary>
-    ///     Exceção que deve ser lançada quando uma entidade não for encontrada.
+    /// <summary>     
+    ///     Exception to be thrown when an entity is not found.
     /// </summary>
     public class EntityNotFoundException : Exception
     {

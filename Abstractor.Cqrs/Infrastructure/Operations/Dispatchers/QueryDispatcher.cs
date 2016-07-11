@@ -7,7 +7,7 @@ using Abstractor.Cqrs.Interfaces.Operations;
 namespace Abstractor.Cqrs.Infrastructure.Operations.Dispatchers
 {
     /// <summary>
-    ///     Processador de consultas.
+    ///     Dispatcher for a query handler.
     /// </summary>
     [DebuggerStepThrough]
     public sealed class QueryDispatcher : IQueryDispatcher
@@ -20,11 +20,11 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Dispatchers
         }
 
         /// <summary>
-        ///     Dispara um <see cref="IQueryHandler{TQuery,TResult}" /> registrado em <see cref="IContainer" />.
+        ///     Delegates the query parameters to the handler that implements <see cref="IQueryHandler{TQuery,TResult}" />.
         /// </summary>
-        /// <typeparam name="TResult">Tipo do resultado da consulta.</typeparam>
-        /// <param name="query">Objeto de consulta.</param>
-        /// <returns>Resultado da consulta.</returns>
+        /// <typeparam name="TResult">Return type.</typeparam>
+        /// <param name="query">Query to be dispatched.</param>
+        /// <returns>Query result.</returns>
         public TResult Dispatch<TResult>(IQuery<TResult> query)
         {
             Guard.ArgumentIsNotNull(query, nameof(query));
@@ -36,12 +36,11 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Dispatchers
         }
 
         /// <summary>
-        ///     Dispara, de forma assíncrona, um <see cref="IQueryHandler{TQuery,TResult}" /> registrado em
-        ///     <see cref="IContainer" />.
+        ///     Delegates the query parameters to the handler that implements <see cref="IQueryHandler{TQuery,TResult}" />.
         /// </summary>
-        /// <typeparam name="TResult">Tipo do resultado da consulta.</typeparam>
-        /// <param name="query">Objeto de consulta.</param>
-        /// <returns>Task assíncrona contendo o resultado da consulta.</returns>
+        /// <typeparam name="TResult">Return type.</typeparam>
+        /// <param name="query">Query to be dispatched.</param>
+        /// <returns>Asynchronous task containing the query result.</returns>
         public async Task<TResult> DispatchAsync<TResult>(IQuery<TResult> query)
         {
             Guard.ArgumentIsNotNull(query, nameof(query));
