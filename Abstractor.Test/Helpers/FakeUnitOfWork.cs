@@ -1,13 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using Abstractor.Cqrs.Interfaces.Persistence;
 using SharpTestsEx;
-using static System.Threading.Thread;
 
 namespace Abstractor.Test.Helpers
 {
-    public class FakeUnitOfWork : IUnitOfWork, IDisposable
+    public class FakeUnitOfWork : IUnitOfWork
     {
         private readonly List<Tuple<int, bool>> _commits;
 
@@ -16,24 +16,19 @@ namespace Abstractor.Test.Helpers
             _commits = new List<Tuple<int, bool>>();
         }
 
-        public void Dispose()
+        public void SetUp()
         {
-            _commits.RemoveAll(t => t.Item1 == CurrentThread.ManagedThreadId);
+            _commits.RemoveAll(t => t.Item1 == Thread.CurrentThread.ManagedThreadId);
         }
 
         public void Commit()
         {
-            _commits.Add(new Tuple<int, bool>(CurrentThread.ManagedThreadId, true));
-        }
-
-        public void SetUp()
-        {
-            Dispose();
+            _commits.Add(new Tuple<int, bool>(Thread.CurrentThread.ManagedThreadId, true));
         }
 
         public void CommittedShouldBe(bool expected)
         {
-            _commits.SingleOrDefault(t => t.Item1 == CurrentThread.ManagedThreadId)
+            _commits.SingleOrDefault(t => t.Item1 == Thread.CurrentThread.ManagedThreadId)
                 ?.Item2
                     .Should()
                     .Be(expected);

@@ -32,59 +32,51 @@ namespace Abstractor.Test.Command
         [Fact]
         public void HandlerDecoratedWithTransaction_ShouldCommit()
         {
-            using (Logger)
-            using (UnitOfWork)
-            {
-                // Arrange
+            // Arrange
 
-                Logger.SetUp();
-                UnitOfWork.SetUp();
+            Logger.SetUp();
+            UnitOfWork.SetUp();
 
-                var command = new TransactionalCommand();
+            var command = new TransactionalCommand();
 
-                // Act
+            // Act
 
-                CommandDispatcher.Dispatch(command);
+            CommandDispatcher.Dispatch(command);
 
-                // Assert
+            // Assert
 
-                UnitOfWork.CommittedShouldBe(true);
+            UnitOfWork.CommittedShouldBe(true);
 
-                Logger.MessagesShouldBe(
-                    "Executing command \"TransactionalCommand\" with the parameters:",
-                    "{}",
-                    "Starting transactional command.",
-                    "Transaction committed successfully.",
-                    "Command \"TransactionalCommand\" executed in 00:00:00.");
-            }
+            Logger.MessagesShouldBe(
+                "Executing command \"TransactionalCommand\" with the parameters:",
+                "{}",
+                "Starting transactional command.",
+                "Transaction committed successfully.",
+                "Command \"TransactionalCommand\" executed in 00:00:00.");
         }
 
         [Fact]
         public void HandlerNotDecoratedWithTransaction_ShouldNotCommit()
         {
-            using (Logger)
-            using (UnitOfWork)
-            {
-                // Arrange
+            // Arrange
 
-                Logger.SetUp();
-                UnitOfWork.SetUp();
+            Logger.SetUp();
+            UnitOfWork.SetUp();
 
-                var command = new NonTransactionalCommand();
+            var command = new NonTransactionalCommand();
 
-                // Act
+            // Act
 
-                CommandDispatcher.Dispatch(command);
+            CommandDispatcher.Dispatch(command);
 
-                // Assert
+            // Assert
 
-                UnitOfWork.CommittedShouldBe(false);
+            UnitOfWork.CommittedShouldBe(false);
 
-                Logger.MessagesShouldBe(
-                    "Executing command \"NonTransactionalCommand\" with the parameters:",
-                    "{}",
-                    "Command \"NonTransactionalCommand\" executed in 00:00:00.");
-            }
+            Logger.MessagesShouldBe(
+                "Executing command \"NonTransactionalCommand\" with the parameters:",
+                "{}",
+                "Command \"NonTransactionalCommand\" executed in 00:00:00.");
         }
     }
 }

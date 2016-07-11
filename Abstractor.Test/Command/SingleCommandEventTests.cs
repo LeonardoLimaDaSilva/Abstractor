@@ -84,39 +84,36 @@ namespace Abstractor.Test.Command
         [Fact]
         public void SyncContext_CommandSucceeded_EventHandlerShouldBeExecuted()
         {
-            using (Logger)
-            {
-                // Arrange
+            // Arrange
 
-                Logger.SetUp();
+            Logger.SetUp();
 
-                var scheduler = new SynchronousTaskScheduler();
+            var scheduler = new SynchronousTaskScheduler();
 
-                var command = new FakeCommand();
+            var command = new FakeCommand();
 
-                Task.Factory.StartNew(
-                    () =>
-                    {
-                        // Act
+            Task.Factory.StartNew(
+                () =>
+                {
+                    // Act
 
-                        CommandDispatcher.Dispatch(command);
-                    },
-                    CancellationToken.None,
-                    TaskCreationOptions.None,
-                    scheduler);
+                    CommandDispatcher.Dispatch(command);
+                },
+                CancellationToken.None,
+                TaskCreationOptions.None,
+                scheduler);
 
-                // Assert
+            // Assert
 
-                command.EventHandlerExecuted.Should().Be.True();
+            command.EventHandlerExecuted.Should().Be.True();
 
-                Logger.MessagesShouldBe(
-                    "Executing command \"FakeCommand\" with the parameters:",
-                    "{\r\n  \"CommandThrowsException\": false,\r\n  \"EventHandlerExecuted\": false\r\n}",
-                    "Executing event \"OnFakeCommandHandled\" with the listener parameters:",
-                    "{\r\n  \"CommandThrowsException\": false,\r\n  \"EventHandlerExecuted\": false\r\n}",
-                    "Event \"OnFakeCommandHandled\" executed in 00:00:00.",
-                    "Command \"FakeCommand\" executed in 00:00:00.");
-            }
+            Logger.MessagesShouldBe(
+                "Executing command \"FakeCommand\" with the parameters:",
+                "{\r\n  \"CommandThrowsException\": false,\r\n  \"EventHandlerExecuted\": false\r\n}",
+                "Executing event \"OnFakeCommandHandled\" with the listener parameters:",
+                "{\r\n  \"CommandThrowsException\": false,\r\n  \"EventHandlerExecuted\": false\r\n}",
+                "Event \"OnFakeCommandHandled\" executed in 00:00:00.",
+                "Command \"FakeCommand\" executed in 00:00:00.");
         }
     }
 }

@@ -7,7 +7,7 @@ using SharpTestsEx;
 
 namespace Abstractor.Test.Helpers
 {
-    public class FakeLogger : ILogger, IDisposable
+    public class FakeLogger : ILogger
     {
         private readonly List<Tuple<int, string>> _messages;
 
@@ -16,7 +16,7 @@ namespace Abstractor.Test.Helpers
             _messages = new List<Tuple<int, string>>();
         }
 
-        public void Dispose()
+        public void SetUp()
         {
             _messages.RemoveAll(t => t.Item1 == Thread.CurrentThread.ManagedThreadId);
         }
@@ -24,11 +24,6 @@ namespace Abstractor.Test.Helpers
         public void Log(string message)
         {
             _messages.Add(new Tuple<int, string>(Thread.CurrentThread.ManagedThreadId, message));
-        }
-
-        public void SetUp()
-        {
-            Dispose();
         }
 
         public void MessagesShouldBe(params string[] expected)
