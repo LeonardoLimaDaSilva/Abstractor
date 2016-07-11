@@ -93,11 +93,14 @@
     <Compile Include="Command\SingleCommandEventTests.cs" />
     <Compile Include="Command\CommandPostActionTests.cs" />
     <Compile Include="Command\CommandValidationTests.cs" />
+    <Compile Include="Command\TransactionCommandTests.cs" />
     <Compile Include="Helpers\CompositionRoot.cs" />
     <Compile Include="Helpers\BaseTest.cs" />
     <Compile Include="Command\CommandDispatcherTests.cs" />
     <Compile Include="Helpers\AutoMoqDataAttribute.cs" />
-    <Compile Include="Helpers\InMemoryLogger.cs" />
+    <Compile Include="Helpers\FakeStopwatch.cs" />
+    <Compile Include="Helpers\FakeUnitOfWork.cs" />
+    <Compile Include="Helpers\FakeLogger.cs" />
     <Compile Include="Helpers\SynchronousTaskScheduler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

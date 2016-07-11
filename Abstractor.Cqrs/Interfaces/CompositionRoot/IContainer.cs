@@ -19,7 +19,11 @@ namespace Abstractor.Cqrs.Interfaces.CompositionRoot
         void RegisterTransient(Type serviceType, Type implementationType);
         void RegisterTransient(Type openGenericServiceType, IEnumerable<Assembly> assemblies);
         void RegisterCollection(Type openGenericServiceType, IEnumerable<Assembly> assemblies);
-        void RegisterSingleton<TService, TImplementation>();
+
+        void RegisterSingleton<TService, TImplementation>()
+            where TService : class
+            where TImplementation : class, TService;
+
         void RegisterDecoratorTransient(Type serviceType, Type decoratorType);
         void RegisterDecoratorTransient(Type serviceType, Type decoratorType, Type customAttribute);
         void RegisterDecoratorSingleton(Type serviceType, Type decoratorType);
@@ -38,6 +42,7 @@ namespace Abstractor.Cqrs.Interfaces.CompositionRoot
         /// </summary>
         void AllowResolvingFuncFactories();
 
-        void Register<TService>(Func<TService> instanceCreator) where TService : class;
+        void Register<TService>(Func<TService> instanceCreator) 
+            where TService : class;
     }
 }

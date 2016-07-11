@@ -73,6 +73,8 @@ namespace Abstractor.Cqrs.SimpleInjector.Adapters
         }
 
         public void RegisterSingleton<TService, TImplementation>()
+            where TService : class
+            where TImplementation : class, TService
         {
             _container.Register(typeof (TService), typeof (TImplementation), Lifestyle.Singleton);
         }

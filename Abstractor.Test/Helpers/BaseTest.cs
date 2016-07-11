@@ -1,21 +1,25 @@
 using Abstractor.Cqrs.Interfaces.CrossCuttingConcerns;
 using Abstractor.Cqrs.Interfaces.Operations;
+using Abstractor.Cqrs.Interfaces.Persistence;
 
 namespace Abstractor.Test.Helpers
 {
-    public class BaseTest
+    public abstract class BaseTest
     {
         public IQueryDispatcher QueryDispatcher { get; set; }
 
         public ICommandDispatcher CommandDispatcher { get; set; }
 
-        public InMemoryLogger Logger { get; set; }
+        public FakeLogger Logger { get; set; }
 
-        public BaseTest()
+        public FakeUnitOfWork UnitOfWork { get; set; }
+
+        protected BaseTest()
         {
             CommandDispatcher = CompositionRoot.GetContainer().GetInstance<ICommandDispatcher>();
             QueryDispatcher = CompositionRoot.GetContainer().GetInstance<IQueryDispatcher>();
-            Logger = (InMemoryLogger) CompositionRoot.GetContainer().GetInstance<ILogger>();
+            Logger = (FakeLogger) CompositionRoot.GetContainer().GetInstance<ILogger>();
+            UnitOfWork = (FakeUnitOfWork) CompositionRoot.GetContainer().GetInstance<IUnitOfWork>();
         }
     }
 }

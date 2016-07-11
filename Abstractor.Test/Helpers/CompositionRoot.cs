@@ -2,6 +2,7 @@
 using Abstractor.Cqrs.Infrastructure.CompositionRoot;
 using Abstractor.Cqrs.Infrastructure.CompositionRoot.Extensions;
 using Abstractor.Cqrs.Interfaces.CrossCuttingConcerns;
+using Abstractor.Cqrs.Interfaces.Persistence;
 using Abstractor.Cqrs.SimpleInjector.Adapters;
 using SimpleInjector;
 using SimpleInjector.Extensions.LifetimeScoping;
@@ -53,7 +54,9 @@ namespace Abstractor.Test.Helpers
                         settings.ApplicationTypes = concreteTypes;
                     });
 
-                    containerAdapter.RegisterSingleton<ILogger, InMemoryLogger>();
+                    containerAdapter.RegisterSingleton<ILogger, FakeLogger>();
+                    containerAdapter.RegisterSingleton<IUnitOfWork, FakeUnitOfWork>();
+                    containerAdapter.RegisterSingleton<IStopwatch, FakeStopwatch>();
 
                     _container.Verify();
                 }

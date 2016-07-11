@@ -26,7 +26,7 @@ namespace Abstractor.Cqrs.Test.Operations
         }
 
         [Fact]
-        public void Reset_ShouldSetAnEmptyAction()
+        public void Reset_ShouldNotCallTheSettedUpAction()
         {
             // Arrange
 
@@ -35,15 +35,14 @@ namespace Abstractor.Cqrs.Test.Operations
 
             action.Execute += () => { executed = true; };
 
-            action.Act();
-
             // Act
 
             action.Reset();
+            action.Act();
 
             // Assert
 
-            executed.Should().Be.True();
+            executed.Should().Be.False();
         }
     }
 }
