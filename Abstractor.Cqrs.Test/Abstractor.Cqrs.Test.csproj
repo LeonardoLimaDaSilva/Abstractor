@@ -94,7 +94,6 @@
     <Compile Include="Helpers\AutoMoqDataAttribute.cs" />
     <Compile Include="Helpers\FakeDataContext.cs" />
     <Compile Include="Helpers\FakeDataSet.cs" />
-    <Compile Include="Helpers\InstanceProducerAdapter.cs" />
     <Compile Include="Helpers\SynchronousTaskScheduler.cs" />
     <Compile Include="Operations\CommandPostActionTests.cs" />
     <Compile Include="Operations\Decorators\CommandEventDispatcherDecoratorTests.cs" />

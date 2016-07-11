@@ -26,6 +26,11 @@ namespace Abstractor.Test.Helpers
             _commits.Add(new Tuple<int, bool>(CurrentThread.ManagedThreadId, true));
         }
 
+        public void SetUp()
+        {
+            Dispose();
+        }
+
         public void CommittedShouldBe(bool expected)
         {
             _commits.SingleOrDefault(t => t.Item1 == CurrentThread.ManagedThreadId)

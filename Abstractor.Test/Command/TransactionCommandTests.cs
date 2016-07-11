@@ -37,6 +37,9 @@ namespace Abstractor.Test.Command
             {
                 // Arrange
 
+                Logger.SetUp();
+                UnitOfWork.SetUp();
+
                 var command = new TransactionalCommand();
 
                 // Act
@@ -63,6 +66,9 @@ namespace Abstractor.Test.Command
             using (UnitOfWork)
             {
                 // Arrange
+
+                Logger.SetUp();
+                UnitOfWork.SetUp();
 
                 var command = new NonTransactionalCommand();
 

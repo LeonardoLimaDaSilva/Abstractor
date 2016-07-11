@@ -1,5 +1,6 @@
 using System;
 using Abstractor.Cqrs.Infrastructure.Operations.Decorators;
+using Abstractor.Cqrs.Interfaces.CrossCuttingConcerns;
 using Abstractor.Cqrs.Interfaces.Operations;
 using Abstractor.Cqrs.Interfaces.Persistence;
 using Abstractor.Cqrs.Test.Helpers;
@@ -16,6 +17,7 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
         public void Handle_Success_ShouldCommitTheUnitOfWorkAfterCommandHandled(
             [Frozen] Mock<ICommandHandler<ICommand>> commandHandler,
             [Frozen] Mock<IUnitOfWork> unitOfWork,
+            [Frozen] Mock<ILogger> logger,
             ICommand command,
             CommandTransactionDecorator<ICommand> decorator)
         {
@@ -29,12 +31,18 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
             // Act
 
             decorator.Handle(command);
+
+            // Assert
+
+            logger.Verify(l => l.Log("Starting transactional command."), Times.Once);
+            logger.Verify(l => l.Log("Transaction committed successfully."), Times.Once);
         }
 
         [Theory, AutoMoqData]
         public void Handle_Exception_ShouldNotCommitUnitOfWork(
             [Frozen] Mock<ICommandHandler<ICommand>> commandHandler,
             [Frozen] Mock<IUnitOfWork> unitOfWork,
+            [Frozen] Mock<ILogger> logger,
             ICommand command,
             CommandTransactionDecorator<ICommand> decorator)
         {
@@ -49,6 +57,9 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
             // Assert
 
             unitOfWork.Verify(d => d.Commit(), Times.Never);
+
+            logger.Verify(l => l.Log("Starting transactional command."), Times.Once);
+            logger.Verify(l => l.Log("Transaction committed successfully."), Times.Never);
         }
     }
 }

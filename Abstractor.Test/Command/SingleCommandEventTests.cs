@@ -84,26 +84,39 @@ namespace Abstractor.Test.Command
         [Fact]
         public void SyncContext_CommandSucceeded_EventHandlerShouldBeExecuted()
         {
-            // Arrange
+            using (Logger)
+            {
+                // Arrange
 
-            var scheduler = new SynchronousTaskScheduler();
+                Logger.SetUp();
 
-            var command = new FakeCommand();
+                var scheduler = new SynchronousTaskScheduler();
 
-            Task.Factory.StartNew(
-                () =>
-                {
-                    // Act
+                var command = new FakeCommand();
 
-                    CommandDispatcher.Dispatch(command);
-                },
-                CancellationToken.None,
-                TaskCreationOptions.None,
-                scheduler);
+                Task.Factory.StartNew(
+                    () =>
+                    {
+                        // Act
 
-            // Assert
+                        CommandDispatcher.Dispatch(command);
+                    },
+                    CancellationToken.None,
+                    TaskCreationOptions.None,
+                    scheduler);
 
-            command.EventHandlerExecuted.Should().Be.True();
+                // Assert
+
+                command.EventHandlerExecuted.Should().Be.True();
+
+                Logger.MessagesShouldBe(
+                    "Executing command \"FakeCommand\" with the parameters:",
+                    "{\r\n  \"CommandThrowsException\": false,\r\n  \"EventHandlerExecuted\": false\r\n}",
+                    "Executing event \"OnFakeCommandHandled\" with the listener parameters:",
+                    "{\r\n  \"CommandThrowsException\": false,\r\n  \"EventHandlerExecuted\": false\r\n}",
+                    "Event \"OnFakeCommandHandled\" executed in 00:00:00.",
+                    "Command \"FakeCommand\" executed in 00:00:00.");
+            }
         }
     }
 }

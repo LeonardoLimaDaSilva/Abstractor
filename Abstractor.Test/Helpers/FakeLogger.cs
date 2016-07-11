@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using Abstractor.Cqrs.Interfaces.CrossCuttingConcerns;
 using SharpTestsEx;
-using static System.Threading.Thread;
 
 namespace Abstractor.Test.Helpers
 {
@@ -18,27 +18,25 @@ namespace Abstractor.Test.Helpers
 
         public void Dispose()
         {
-            _messages.RemoveAll(t => t.Item1 == CurrentThread.ManagedThreadId);
+            _messages.RemoveAll(t => t.Item1 == Thread.CurrentThread.ManagedThreadId);
         }
 
         public void Log(string message)
         {
-            _messages.Add(new Tuple<int, string>(CurrentThread.ManagedThreadId, message));
+            _messages.Add(new Tuple<int, string>(Thread.CurrentThread.ManagedThreadId, message));
+        }
+
+        public void SetUp()
+        {
+            Dispose();
         }
 
         public void MessagesShouldBe(params string[] expected)
         {
-            var messagesPerThread = _messages.Where(t => t.Item1 == CurrentThread.ManagedThreadId).ToList();
+            var messagesPerThread = _messages.Where(t => t.Item1 == Thread.CurrentThread.ManagedThreadId).ToList();
 
             for (var i = 0; i < expected.Length; i++)
                 messagesPerThread[i].Item2.Should().Be(expected[i]);
-        }
-
-        public IEnumerable<string> GetMessages()
-        {
-            return _messages.Where(t => t.Item1 == CurrentThread.ManagedThreadId)
-                .Select(m => m.Item2)
-                .ToList();
         }
     }
 }
