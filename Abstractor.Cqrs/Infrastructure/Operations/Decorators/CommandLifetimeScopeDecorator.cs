@@ -6,9 +6,9 @@ using Abstractor.Cqrs.Interfaces.Operations;
 namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
 {
     /// <summary>
-    ///     Inicia um novo escopo do ciclo de vida do comando, caso não exista nenhum.
+    ///     Ensures that there is a lifetime scope before the command execution.
     /// </summary>
-    /// <typeparam name="TCommand">Comando que será executado.</typeparam>
+    /// <typeparam name="TCommand">Command to be handled.</typeparam>
     [DebuggerStepThrough]
     public sealed class CommandLifetimeScopeDecorator<TCommand> : ICommandHandler<TCommand>
         where TCommand : ICommand
@@ -25,9 +25,9 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
         }
 
         /// <summary>
-        ///     Inicia um novo escopo do ciclo de vida antes de executar o comando.
+        ///     Ensures that there is a lifetime scope before the command execution.
         /// </summary>
-        /// <param name="command"></param>
+        /// <param name="command">Command to be handled</param>
         public void Handle(TCommand command)
         {
             if (_container.GetCurrentLifetimeScope() != null)
