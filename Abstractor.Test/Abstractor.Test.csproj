@@ -90,6 +90,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Command\MultipleCommandEventsTests.cs" />
+    <Compile Include="Query\QueryDispatcherTests.cs" />
     <Compile Include="Command\SingleCommandEventTests.cs" />
     <Compile Include="Command\CommandPostActionTests.cs" />
     <Compile Include="Command\CommandValidationTests.cs" />

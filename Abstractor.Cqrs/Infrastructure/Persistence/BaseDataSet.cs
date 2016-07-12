@@ -73,8 +73,6 @@ namespace Abstractor.Cqrs.Infrastructure.Persistence
                     case BaseDataSetOperationType.Update:
                         DoUpdate(operation);
                         break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
                 }
             }
         }

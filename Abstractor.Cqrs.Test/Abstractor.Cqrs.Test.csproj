@@ -83,8 +83,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CrossCuttingConcerns\DataAnnotationsValidatorTests.cs" />
+    <Compile Include="CrossCuttingConcerns\DefaultStopwatchTests.cs" />
+    <Compile Include="CrossCuttingConcerns\EmptyLoggerTests.cs" />
     <Compile Include="CrossCuttingConcerns\GuardTests.cs" />
+    <Compile Include="CrossCuttingConcerns\SystemClockTests.cs" />
     <Compile Include="Domain\EntityTests.cs" />
+    <Compile Include="Domain\GenericFileTests.cs" />
+    <Compile Include="Domain\QueueMessageTests.cs" />
     <Compile Include="Domain\ValueObjectTests.cs" />
     <Compile Include="Operations\Decorators\CommandLoggerDecoratorTests.cs" />
     <Compile Include="Operations\Decorators\EventLoggerDecoratorTests.cs" />
@@ -107,6 +112,7 @@
     <Compile Include="Operations\Dispatchers\QueryDispatcherTests.cs" />
     <Compile Include="Persistence\BaseDataContextTests.cs" />
     <Compile Include="Persistence\BaseDataSetTests.cs" />
+    <Compile Include="Persistence\EmptyUnitOfWorkTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

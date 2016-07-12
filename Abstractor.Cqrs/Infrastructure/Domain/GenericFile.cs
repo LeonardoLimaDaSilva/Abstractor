@@ -22,7 +22,7 @@ namespace Abstractor.Cqrs.Infrastructure.Domain
             Stream = stream;
         }
 
-        public void Dispose()
+        public virtual void Dispose()
         {
             Stream.Dispose();
         }

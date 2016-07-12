@@ -5,6 +5,6 @@ namespace Abstractor.Cqrs.Infrastructure.Domain
     /// </summary>
     public class QueueMessage
     {
-        public object DataMessage { get; set; }
+        public object Object { get; set; }
     }
 }

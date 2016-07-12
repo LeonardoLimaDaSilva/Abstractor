@@ -23,7 +23,7 @@ namespace Abstractor.Cqrs.Test.Persistence
 
             var operation = dataSet.InternalOperations.Single();
 
-            operation.Entity.Should().Be.EqualTo(entity);
+            operation.CurrentEntity.Should().Be.EqualTo(entity);
             operation.Type.Should().Be(BaseDataSetOperationType.Insert);
             operation.Done.Should().Be.False();
         }
@@ -82,7 +82,7 @@ namespace Abstractor.Cqrs.Test.Persistence
 
             var operation = dataSet.InternalOperations.Single();
 
-            operation.Entity.Should().Be.EqualTo(entity);
+            operation.CurrentEntity.Should().Be.EqualTo(entity);
             operation.Type.Should().Be(BaseDataSetOperationType.Delete);
             operation.Done.Should().Be.False();
         }
@@ -141,7 +141,7 @@ namespace Abstractor.Cqrs.Test.Persistence
 
             var operation = dataSet.InternalOperations.Single();
 
-            operation.Entity.Should().Be.EqualTo(entity);
+            operation.CurrentEntity.Should().Be.EqualTo(entity);
             operation.Type.Should().Be(BaseDataSetOperationType.Update);
             operation.Done.Should().Be.False();
         }
@@ -164,9 +164,9 @@ namespace Abstractor.Cqrs.Test.Persistence
             var operation = dataSet.InternalOperations.Single();
 
             operation.Type.Should().Be(BaseDataSetOperationType.Update);
-            operation.Entity.Should().Not.Be.Null();
-            operation.Entity.Should().Be.EqualTo(entity1);
-            operation.OldEntity.Should().Be.EqualTo(entity2);
+            operation.CurrentEntity.Should().Not.Be.Null();
+            operation.CurrentEntity.Should().Be.EqualTo(entity1);
+            operation.PreviousEntity.Should().Be.EqualTo(entity2);
             operation.Done.Should().Be.True();
         }
 
@@ -194,7 +194,7 @@ namespace Abstractor.Cqrs.Test.Persistence
 
             var operation = dataSet.InternalOperations.Single();
 
-            operation.Entity.Should().Not.Be.EqualTo(operation.OldEntity);
+            operation.CurrentEntity.Should().Not.Be.EqualTo(operation.PreviousEntity);
         }
 
         [Theory, AutoMoqData]

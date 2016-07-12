@@ -31,16 +31,16 @@ namespace Abstractor.Cqrs.AzureStorage.Queue
         public void Delete(TEntity message)
         {
             Guard.ArgumentIsNotNull(message, nameof(message));
-            Guard.ArgumentIsNotNull(message.DataMessage, nameof(message.DataMessage));
+            Guard.ArgumentIsNotNull(message.Object, nameof(message.Object));
 
-            AzureQueueRepository.Delete((TAzureEntity) message.DataMessage);
+            AzureQueueRepository.Delete((TAzureEntity) message.Object);
         }
 
         public TEntity GetNext()
         {
             var message = AzureQueueRepository.GetNext(_visibilityTimeout);
             var entity = ToEntity(message);
-            entity.DataMessage = message;
+            entity.Object = message;
             return entity;
         }
 
