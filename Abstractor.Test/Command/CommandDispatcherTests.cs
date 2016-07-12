@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Abstractor.Cqrs.Interfaces.Operations;
 using Abstractor.Test.Helpers;
 using SharpTestsEx;
@@ -37,7 +38,7 @@ namespace Abstractor.Test.Command
         }
 
         [Fact]
-        public void DispatchAsync_AsyncContext_ShouldEnsureThatCommandWasDispatchedAsyncly()
+        public void DispatchAsync_DoNotAwait_ShouldEnsureThatCommandWasDispatchedAsyncly()
         {
             // Arrange
 
@@ -53,7 +54,7 @@ namespace Abstractor.Test.Command
         }
 
         [Fact]
-        public async void DispatchAsync_SyncContext_ShouldExecuteHandler()
+        public async void DispatchAsync_Await_ShouldExecuteHandler()
         {
             // Arrange
 

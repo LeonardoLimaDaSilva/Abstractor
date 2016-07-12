@@ -33,7 +33,7 @@ namespace Abstractor.Test.Query
             {
                 query.HandlerExecuted = true;
 
-                return await Task.Factory.StartNew(() => new FakeResult());
+                return await Task<FakeResult>.Factory.StartNew(() => new FakeResult());
             }
         }
 
@@ -56,7 +56,30 @@ namespace Abstractor.Test.Query
         }
 
         [Fact]
-        public async void DispatchAsync_SyncContext_ShouldExecuteHandler()
+        public void DispatchAsync_DoNotAwait_ShouldEnsureThatQueryWasDispatchedAsyncly()
+        {
+            // Arrange
+
+            var query = new FakeQuery();
+
+            // Act
+
+            var result = QueryDispatcher.DispatchAsync(query);
+
+            // Assert
+
+            //TODO test fails only when run alone
+            //SharpTestsEx.AssertExceptionRanToCompletion Should Be Equal To WaitingForActivation.
+
+            result.Status.Should().Be(TaskStatus.WaitingForActivation);
+
+            query.HandlerExecuted.Should().Be.True();
+
+            result.Result.Should().Not.Be.Null();
+        }
+
+        [Fact]
+        public async void DispatchAsync_Await_ShouldExecuteHandler()
         {
             // Arrange
 
