@@ -14,15 +14,18 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
     public sealed class CommandTransactionDecorator<TCommand> : ICommandHandler<TCommand>
         where TCommand : ICommand
     {
+        private readonly IAttributeFinder _attributeFinder;
         private readonly Func<ICommandHandler<TCommand>> _handlerFactory;
         private readonly ILogger _logger;
         private readonly IUnitOfWork _unitOfWork;
 
         public CommandTransactionDecorator(
+            IAttributeFinder attributeFinder,
             ILogger logger,
             IUnitOfWork unitOfWork,
             Func<ICommandHandler<TCommand>> handlerFactory)
         {
+            _attributeFinder = attributeFinder;
             _logger = logger;
             _unitOfWork = unitOfWork;
             _handlerFactory = handlerFactory;
@@ -34,10 +37,16 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
         /// <param name="command">Command to be handled.</param>
         public void Handle(TCommand command)
         {
-            _logger.Log("Starting transactional command.");
+            var handler = _handlerFactory();
+
+            var log = _attributeFinder.Decorates(handler.GetType(), typeof (LogAttribute));
+
+            if (log) _logger.Log("Starting transaction...");
+
             _handlerFactory().Handle(command);
             _unitOfWork.Commit();
-            _logger.Log("Transaction committed successfully.");
+
+            if (log) _logger.Log("Transaction committed.");
         }
     }
 }

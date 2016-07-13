@@ -14,9 +14,9 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
         where TCommand : ICommand
     {
         private readonly Func<ICommandHandler<TCommand>> _handlerFactory;
-        private readonly IStopwatch _stopwatch;
-        private readonly ILoggerSerializer _loggerSerializer;
         private readonly ILogger _logger;
+        private readonly ILoggerSerializer _loggerSerializer;
+        private readonly IStopwatch _stopwatch;
 
         public CommandLoggerDecorator(
             Func<ICommandHandler<TCommand>> handlerFactory,

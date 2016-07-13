@@ -23,7 +23,9 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
         public class FakeQueryHandler : IQueryHandler<FakeQuery, FakeResult>
         {
             public bool Executed { get; private set; }
+
             public bool ThrowsException { get; set; }
+
             public bool HasInnerException { get; set; }
 
             public FakeResult Handle(FakeQuery query)
@@ -49,7 +51,7 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
 
             var queryHandler = new FakeQueryHandler();
 
-            var decorator = new QueryLoggerDecorator<FakeQuery,FakeResult>(
+            var decorator = new QueryLoggerDecorator<FakeQuery, FakeResult>(
                 () => queryHandler,
                 stopwatch.Object,
                 loggerSerializer.Object,
@@ -97,7 +99,7 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
             stopwatch.Setup(s => s.GetElapsed()).Returns(TimeSpan.FromSeconds(1));
 
             loggerSerializer.Setup(s => s.Serialize(It.IsAny<object>()))
-                .Throws(new Exception("Serialization exception."));
+                            .Throws(new Exception("Serialization exception."));
 
             // Act
 
@@ -126,7 +128,7 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
         {
             // Arrange
 
-            var queryHandler = new FakeQueryHandler { ThrowsException = true };
+            var queryHandler = new FakeQueryHandler {ThrowsException = true};
 
             var decorator = new QueryLoggerDecorator<FakeQuery, FakeResult>(
                 () => queryHandler,

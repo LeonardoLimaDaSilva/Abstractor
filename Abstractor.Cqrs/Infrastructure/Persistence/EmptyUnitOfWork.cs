@@ -8,7 +8,7 @@ namespace Abstractor.Cqrs.Infrastructure.Persistence
     public class EmptyUnitOfWork : IUnitOfWork
     {
         /// <summary>
-        /// Does nothing.
+        ///     Does nothing.
         /// </summary>
         public void Commit()
         {

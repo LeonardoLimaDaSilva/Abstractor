@@ -16,14 +16,14 @@ namespace Abstractor.Test.Helpers
             _messages = new List<Tuple<int, string>>();
         }
 
-        public void SetUp()
-        {
-            _messages.RemoveAll(t => t.Item1 == Thread.CurrentThread.ManagedThreadId);
-        }
-
         public void Log(string message)
         {
             _messages.Add(new Tuple<int, string>(Thread.CurrentThread.ManagedThreadId, message));
+        }
+
+        public void SetUp()
+        {
+            _messages.RemoveAll(t => t.Item1 == Thread.CurrentThread.ManagedThreadId);
         }
 
         public void MessagesShouldBe(params string[] expected)
@@ -32,6 +32,12 @@ namespace Abstractor.Test.Helpers
 
             for (var i = 0; i < expected.Length; i++)
                 messagesPerThread[i].Item2.Should().Be(expected[i]);
+        }
+
+        public void MessagesShouldBeEmpty()
+        {
+            var messagesPerThread = _messages.Where(t => t.Item1 == Thread.CurrentThread.ManagedThreadId).ToList();
+            messagesPerThread.Any().Should().Be.False();
         }
     }
 }

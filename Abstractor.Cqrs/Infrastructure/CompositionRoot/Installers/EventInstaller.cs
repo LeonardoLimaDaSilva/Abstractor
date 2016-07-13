@@ -1,4 +1,5 @@
 ﻿using Abstractor.Cqrs.Infrastructure.CrossCuttingConcerns;
+using Abstractor.Cqrs.Infrastructure.Operations;
 using Abstractor.Cqrs.Infrastructure.Operations.Decorators;
 using Abstractor.Cqrs.Infrastructure.Operations.Dispatchers;
 using Abstractor.Cqrs.Interfaces.CompositionRoot;
@@ -19,8 +20,9 @@ namespace Abstractor.Cqrs.Infrastructure.CompositionRoot.Installers
             container.RegisterCollection(typeof (IEventHandler<>), settings.OperationAssemblies);
 
             container.RegisterDecoratorSingleton(
-                typeof(IEventHandler<>),
-                typeof(EventLoggerDecorator<>));
+                typeof (IEventHandler<>),
+                typeof (EventLoggerDecorator<>),
+                typeof (LogAttribute));
         }
     }
 }

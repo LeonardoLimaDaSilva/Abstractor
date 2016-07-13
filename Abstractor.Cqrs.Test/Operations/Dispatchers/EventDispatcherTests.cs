@@ -46,7 +46,7 @@ namespace Abstractor.Cqrs.Test.Operations.Dispatchers
 
             var scheduler = new SynchronousTaskScheduler();
 
-            var genericTypeName = typeof(IEventHandler<FakeEventListener>).FullName;
+            var genericTypeName = typeof (IEventHandler<FakeEventListener>).FullName;
 
             var eventHandlers = new List<IEventHandler<FakeEventListener>>
             {
@@ -84,7 +84,7 @@ namespace Abstractor.Cqrs.Test.Operations.Dispatchers
 
             var scheduler = new SynchronousTaskScheduler();
 
-            var genericTypeName = typeof(IEventHandler<FakeEventListener>).FullName;
+            var genericTypeName = typeof (IEventHandler<FakeEventListener>).FullName;
 
             container.Setup(c => c.GetAllInstances(It.Is<Type>(t => t.FullName == genericTypeName)))
                      .Returns(new List<IEventHandler<FakeEventListener>>());
@@ -112,7 +112,7 @@ namespace Abstractor.Cqrs.Test.Operations.Dispatchers
 
             var scheduler = new SynchronousTaskScheduler();
 
-            var genericTypeName = typeof(IEventHandler<FakeEventListener>).FullName;
+            var genericTypeName = typeof (IEventHandler<FakeEventListener>).FullName;
 
             var eventHandlers = new List<IEventHandler<FakeEventListener>>
             {

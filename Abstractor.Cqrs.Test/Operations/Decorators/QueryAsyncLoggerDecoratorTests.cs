@@ -24,7 +24,9 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
         public class FakeQueryAsyncHandler : IQueryAsyncHandler<FakeQuery, FakeResult>
         {
             public bool Executed { get; private set; }
+
             public bool ThrowsException { get; set; }
+
             public bool HasInnerException { get; set; }
 
             public Task<FakeResult> HandleAsync(FakeQuery query)
@@ -35,7 +37,8 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
 
                 if (!HasInnerException) throw new Exception("FakeQueryAsyncHandlerException.");
 
-                throw new Exception("FakeQueryAsyncHandlerException.", new Exception("FakeQueryAsyncHandlerInnerException."));
+                throw new Exception("FakeQueryAsyncHandlerException.",
+                    new Exception("FakeQueryAsyncHandlerInnerException."));
             }
         }
 
@@ -98,7 +101,7 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
             stopwatch.Setup(s => s.GetElapsed()).Returns(TimeSpan.FromSeconds(1));
 
             loggerSerializer.Setup(s => s.Serialize(It.IsAny<object>()))
-                .Throws(new Exception("Serialization exception."));
+                            .Throws(new Exception("Serialization exception."));
 
             // Act
 
@@ -127,7 +130,7 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
         {
             // Arrange
 
-            var queryHandler = new FakeQueryAsyncHandler { ThrowsException = true };
+            var queryHandler = new FakeQueryAsyncHandler {ThrowsException = true};
 
             var decorator = new QueryAsyncLoggerDecorator<FakeQuery, FakeResult>(
                 () => queryHandler,

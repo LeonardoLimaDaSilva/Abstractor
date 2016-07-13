@@ -11,7 +11,7 @@ namespace Abstractor.Cqrs.Infrastructure.Persistence
     public abstract class BaseDataContext : IDisposable
     {
         /// <summary>
-        /// Stores the data sets created for each entity type.
+        ///     Stores the data sets created for each entity type.
         /// </summary>
         private readonly IDictionary<string, IBaseDataSet> _internalContext;
 

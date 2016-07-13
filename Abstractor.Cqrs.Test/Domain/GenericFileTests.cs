@@ -10,7 +10,7 @@ namespace Abstractor.Cqrs.Test.Domain
     {
         [Theory, AutoMoqData]
         public void Map_ShouldMapTheProperties(
-            string fileName, 
+            string fileName,
             Stream stream)
         {
             // Arrange and act

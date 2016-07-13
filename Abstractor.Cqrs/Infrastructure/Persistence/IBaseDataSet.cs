@@ -11,7 +11,7 @@
         /// </summary>
         void Commit();
 
-        /// <summary>     
+        /// <summary>
         ///     Undoes all done operations.
         /// </summary>
         void Rollback();

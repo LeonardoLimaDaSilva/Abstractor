@@ -16,14 +16,14 @@ namespace Abstractor.Test.Helpers
             _commits = new List<Tuple<int, bool>>();
         }
 
-        public void SetUp()
-        {
-            _commits.RemoveAll(t => t.Item1 == Thread.CurrentThread.ManagedThreadId);
-        }
-
         public void Commit()
         {
             _commits.Add(new Tuple<int, bool>(Thread.CurrentThread.ManagedThreadId, true));
+        }
+
+        public void SetUp()
+        {
+            _commits.RemoveAll(t => t.Item1 == Thread.CurrentThread.ManagedThreadId);
         }
 
         public void CommittedShouldBe(bool expected)

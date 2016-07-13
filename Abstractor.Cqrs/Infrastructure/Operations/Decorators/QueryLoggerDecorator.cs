@@ -15,9 +15,9 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
         where TQuery : IQuery<TResult>
     {
         private readonly Func<IQueryHandler<TQuery, TResult>> _handlerFactory;
-        private readonly IStopwatch _stopwatch;
-        private readonly ILoggerSerializer _loggerSerializer;
         private readonly ILogger _logger;
+        private readonly ILoggerSerializer _loggerSerializer;
+        private readonly IStopwatch _stopwatch;
 
         public QueryLoggerDecorator(
             Func<IQueryHandler<TQuery, TResult>> handlerFactory,

@@ -19,7 +19,7 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Dispatchers
             _container = container;
         }
 
-        /// <summary>     
+        /// <summary>
         ///     Delegates the event listener and dispatches to all event handlers that subscribes to <see cref="IEventListener" />.
         /// </summary>
         /// <param name="eventListener"></param>
@@ -36,7 +36,7 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Dispatchers
                 {
                     try
                     {
-                        handler.Handle((dynamic)eventListener);
+                        handler.Handle((dynamic) eventListener);
                     }
                     catch
                     {

@@ -27,6 +27,7 @@ namespace Abstractor.Cqrs.Interfaces.CompositionRoot
         void RegisterDecoratorTransient(Type serviceType, Type decoratorType);
         void RegisterDecoratorTransient(Type serviceType, Type decoratorType, Type customAttribute);
         void RegisterDecoratorSingleton(Type serviceType, Type decoratorType);
+        void RegisterDecoratorSingleton(Type serviceType, Type decoratorType, Type customAttribute);
 
         /// <summary>
         ///     Provides functionality for the deferred resolving of unregistered types.
@@ -42,7 +43,7 @@ namespace Abstractor.Cqrs.Interfaces.CompositionRoot
         /// </summary>
         void AllowResolvingFuncFactories();
 
-        void Register<TService>(Func<TService> instanceCreator) 
+        void Register<TService>(Func<TService> instanceCreator)
             where TService : class;
     }
 }

@@ -1,3 +1,4 @@
+using Abstractor.Cqrs.Infrastructure.Operations;
 using Abstractor.Cqrs.Interfaces.Operations;
 using Abstractor.Test.Helpers;
 using Xunit;
@@ -14,7 +15,7 @@ namespace Abstractor.Test.Command
         {
         }
 
-        [Transaction]
+        [Transactional]
         public class TransactionalCommandHandler : ICommandHandler<TransactionalCommand>
         {
             public void Handle(TransactionalCommand command)
@@ -34,7 +35,6 @@ namespace Abstractor.Test.Command
         {
             // Arrange
 
-            Logger.SetUp();
             UnitOfWork.SetUp();
 
             var command = new TransactionalCommand();
@@ -46,13 +46,6 @@ namespace Abstractor.Test.Command
             // Assert
 
             UnitOfWork.CommittedShouldBe(true);
-
-            Logger.MessagesShouldBe(
-                "Executing command \"TransactionalCommand\" with the parameters:",
-                "{}",
-                "Starting transactional command.",
-                "Transaction committed successfully.",
-                "Command \"TransactionalCommand\" executed in 00:00:00.");
         }
 
         [Fact]
@@ -60,7 +53,6 @@ namespace Abstractor.Test.Command
         {
             // Arrange
 
-            Logger.SetUp();
             UnitOfWork.SetUp();
 
             var command = new NonTransactionalCommand();
@@ -72,11 +64,6 @@ namespace Abstractor.Test.Command
             // Assert
 
             UnitOfWork.CommittedShouldBe(false);
-
-            Logger.MessagesShouldBe(
-                "Executing command \"NonTransactionalCommand\" with the parameters:",
-                "{}",
-                "Command \"NonTransactionalCommand\" executed in 00:00:00.");
         }
     }
 }

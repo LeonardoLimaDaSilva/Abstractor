@@ -100,6 +100,17 @@ namespace Abstractor.Cqrs.SimpleInjector.Adapters
             _container.RegisterDecorator(serviceType, decoratorType, Lifestyle.Singleton);
         }
 
+        public void RegisterDecoratorSingleton(Type serviceType, Type decoratorType, Type customAttribute)
+        {
+            _container.RegisterDecorator(
+                serviceType,
+                decoratorType,
+                Lifestyle.Singleton,
+                c => c.ImplementationType
+                      .CustomAttributes
+                      .Any(a => a.AttributeType == customAttribute));
+        }
+
         public void RegisterLazySingleton<TService, TImplementation>()
             where TService : class
             where TImplementation : class, TService

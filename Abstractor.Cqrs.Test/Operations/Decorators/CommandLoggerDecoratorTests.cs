@@ -19,7 +19,9 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
         public class FakeCommandHandler : ICommandHandler<FakeCommand>
         {
             public bool Executed { get; private set; }
+
             public bool ThrowsException { get; set; }
+
             public bool HasInnerException { get; set; }
 
             public void Handle(FakeCommand command)
@@ -93,7 +95,7 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
             stopwatch.Setup(s => s.GetElapsed()).Returns(TimeSpan.FromSeconds(1));
 
             loggerSerializer.Setup(s => s.Serialize(It.IsAny<object>()))
-                .Throws(new Exception("Serialization exception."));
+                            .Throws(new Exception("Serialization exception."));
 
             // Act
 
@@ -122,7 +124,7 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
         {
             // Arrange
 
-            var commandHandler = new FakeCommandHandler { ThrowsException = true };
+            var commandHandler = new FakeCommandHandler {ThrowsException = true};
 
             var decorator = new CommandLoggerDecorator<FakeCommand>(
                 () => commandHandler,

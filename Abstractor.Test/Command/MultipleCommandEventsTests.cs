@@ -168,8 +168,6 @@ namespace Abstractor.Test.Command
         {
             // Arrange
 
-            Logger.SetUp();
-
             var scheduler = new SynchronousTaskScheduler();
 
             var command = new FakeCommand();
@@ -189,17 +187,6 @@ namespace Abstractor.Test.Command
             command.EventHandler1Executed.Should().Be.True();
 
             command.EventHandler2Executed.Should().Be.True();
-
-            Logger.MessagesShouldBe(
-                "Executing command \"FakeCommand\" with the parameters:",
-                "{\r\n  \"CommandThrowsException\": false,\r\n  \"EventHandler1ThrowsException\": false,\r\n  \"EventHandler2ThrowsException\": false,\r\n  \"EventHandler1Executed\": false,\r\n  \"EventHandler2Executed\": false,\r\n  \"EventHandler1Succeeded\": false,\r\n  \"EventHandler2Succeeded\": false\r\n}",
-                "Executing event \"OnFakeCommandHandled1\" with the listener parameters:",
-                "{\r\n  \"CommandThrowsException\": false,\r\n  \"EventHandler1ThrowsException\": false,\r\n  \"EventHandler2ThrowsException\": false,\r\n  \"EventHandler1Executed\": false,\r\n  \"EventHandler2Executed\": false,\r\n  \"EventHandler1Succeeded\": false,\r\n  \"EventHandler2Succeeded\": false\r\n}",
-                "Event \"OnFakeCommandHandled1\" executed in 00:00:00.",
-                "Executing event \"OnFakeCommandHandled2\" with the listener parameters:",
-                "{\r\n  \"CommandThrowsException\": false,\r\n  \"EventHandler1ThrowsException\": false,\r\n  \"EventHandler2ThrowsException\": false,\r\n  \"EventHandler1Executed\": true,\r\n  \"EventHandler2Executed\": false,\r\n  \"EventHandler1Succeeded\": true,\r\n  \"EventHandler2Succeeded\": false\r\n}",
-                "Event \"OnFakeCommandHandled2\" executed in 00:00:00.",
-                "Command \"FakeCommand\" executed in 00:00:00.");
         }
 
         [Fact]

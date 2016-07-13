@@ -19,7 +19,9 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
         public class FakeEventHandler : IEventHandler<FakeEventListener>
         {
             public bool Executed { get; private set; }
+
             public bool ThrowsException { get; set; }
+
             public bool HasInnerException { get; set; }
 
             public void Handle(FakeEventListener eventListener)
@@ -93,7 +95,7 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
             stopwatch.Setup(s => s.GetElapsed()).Returns(TimeSpan.FromSeconds(1));
 
             loggerSerializer.Setup(s => s.Serialize(It.IsAny<object>()))
-                .Throws(new Exception("Serialization exception."));
+                            .Throws(new Exception("Serialization exception."));
 
             // Act
 

@@ -4,7 +4,7 @@ using System.Linq;
 namespace Abstractor.Cqrs.Infrastructure.Domain
 {
     /// <summary>
-    /// A value object that can be compared through their properties.
+    ///     A value object that can be compared through their properties.
     /// </summary>
     /// <typeparam name="T">Value object type.</typeparam>
     public abstract class ValueObject<T> where T : ValueObject<T>

@@ -86,8 +86,6 @@ namespace Abstractor.Test.Command
         {
             // Arrange
 
-            Logger.SetUp();
-
             var scheduler = new SynchronousTaskScheduler();
 
             var command = new FakeCommand();
@@ -106,14 +104,6 @@ namespace Abstractor.Test.Command
             // Assert
 
             command.EventHandlerExecuted.Should().Be.True();
-
-            Logger.MessagesShouldBe(
-                "Executing command \"FakeCommand\" with the parameters:",
-                "{\r\n  \"CommandThrowsException\": false,\r\n  \"EventHandlerExecuted\": false\r\n}",
-                "Executing event \"OnFakeCommandHandled\" with the listener parameters:",
-                "{\r\n  \"CommandThrowsException\": false,\r\n  \"EventHandlerExecuted\": false\r\n}",
-                "Event \"OnFakeCommandHandled\" executed in 00:00:00.",
-                "Command \"FakeCommand\" executed in 00:00:00.");
         }
     }
 }

@@ -37,7 +37,7 @@ namespace Abstractor.Test.Command
         {
             // Arrange
 
-            var command = new ValidationCommand { Property = "Property" };
+            var command = new ValidationCommand {Property = "Property"};
 
             // Act and assert
 

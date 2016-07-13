@@ -21,6 +21,7 @@ namespace Abstractor.Cqrs.Infrastructure.CompositionRoot.Installers
             container.RegisterLazySingleton<IStopwatch, DefaultStopwatch>();
             container.RegisterLazySingleton<IValidator, DataAnnotationsValidator>();
             container.RegisterLazySingleton<IClock, SystemClock>();
+            container.RegisterLazySingleton<IAttributeFinder, AttributeFinder>();
 
             // Registers all the implementations from the persistence layer
             if (settings.PersistenceTypes != null)

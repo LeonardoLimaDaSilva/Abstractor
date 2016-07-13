@@ -1,4 +1,5 @@
 ﻿using Abstractor.Cqrs.Infrastructure.CrossCuttingConcerns;
+using Abstractor.Cqrs.Infrastructure.Operations;
 using Abstractor.Cqrs.Infrastructure.Operations.Decorators;
 using Abstractor.Cqrs.Infrastructure.Operations.Dispatchers;
 using Abstractor.Cqrs.Interfaces.CompositionRoot;
@@ -24,16 +25,18 @@ namespace Abstractor.Cqrs.Infrastructure.CompositionRoot.Installers
                 typeof (QueryLifetimeScopeDecorator<,>));
 
             container.RegisterDecoratorSingleton(
-                typeof(IQueryHandler<,>),
-                typeof(QueryLoggerDecorator<,>));
+                typeof (IQueryHandler<,>),
+                typeof (QueryLoggerDecorator<,>),
+                typeof (LogAttribute));
 
             container.RegisterDecoratorSingleton(
                 typeof (IQueryAsyncHandler<,>),
                 typeof (QueryAsyncLifetimeScopeDecorator<,>));
 
             container.RegisterDecoratorSingleton(
-                typeof(IQueryAsyncHandler<,>),
-                typeof(QueryAsyncLoggerDecorator<,>));
+                typeof (IQueryAsyncHandler<,>),
+                typeof (QueryAsyncLoggerDecorator<,>),
+                typeof (LogAttribute));
         }
     }
 }

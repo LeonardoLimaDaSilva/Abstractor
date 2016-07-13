@@ -72,6 +72,7 @@
     <Compile Include="Infrastructure\Domain\GenericFile.cs" />
     <Compile Include="Infrastructure\Domain\QueueMessage.cs" />
     <Compile Include="Infrastructure\Domain\ValueObject.cs" />
+    <Compile Include="Infrastructure\CrossCuttingConcerns\AttributeFinder.cs" />
     <Compile Include="Infrastructure\Operations\Decorators\CommandLoggerDecorator.cs" />
     <Compile Include="Infrastructure\Operations\Decorators\EventLoggerDecorator.cs" />
     <Compile Include="Infrastructure\Operations\Decorators\QueryAsyncLoggerDecorator.cs" />
@@ -95,6 +96,7 @@
     <Compile Include="Infrastructure\Persistence\IBaseDataSet.cs" />
     <Compile Include="Interfaces\CompositionRoot\IContainer.cs" />
     <Compile Include="Interfaces\CompositionRoot\IInstanceProducer.cs" />
+    <Compile Include="Interfaces\CrossCuttingConcerns\IAttributeFinder.cs" />
     <Compile Include="Interfaces\CrossCuttingConcerns\IClock.cs" />
     <Compile Include="Interfaces\CrossCuttingConcerns\ILogger.cs" />
     <Compile Include="Interfaces\CrossCuttingConcerns\ILoggerSerializer.cs" />
@@ -116,7 +118,8 @@
     <Compile Include="Interfaces\Operations\IQueryAsyncHandler.cs" />
     <Compile Include="Interfaces\Operations\IQueryDispatcher.cs" />
     <Compile Include="Interfaces\Operations\IQueryHandler.cs" />
-    <Compile Include="Interfaces\Operations\TransactionAttribute.cs" />
+    <Compile Include="Infrastructure\Operations\LogAttribute.cs" />
+    <Compile Include="Infrastructure\Operations\TransactionalAttribute.cs" />
     <Compile Include="Interfaces\Persistence\IAggregateReader.cs" />
     <Compile Include="Interfaces\Persistence\IAggregateWriter.cs" />
     <Compile Include="Interfaces\Persistence\IRepository.cs" />
