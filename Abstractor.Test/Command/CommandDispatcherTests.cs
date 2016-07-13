@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using Abstractor.Cqrs.Interfaces.Operations;
 using Abstractor.Test.Helpers;
 using SharpTestsEx;
