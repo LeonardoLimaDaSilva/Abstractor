@@ -60,6 +60,7 @@
     <Compile Include="Infrastructure\CompositionRoot\Installers\IAbstractorInstaller.cs" />
     <Compile Include="Infrastructure\CompositionRoot\Installers\QueryInstaller.cs" />
     <Compile Include="Infrastructure\CompositionRoot\PredicateBuilder.cs" />
+    <Compile Include="Infrastructure\CrossCuttingConcerns\CommandException.cs" />
     <Compile Include="Infrastructure\CrossCuttingConcerns\DataAnnotationsValidator.cs" />
     <Compile Include="Infrastructure\CrossCuttingConcerns\DefaultStopwatch.cs" />
     <Compile Include="Infrastructure\CrossCuttingConcerns\EmptyLogger.cs" />

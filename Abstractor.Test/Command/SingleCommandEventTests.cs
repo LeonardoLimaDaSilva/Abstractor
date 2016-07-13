@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Abstractor.Cqrs.Infrastructure.CrossCuttingConcerns;
 using Abstractor.Cqrs.Interfaces.Events;
 using Abstractor.Cqrs.Interfaces.Operations;
 using Abstractor.Test.Helpers;
@@ -19,9 +20,13 @@ namespace Abstractor.Test.Command
         /// </summary>
         public class FakeCommand : ICommand, IEventListener
         {
-            public bool CommandThrowsException { get; set; }
+            public bool CommandThrowsGenericException { get; set; }
+
+            public bool CommandThrowsSpecificException { get; set; }
 
             public bool EventHandlerExecuted { get; set; }
+
+            public bool SpecificExceptionHandlerExecuted { get; set; }
         }
 
         /// <summary>
@@ -31,18 +36,43 @@ namespace Abstractor.Test.Command
         {
             public void Handle(FakeCommand command)
             {
-                if (command.CommandThrowsException) throw new Exception();
+                if (command.CommandThrowsGenericException) throw new Exception();
+                if (command.CommandThrowsSpecificException) throw new SpecificException(command);
             }
         }
 
         /// <summary>
-        ///     EventHandler1 that subscribes to FakeCommand.
+        ///     Event handler that subscribes to FakeCommand.
         /// </summary>
         public class OnFakeCommandHandled : IEventHandler<FakeCommand>
         {
             public void Handle(FakeCommand command)
             {
                 command.EventHandlerExecuted = true;
+            }
+        }
+
+        /// <summary>
+        ///     The specific command exception is an event listener too.
+        /// </summary>
+        public class SpecificException : CommandException
+        {
+            public FakeCommand Command { get; private set; }
+
+            public SpecificException(FakeCommand command)
+            {
+                Command = command;
+            }
+        }
+
+        /// <summary>
+        ///     Event handler that subscribes to SpecificException.
+        /// </summary>
+        public class OnSpecificException : IEventHandler<SpecificException>
+        {
+            public void Handle(SpecificException eventListener)
+            {
+                eventListener.Command.SpecificExceptionHandlerExecuted = true;
             }
         }
 
@@ -63,13 +93,13 @@ namespace Abstractor.Test.Command
         }
 
         [Fact]
-        public void CommandThrowsException_EventHandlerShouldNotBeExecuted()
+        public void CommandThrowsGenericException_EventHandlerShouldNotBeExecutedAndExceptionRethrows()
         {
             // Arrange
 
             var command = new FakeCommand
             {
-                CommandThrowsException = true
+                CommandThrowsGenericException = true
             };
 
             // Act
@@ -79,6 +109,37 @@ namespace Abstractor.Test.Command
             // Assert
 
             command.EventHandlerExecuted.Should().Be.False();
+        }
+        
+        [Fact]
+        public void CommandThrowsSpecificException_EventHandlerShouldNotBeExecuted_ShouldHandleExceptionAndRethrow()
+        {
+            // Arrange
+
+            var scheduler = new SynchronousTaskScheduler();
+
+            var command = new FakeCommand
+            {
+                CommandThrowsSpecificException = true
+            };
+
+            // Act
+
+            Task.Factory.StartNew(() =>
+            {
+                // Act
+
+                Assert.Throws<SpecificException>(() => CommandDispatcher.Dispatch(command));
+            },
+                CancellationToken.None,
+                TaskCreationOptions.None,
+                scheduler);
+
+            // Assert
+
+            command.EventHandlerExecuted.Should().Be.False();
+
+            command.SpecificExceptionHandlerExecuted.Should().Be.True();
         }
 
         [Fact]

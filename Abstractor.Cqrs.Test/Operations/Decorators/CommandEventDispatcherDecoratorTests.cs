@@ -1,4 +1,5 @@
 ﻿using System;
+using Abstractor.Cqrs.Infrastructure.CrossCuttingConcerns;
 using Abstractor.Cqrs.Infrastructure.Operations.Decorators;
 using Abstractor.Cqrs.Interfaces.Events;
 using Abstractor.Cqrs.Interfaces.Operations;
@@ -53,6 +54,26 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
             // Assert
 
             eventDispatcher.Verify(d => d.Dispatch(It.IsAny<ICommandThatListensToEvents>()), Times.Never);
+        }
+
+        [Theory, AutoMoqData]
+        public void Handle_CommandException_ShouldNotDispatchEvent_ShouldDispatchExceptionAndRethrow(
+            [Frozen] Mock<ICommandHandler<ICommandThatListensToEvents>> commandHandler,
+            [Frozen] Mock<IEventDispatcher> eventDispatcher,
+            ICommandThatListensToEvents command,
+            CommandEventDispatcherDecorator<ICommandThatListensToEvents> decorator)
+        {
+            // Arrange
+
+            commandHandler.Setup(d => d.Handle(It.IsAny<ICommandThatListensToEvents>())).Throws<CommandException>();
+
+            // Act
+
+            Assert.Throws<CommandException>(() => decorator.Handle(command));
+
+            // Assert
+
+            eventDispatcher.Verify(d => d.Dispatch(It.IsAny<CommandException>()), Times.Once);
         }
     }
 }

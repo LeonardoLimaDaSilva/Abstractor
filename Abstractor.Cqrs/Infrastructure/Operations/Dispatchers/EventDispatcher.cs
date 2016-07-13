@@ -27,8 +27,8 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Dispatchers
         {
             Guard.ArgumentIsNotNull(eventListener, nameof(eventListener));
 
-            var triggerType = typeof (IEventHandler<>).MakeGenericType(eventListener.GetType());
-            dynamic handlers = _container.GetAllInstances(triggerType);
+            var handlerType = typeof (IEventHandler<>).MakeGenericType(eventListener.GetType());
+            dynamic handlers = _container.GetAllInstances(handlerType);
 
             foreach (var handler in handlers)
             {

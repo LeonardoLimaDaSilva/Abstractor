@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using Abstractor.Cqrs.Infrastructure.CrossCuttingConcerns;
 using Abstractor.Cqrs.Interfaces.Events;
 using Abstractor.Cqrs.Interfaces.Operations;
 
@@ -31,8 +32,16 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
         /// <param name="command">Command to be handled.</param>
         public void Handle(TCommand command)
         {
-            _handlerFactory().Handle(command);
-            _eventDispatcher.Dispatch(command);
+            try
+            {
+                _handlerFactory().Handle(command);
+                _eventDispatcher.Dispatch(command);
+            }
+            catch (CommandException ex)
+            {
+                _eventDispatcher.Dispatch(ex);
+                throw;
+            }
         }
     }
 }
