@@ -13,7 +13,7 @@ namespace Abstractor.Test.Command
     /// <summary>
     ///     Tests for commands that has multiples event handlers subscribed to.
     /// </summary>
-    public class MultipleCommandEventsTests : BaseTest
+    public class MultipleApplicationEventsTests : BaseTest
     {
         /// <summary>
         ///     Command that is marked as an application event publisher.

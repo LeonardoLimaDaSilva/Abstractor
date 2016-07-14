@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Abstractor.Cqrs.Infrastructure.Operations.Decorators;
 using Abstractor.Cqrs.Interfaces.CrossCuttingConcerns;
 using Abstractor.Cqrs.Interfaces.Events;
@@ -10,13 +10,13 @@ using Xunit;
 
 namespace Abstractor.Cqrs.Test.Operations.Decorators
 {
-    public class ApplicationEventLoggerDecoratorTests
+    public class DomainEventLoggerDecoratorTests
     {
-        public class FakeApplicationEvent : IApplicationEvent
+        public class FakeDomainEvent : IDomainEvent
         {
         }
 
-        public class FakeEventHandler : IApplicationEventHandler<FakeApplicationEvent>
+        public class FakeEventHandler : IDomainEventHandler<FakeDomainEvent>
         {
             public bool Executed { get; private set; }
 
@@ -24,7 +24,7 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
 
             public bool HasInnerException { get; set; }
 
-            public void Handle(FakeApplicationEvent applicationEvent)
+            public void Handle(FakeDomainEvent domainEvent)
             {
                 Executed = true;
 
@@ -41,34 +41,34 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
             [Frozen] Mock<ILogger> logger,
             [Frozen] Mock<IStopwatch> stopwatch,
             [Frozen] Mock<ILoggerSerializer> loggerSerializer,
-            FakeApplicationEvent applicationEvent)
+            FakeDomainEvent domainEvent)
         {
             // Arrange
 
             var eventHandler = new FakeEventHandler();
 
-            var decorator = new ApplicationEventLoggerDecorator<FakeApplicationEvent>(
+            var decorator = new DomainEventLoggerDecorator<FakeDomainEvent>(
                 () => eventHandler,
                 stopwatch.Object,
                 loggerSerializer.Object,
                 logger.Object);
 
-            loggerSerializer.Setup(s => s.Serialize(applicationEvent)).Returns("Serialized parameters");
+            loggerSerializer.Setup(s => s.Serialize(domainEvent)).Returns("Serialized parameters");
 
             stopwatch.Setup(s => s.GetElapsed()).Returns(TimeSpan.Zero);
 
             // Act
 
-            decorator.Handle(applicationEvent);
+            decorator.Handle(domainEvent);
 
             // Assert
 
             stopwatch.Verify(s => s.Start(), Times.Once());
             stopwatch.Verify(s => s.Stop(), Times.Once());
 
-            logger.Verify(l => l.Log("Executing application event \"FakeEventHandler\" with the parameters:"), Times.Once);
+            logger.Verify(l => l.Log("Executing domain event \"FakeDomainEvent\" with the parameters:"), Times.Once);
             logger.Verify(l => l.Log("Serialized parameters"), Times.Once);
-            logger.Verify(l => l.Log("Application event \"FakeEventHandler\" executed in 00:00:00."), Times.Once);
+            logger.Verify(l => l.Log("Domain event \"FakeDomainEvent\" executed in 00:00:00."), Times.Once);
 
             eventHandler.Executed.Should().Be.True();
         }
@@ -78,19 +78,19 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
             [Frozen] Mock<ILogger> logger,
             [Frozen] Mock<IStopwatch> stopwatch,
             [Frozen] Mock<ILoggerSerializer> loggerSerializer,
-            FakeApplicationEvent applicationEvent)
+            FakeDomainEvent domainEvent)
         {
             // Arrange
 
             var eventHandler = new FakeEventHandler();
 
-            var decorator = new ApplicationEventLoggerDecorator<FakeApplicationEvent>(
+            var decorator = new DomainEventLoggerDecorator<FakeDomainEvent>(
                 () => eventHandler,
                 stopwatch.Object,
                 loggerSerializer.Object,
                 logger.Object);
 
-            loggerSerializer.Setup(s => s.Serialize(applicationEvent)).Returns("Serialized parameters");
+            loggerSerializer.Setup(s => s.Serialize(domainEvent)).Returns("Serialized parameters");
 
             stopwatch.Setup(s => s.GetElapsed()).Returns(TimeSpan.Zero);
 
@@ -99,18 +99,18 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
 
             // Act
 
-            decorator.Handle(applicationEvent);
+            decorator.Handle(domainEvent);
 
             // Assert
 
             stopwatch.Verify(s => s.Start(), Times.Once());
             stopwatch.Verify(s => s.Stop(), Times.Once());
 
-            logger.Verify(l => l.Log("Executing application event \"FakeEventHandler\" with the parameters:"), Times.Once);
+            logger.Verify(l => l.Log("Executing domain event \"FakeDomainEvent\" with the parameters:"), Times.Once);
             logger.Verify(
                 l => l.Log("Could not serialize the parameters: Serialization exception."),
                 Times.Once);
-            logger.Verify(l => l.Log("Application event \"FakeEventHandler\" executed in 00:00:00."), Times.Once);
+            logger.Verify(l => l.Log("Domain event \"FakeDomainEvent\" executed in 00:00:00."), Times.Once);
 
             eventHandler.Executed.Should().Be.True();
         }
@@ -120,35 +120,35 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
             [Frozen] Mock<ILogger> logger,
             [Frozen] Mock<IStopwatch> stopwatch,
             [Frozen] Mock<ILoggerSerializer> loggerSerializer,
-            FakeApplicationEvent applicationEvent)
+            FakeDomainEvent domainEvent)
         {
             // Arrange
 
-            var eventHandler = new FakeEventHandler {ThrowsException = true};
+            var eventHandler = new FakeEventHandler { ThrowsException = true };
 
-            var decorator = new ApplicationEventLoggerDecorator<FakeApplicationEvent>(
+            var decorator = new DomainEventLoggerDecorator<FakeDomainEvent>(
                 () => eventHandler,
                 stopwatch.Object,
                 loggerSerializer.Object,
                 logger.Object);
 
-            loggerSerializer.Setup(s => s.Serialize(applicationEvent)).Returns("Serialized parameters");
+            loggerSerializer.Setup(s => s.Serialize(domainEvent)).Returns("Serialized parameters");
 
             stopwatch.Setup(s => s.GetElapsed()).Returns(TimeSpan.Zero);
 
             // Act
 
-            Assert.Throws<Exception>(() => decorator.Handle(applicationEvent));
+            Assert.Throws<Exception>(() => decorator.Handle(domainEvent));
 
             // Assert
 
             stopwatch.Verify(s => s.Start(), Times.Once());
             stopwatch.Verify(s => s.Stop(), Times.Once());
 
-            logger.Verify(l => l.Log("Executing application event \"FakeEventHandler\" with the parameters:"), Times.Once);
+            logger.Verify(l => l.Log("Executing domain event \"FakeDomainEvent\" with the parameters:"), Times.Once);
             logger.Verify(l => l.Log("Serialized parameters"), Times.Once);
             logger.Verify(l => l.Log("Exception caught: FakeEventHandlerException."), Times.Once);
-            logger.Verify(l => l.Log("Application event \"FakeEventHandler\" executed in 00:00:00."), Times.Once);
+            logger.Verify(l => l.Log("Domain event \"FakeDomainEvent\" executed in 00:00:00."), Times.Once);
 
             eventHandler.Executed.Should().Be.True();
         }
@@ -158,7 +158,7 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
             [Frozen] Mock<ILogger> logger,
             [Frozen] Mock<IStopwatch> stopwatch,
             [Frozen] Mock<ILoggerSerializer> loggerSerializer,
-            FakeApplicationEvent applicationEvent)
+            FakeDomainEvent domainEvent)
         {
             // Arrange
 
@@ -168,30 +168,30 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
                 HasInnerException = true
             };
 
-            var decorator = new ApplicationEventLoggerDecorator<FakeApplicationEvent>(
+            var decorator = new DomainEventLoggerDecorator<FakeDomainEvent>(
                 () => eventHandler,
                 stopwatch.Object,
                 loggerSerializer.Object,
                 logger.Object);
 
-            loggerSerializer.Setup(s => s.Serialize(applicationEvent)).Returns("Serialized parameters");
+            loggerSerializer.Setup(s => s.Serialize(domainEvent)).Returns("Serialized parameters");
 
             stopwatch.Setup(s => s.GetElapsed()).Returns(TimeSpan.Zero);
 
             // Act
 
-            Assert.Throws<Exception>(() => decorator.Handle(applicationEvent));
+            Assert.Throws<Exception>(() => decorator.Handle(domainEvent));
 
             // Assert
 
             stopwatch.Verify(s => s.Start(), Times.Once());
             stopwatch.Verify(s => s.Stop(), Times.Once());
 
-            logger.Verify(l => l.Log("Executing application event \"FakeEventHandler\" with the parameters:"), Times.Once);
+            logger.Verify(l => l.Log("Executing domain event \"FakeDomainEvent\" with the parameters:"), Times.Once);
             logger.Verify(l => l.Log("Serialized parameters"), Times.Once);
             logger.Verify(l => l.Log("Exception caught: FakeEventHandlerException."), Times.Once);
             logger.Verify(l => l.Log("Inner exception caught: FakeEventHandlerInnerException."), Times.Once);
-            logger.Verify(l => l.Log("Application event \"FakeEventHandler\" executed in 00:00:00."), Times.Once);
+            logger.Verify(l => l.Log("Domain event \"FakeDomainEvent\" executed in 00:00:00."), Times.Once);
 
             eventHandler.Executed.Should().Be.True();
         }

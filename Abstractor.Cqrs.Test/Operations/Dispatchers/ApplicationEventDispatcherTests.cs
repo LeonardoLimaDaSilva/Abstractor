@@ -23,23 +23,13 @@ namespace Abstractor.Cqrs.Test.Operations.Dispatchers
         {
             Assert.Throws<ArgumentNullException>(() => dispatcher.Dispatch(null));
         }
-
-        /// <summary>
-        ///     Dispatch inside a sync context.
-        ///     Build generic event handler and get all registrations for this type from container.
-        ///     Should execute all handlers passing the event listener.
-        /// </summary>
-        /// <param name="container"></param>
-        /// <param name="eventHandler1"></param>
-        /// <param name="eventHandler2"></param>
-        /// <param name="eventListener"></param>
-        /// <param name="dispatcher"></param>
+        
         [Theory, AutoMoqData]
-        public void Dispatch_SyncContext_BuildGenericType_ExecutesAllHandlersPassingTheEventListener(
+        public void Dispatch_SyncContext_BuildGenericType_ExecutesAllHandlersPassingTheEvent(
             [Frozen] Mock<IContainer> container,
             Mock<IApplicationEventHandler<FakeApplicationEvent>> eventHandler1,
             Mock<IApplicationEventHandler<FakeApplicationEvent>> eventHandler2,
-            FakeApplicationEvent eventListener,
+            FakeApplicationEvent applicationEvent,
             ApplicationEventDispatcher dispatcher)
         {
             // Arrange
@@ -61,7 +51,7 @@ namespace Abstractor.Cqrs.Test.Operations.Dispatchers
             {
                 // Act
 
-                dispatcher.Dispatch(eventListener);
+                dispatcher.Dispatch(applicationEvent);
             },
                 CancellationToken.None,
                 TaskCreationOptions.None,
@@ -69,15 +59,15 @@ namespace Abstractor.Cqrs.Test.Operations.Dispatchers
 
             // Assert
 
-            eventHandler1.Verify(t => t.Handle(eventListener), Times.Once);
+            eventHandler1.Verify(t => t.Handle(applicationEvent), Times.Once);
 
-            eventHandler2.Verify(t => t.Handle(eventListener), Times.Once);
+            eventHandler2.Verify(t => t.Handle(applicationEvent), Times.Once);
         }
 
         [Theory, AutoMoqData]
         public void Dispatch_SyncContext_NoHandlersRegistered_DoNothing(
             [Frozen] Mock<IContainer> container,
-            FakeApplicationEvent eventListener,
+            FakeApplicationEvent applicationEvent,
             ApplicationEventDispatcher dispatcher)
         {
             // Arrange
@@ -93,7 +83,7 @@ namespace Abstractor.Cqrs.Test.Operations.Dispatchers
             {
                 // Act
 
-                dispatcher.Dispatch(eventListener);
+                dispatcher.Dispatch(applicationEvent);
             },
                 CancellationToken.None,
                 TaskCreationOptions.None,
@@ -105,7 +95,7 @@ namespace Abstractor.Cqrs.Test.Operations.Dispatchers
             [Frozen] Mock<IContainer> container,
             Mock<IApplicationEventHandler<FakeApplicationEvent>> eventHandler1,
             Mock<IApplicationEventHandler<FakeApplicationEvent>> eventHandler2,
-            FakeApplicationEvent eventListener,
+            FakeApplicationEvent applicationEvent,
             ApplicationEventDispatcher dispatcher)
         {
             // Arrange
@@ -129,7 +119,7 @@ namespace Abstractor.Cqrs.Test.Operations.Dispatchers
             {
                 // Act
 
-                dispatcher.Dispatch(eventListener);
+                dispatcher.Dispatch(applicationEvent);
             },
                 CancellationToken.None,
                 TaskCreationOptions.None,
@@ -137,9 +127,9 @@ namespace Abstractor.Cqrs.Test.Operations.Dispatchers
 
             // Assert
 
-            eventHandler1.Verify(t => t.Handle(eventListener), Times.Once);
+            eventHandler1.Verify(t => t.Handle(applicationEvent), Times.Once);
 
-            eventHandler2.Verify(t => t.Handle(eventListener), Times.Once);
+            eventHandler2.Verify(t => t.Handle(applicationEvent), Times.Once);
         }
     }
 }

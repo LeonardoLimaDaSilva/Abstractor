@@ -91,10 +91,12 @@
   <ItemGroup>
     <Compile Include="Command\CommandLoggingTests.cs" />
     <Compile Include="Command\ApplicationEventLoggingTests.cs" />
-    <Compile Include="Command\MultipleCommandEventsTests.cs" />
+    <Compile Include="Command\MultipleApplicationEventsTests.cs" />
+    <Compile Include="Command\MultipleDomainEventTests.cs" />
+    <Compile Include="Command\SingleDomainEventTests.cs" />
     <Compile Include="Query\QueryLoggingTests.cs" />
     <Compile Include="Query\QueryDispatcherTests.cs" />
-    <Compile Include="Command\SingleCommandEventTests.cs" />
+    <Compile Include="Command\SingleApplicationEventTests.cs" />
     <Compile Include="Command\CommandPostActionTests.cs" />
     <Compile Include="Command\CommandValidationTests.cs" />
     <Compile Include="Command\TransactionCommandTests.cs" />

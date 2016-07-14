@@ -76,6 +76,7 @@
     <Compile Include="Infrastructure\CrossCuttingConcerns\AttributeFinder.cs" />
     <Compile Include="Infrastructure\Operations\Decorators\CommandLoggerDecorator.cs" />
     <Compile Include="Infrastructure\Operations\Decorators\ApplicationEventLoggerDecorator.cs" />
+    <Compile Include="Infrastructure\Operations\Decorators\DomainEventDispatcherDecorator.cs" />
     <Compile Include="Infrastructure\Operations\Decorators\DomainEventLoggerDecorator.cs" />
     <Compile Include="Infrastructure\Operations\Decorators\QueryAsyncLoggerDecorator.cs" />
     <Compile Include="Infrastructure\Operations\Decorators\QueryLoggerDecorator.cs" />

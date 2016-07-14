@@ -14,7 +14,7 @@ namespace Abstractor.Test.Command
     /// <summary>
     ///     Tests for commands that has a single event handler subscribed to.
     /// </summary>
-    public class SingleCommandEventTests : BaseTest
+    public class SingleApplicationEventTests : BaseTest
     {
         /// <summary>
         ///     Command that is marked as an event publisher.

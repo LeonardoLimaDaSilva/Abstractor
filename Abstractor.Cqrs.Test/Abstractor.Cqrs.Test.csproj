@@ -93,6 +93,8 @@
     <Compile Include="Domain\ValueObjectTests.cs" />
     <Compile Include="Operations\Decorators\CommandLoggerDecoratorTests.cs" />
     <Compile Include="Operations\Decorators\ApplicationEventLoggerDecoratorTests.cs" />
+    <Compile Include="Operations\Decorators\DomainEventDispatcherDecoratorTests.cs" />
+    <Compile Include="Operations\Decorators\DomainEventLoggerDecoratorTests.cs" />
     <Compile Include="Operations\Decorators\QueryAsyncLoggerDecoratorTests.cs" />
     <Compile Include="Operations\Decorators\QueryLoggerDecoratorTests.cs" />
     <Compile Include="Operations\Dispatchers\ApplicationEventDispatcherTests.cs" />
@@ -109,6 +111,7 @@
     <Compile Include="Operations\Decorators\QueryAsyncLifetimeScopeDecoratorTests.cs" />
     <Compile Include="Operations\Decorators\QueryLifetimeScopeDecoratorTests.cs" />
     <Compile Include="Operations\Dispatchers\CommandDispatcherTests.cs" />
+    <Compile Include="Operations\Dispatchers\DomainEventDispatcherTests.cs" />
     <Compile Include="Operations\Dispatchers\QueryDispatcherTests.cs" />
     <Compile Include="Persistence\BaseDataContextTests.cs" />
     <Compile Include="Persistence\BaseDataSetTests.cs" />

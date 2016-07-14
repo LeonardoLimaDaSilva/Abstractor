@@ -1,4 +1,5 @@
-﻿using Abstractor.Cqrs.Interfaces.CompositionRoot;
+﻿using Abstractor.Cqrs.Infrastructure.CrossCuttingConcerns;
+using Abstractor.Cqrs.Interfaces.CompositionRoot;
 using Abstractor.Cqrs.Interfaces.Events;
 
 namespace Abstractor.Cqrs.Infrastructure.Operations.Dispatchers
@@ -21,6 +22,8 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Dispatchers
         /// <param name="domainEvent">Event to be dispatched.</param>
         public void Dispatch(IDomainEvent domainEvent)
         {
+            Guard.ArgumentIsNotNull(domainEvent, nameof(domainEvent));
+
             var handlerType = typeof (IDomainEventHandler<>).MakeGenericType(domainEvent.GetType());
             dynamic handlers = _container.GetAllInstances(handlerType);
 

@@ -68,12 +68,12 @@ namespace Abstractor.Test.Command
             // Assert
 
             Logger.MessagesShouldBe(
-                "Executing event \"LoggedCommandHandled1\" with the parameters:",
+                "Executing application event \"LoggedCommandHandled1\" with the parameters:",
                 "{}",
-                "Event \"LoggedCommandHandled1\" executed in 00:00:00.",
-                "Executing event \"LoggedCommandHandled2\" with the parameters:",
+                "Application event \"LoggedCommandHandled1\" executed in 00:00:00.",
+                "Executing application event \"LoggedCommandHandled2\" with the parameters:",
                 "{}",
-                "Event \"LoggedCommandHandled2\" executed in 00:00:00.");
+                "Application event \"LoggedCommandHandled2\" executed in 00:00:00.");
         }
     }
 }

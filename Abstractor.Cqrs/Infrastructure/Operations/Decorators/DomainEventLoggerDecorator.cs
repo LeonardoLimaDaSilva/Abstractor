@@ -38,7 +38,7 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
 
             try
             {
-                _logger.Log($"Executing event \"{domainEvent.GetType().Name}\" with the parameters:");
+                _logger.Log($"Executing domain event \"{domainEvent.GetType().Name}\" with the parameters:");
 
                 try
                 {
@@ -65,7 +65,7 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
             {
                 _stopwatch.Stop();
 
-                _logger.Log($"Event \"{domainEvent.GetType().Name}\" executed in {_stopwatch.GetElapsed()}.");
+                _logger.Log($"Domain event \"{domainEvent.GetType().Name}\" executed in {_stopwatch.GetElapsed()}.");
             }
         }
     }

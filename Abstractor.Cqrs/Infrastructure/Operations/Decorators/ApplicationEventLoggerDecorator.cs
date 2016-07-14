@@ -40,7 +40,7 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
 
             try
             {
-                _logger.Log($"Executing event \"{handler.GetType().Name}\" with the parameters:");
+                _logger.Log($"Executing application event \"{handler.GetType().Name}\" with the parameters:");
 
                 try
                 {
@@ -67,7 +67,7 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
             {
                 _stopwatch.Stop();
 
-                _logger.Log($"Event \"{handler.GetType().Name}\" executed in {_stopwatch.GetElapsed()}.");
+                _logger.Log($"Application event \"{handler.GetType().Name}\" executed in {_stopwatch.GetElapsed()}.");
             }
         }
     }
