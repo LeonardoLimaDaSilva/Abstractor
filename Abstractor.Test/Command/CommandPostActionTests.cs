@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using Abstractor.Cqrs.Interfaces.Events;
 using Abstractor.Cqrs.Interfaces.Operations;
 using Abstractor.Test.Helpers;
 using SharpTestsEx;
@@ -24,11 +26,13 @@ namespace Abstractor.Test.Command
                 _commandPostAction = commandPostAction;
             }
 
-            public void Handle(PostActionCommand command)
+            public IEnumerable<IDomainEvent> Handle(PostActionCommand command)
             {
                 _commandPostAction.Execute += () => { command.ActionExecuted = true; };
 
                 if (command.ThrowException) throw new Exception();
+
+                yield break;
             }
         }
 

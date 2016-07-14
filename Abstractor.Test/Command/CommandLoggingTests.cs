@@ -1,6 +1,8 @@
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Abstractor.Cqrs.Infrastructure.Operations;
+using Abstractor.Cqrs.Interfaces.Events;
 using Abstractor.Cqrs.Interfaces.Operations;
 using Abstractor.Test.Helpers;
 using Xunit;
@@ -28,8 +30,9 @@ namespace Abstractor.Test.Command
         [Log]
         public class LoggedCommandCommandHandler : ICommandHandler<LoggedCommand>
         {
-            public void Handle(LoggedCommand command)
+            public IEnumerable<IDomainEvent> Handle(LoggedCommand command)
             {
+                yield break;
             }
         }
 
@@ -37,23 +40,26 @@ namespace Abstractor.Test.Command
         [Transactional]
         public class TransactionalLoggedCommandHandler : ICommandHandler<TransactionalLoggedCommand>
         {
-            public void Handle(TransactionalLoggedCommand command)
+            public IEnumerable<IDomainEvent> Handle(TransactionalLoggedCommand command)
             {
+                yield break;
             }
         }
 
         [Transactional]
         public class TransactionalNonLoggedCommandHandler : ICommandHandler<TransactionalNonLoggedCommand>
         {
-            public void Handle(TransactionalNonLoggedCommand command)
+            public IEnumerable<IDomainEvent> Handle(TransactionalNonLoggedCommand command)
             {
+                yield break;
             }
         }
 
         public class NonTransactionalNonLoggedCommandHandler : ICommandHandler<NonTransactionalNonLoggedCommand>
         {
-            public void Handle(NonTransactionalNonLoggedCommand command)
+            public IEnumerable<IDomainEvent> Handle(NonTransactionalNonLoggedCommand command)
             {
+                yield break;
             }
         }
 

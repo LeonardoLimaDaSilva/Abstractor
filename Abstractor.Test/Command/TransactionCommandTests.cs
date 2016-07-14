@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using Abstractor.Cqrs.Infrastructure.Operations;
+using Abstractor.Cqrs.Interfaces.Events;
 using Abstractor.Cqrs.Interfaces.Operations;
 using Abstractor.Test.Helpers;
 using Xunit;
@@ -18,15 +20,17 @@ namespace Abstractor.Test.Command
         [Transactional]
         public class TransactionalCommandHandler : ICommandHandler<TransactionalCommand>
         {
-            public void Handle(TransactionalCommand command)
+            public IEnumerable<IDomainEvent> Handle(TransactionalCommand command)
             {
+                yield break;
             }
         }
 
         public class NonTransactionalCommandHandler : ICommandHandler<NonTransactionalCommand>
         {
-            public void Handle(NonTransactionalCommand command)
+            public IEnumerable<IDomainEvent> Handle(NonTransactionalCommand command)
             {
+                yield break;
             }
         }
 

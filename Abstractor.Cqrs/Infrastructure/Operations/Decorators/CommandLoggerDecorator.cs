@@ -1,6 +1,8 @@
 using System;
-using System.Diagnostics;
+using System.Collections.Generic;
+using System.Linq;
 using Abstractor.Cqrs.Interfaces.CrossCuttingConcerns;
+using Abstractor.Cqrs.Interfaces.Events;
 using Abstractor.Cqrs.Interfaces.Operations;
 
 namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
@@ -9,7 +11,6 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
     ///     Logs the execution of the command handler.
     /// </summary>
     /// <typeparam name="TCommand">Command to be handled.</typeparam>
-    [DebuggerStepThrough]
     public sealed class CommandLoggerDecorator<TCommand> : ICommandHandler<TCommand>
         where TCommand : ICommand
     {
@@ -34,7 +35,8 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
         ///     Logs the execution of the command handler.
         /// </summary>
         /// <param name="command">Command to be handled.</param>
-        public void Handle(TCommand command)
+        /// <returns>List of domain events raised by the command, if any.</returns>
+        public IEnumerable<IDomainEvent> Handle(TCommand command)
         {
             _stopwatch.Start();
 
@@ -52,7 +54,7 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
                     _logger.Log($"Could not serialize the parameters: {ex.Message}");
                 }
 
-                _handlerFactory().Handle(command);
+                return _handlerFactory().Handle(command)?.ToList();
             }
             catch (Exception ex)
             {

@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Abstractor.Cqrs.Infrastructure.CrossCuttingConcerns;
 using Abstractor.Cqrs.Interfaces.CompositionRoot;
 using Abstractor.Cqrs.Interfaces.Operations;
@@ -9,7 +8,6 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Dispatchers
     /// <summary>
     ///     Dispatcher for a query handler.
     /// </summary>
-    [DebuggerStepThrough]
     public sealed class QueryDispatcher : IQueryDispatcher
     {
         private readonly IContainer _container;

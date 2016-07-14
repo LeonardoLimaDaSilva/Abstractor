@@ -1,25 +1,23 @@
-﻿using System;
-using System.Diagnostics;
+using System;
 using Abstractor.Cqrs.Interfaces.CrossCuttingConcerns;
 using Abstractor.Cqrs.Interfaces.Events;
 
 namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
 {
     /// <summary>
-    ///     Logs the execution of the event handler and supresses any possible exception.
+    ///     Logs the execution of the event handler.
     /// </summary>
-    /// <typeparam name="TEventListener">Listener that the event subscribes to.</typeparam>
-    [DebuggerStepThrough]
-    public sealed class EventLoggerDecorator<TEventListener> : IEventHandler<TEventListener>
-        where TEventListener : IEventListener
+    /// <typeparam name="TEvent">Domain event in which the handler subscribes to.</typeparam>
+    public sealed class DomainEventLoggerDecorator<TEvent> : IDomainEventHandler<TEvent>
+        where TEvent : IDomainEvent
     {
-        private readonly Func<IEventHandler<TEventListener>> _handlerFactory;
+        private readonly Func<IDomainEventHandler<TEvent>> _handlerFactory;
         private readonly ILogger _logger;
         private readonly ILoggerSerializer _loggerSerializer;
         private readonly IStopwatch _stopwatch;
 
-        public EventLoggerDecorator(
-            Func<IEventHandler<TEventListener>> handlerFactory,
+        public DomainEventLoggerDecorator(
+            Func<IDomainEventHandler<TEvent>> handlerFactory,
             IStopwatch stopwatch,
             ILoggerSerializer loggerSerializer,
             ILogger logger)
@@ -31,30 +29,28 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
         }
 
         /// <summary>
-        ///     Logs the execution of the event handler and supresses any possible exception.
+        ///     Logs the execution of the event handler.
         /// </summary>
-        /// <param name="eventListener">Listener that the event subscribes to.</param>
-        public void Handle(TEventListener eventListener)
+        /// <param name="domainEvent">Domain event in which the handler subscribes to.</param>
+        public void Handle(TEvent domainEvent)
         {
             _stopwatch.Start();
 
-            var handler = _handlerFactory();
-
             try
             {
-                _logger.Log($"Executing event \"{handler.GetType().Name}\" with the listener parameters:");
+                _logger.Log($"Executing event \"{domainEvent.GetType().Name}\" with the parameters:");
 
                 try
                 {
-                    var parameters = _loggerSerializer.Serialize(eventListener);
+                    var parameters = _loggerSerializer.Serialize(domainEvent);
                     _logger.Log(parameters);
                 }
                 catch (Exception ex)
                 {
-                    _logger.Log($"Could not serialize the listener parameters: {ex.Message}");
+                    _logger.Log($"Could not serialize the parameters: {ex.Message}");
                 }
 
-                _handlerFactory().Handle(eventListener);
+                _handlerFactory().Handle(domainEvent);
             }
             catch (Exception ex)
             {
@@ -62,12 +58,14 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
 
                 if (ex.InnerException != null)
                     _logger.Log("Inner exception caught: " + ex.InnerException.Message);
+
+                throw;
             }
             finally
             {
                 _stopwatch.Stop();
 
-                _logger.Log($"Event \"{handler.GetType().Name}\" executed in {_stopwatch.GetElapsed()}.");
+                _logger.Log($"Event \"{domainEvent.GetType().Name}\" executed in {_stopwatch.GetElapsed()}.");
             }
         }
     }

@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using Abstractor.Cqrs.Interfaces.CompositionRoot;
 using Abstractor.Cqrs.Interfaces.Operations;
@@ -11,7 +10,6 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
     /// </summary>
     /// <typeparam name="TQuery">Query to be handled.</typeparam>
     /// <typeparam name="TResult">Return type.</typeparam>
-    [DebuggerStepThrough]
     public sealed class QueryAsyncLifetimeScopeDecorator<TQuery, TResult> : IQueryAsyncHandler<TQuery, TResult>
         where TQuery : IQuery<TResult>
     {

@@ -31,7 +31,7 @@ namespace Abstractor.Cqrs.Infrastructure.CompositionRoot.Installers
 
             container.RegisterDecoratorSingleton(
                 typeof (ICommandHandler<>),
-                typeof (CommandEventDispatcherDecorator<>));
+                typeof (ApplicationEventDispatcherDecorator<>));
 
             container.RegisterDecoratorSingleton(
                 typeof (ICommandHandler<>),

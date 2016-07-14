@@ -1,6 +1,8 @@
 ﻿using System;
-using System.Diagnostics;
+using System.Collections.Generic;
+using System.Linq;
 using Abstractor.Cqrs.Interfaces.CrossCuttingConcerns;
+using Abstractor.Cqrs.Interfaces.Events;
 using Abstractor.Cqrs.Interfaces.Operations;
 using Abstractor.Cqrs.Interfaces.Persistence;
 
@@ -10,7 +12,6 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
     ///     Commits the unit of work after the successful command execution.
     /// </summary>
     /// <typeparam name="TCommand">Command to be handled.</typeparam>
-    [DebuggerStepThrough]
     public sealed class CommandTransactionDecorator<TCommand> : ICommandHandler<TCommand>
         where TCommand : ICommand
     {
@@ -35,7 +36,8 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
         ///     Commits the unit of work after the successful command execution.
         /// </summary>
         /// <param name="command">Command to be handled.</param>
-        public void Handle(TCommand command)
+        /// <returns>List of domain events raised by the command, if any.</returns>
+        public IEnumerable<IDomainEvent> Handle(TCommand command)
         {
             var handler = _handlerFactory();
 
@@ -43,10 +45,12 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
 
             if (log) _logger.Log("Starting transaction...");
 
-            _handlerFactory().Handle(command);
+            var domainEvents = _handlerFactory().Handle(command)?.ToList();
             _unitOfWork.Commit();
 
             if (log) _logger.Log("Transaction committed.");
+
+            return domainEvents;
         }
     }
 }

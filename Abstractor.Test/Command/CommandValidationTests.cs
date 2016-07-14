@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Abstractor.Cqrs.Interfaces.Events;
 using Abstractor.Cqrs.Interfaces.Operations;
 using Abstractor.Test.Helpers;
 using Xunit;
@@ -15,8 +17,9 @@ namespace Abstractor.Test.Command
 
         public class ValidationCommandHandler : ICommandHandler<ValidationCommand>
         {
-            public void Handle(ValidationCommand command)
+            public IEnumerable<IDomainEvent> Handle(ValidationCommand command)
             {
+                yield break;
             }
         }
 

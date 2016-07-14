@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using Abstractor.Cqrs.Interfaces.Events;
 using Abstractor.Cqrs.Interfaces.Operations;
 using Abstractor.Test.Helpers;
 using SharpTestsEx;
@@ -14,9 +16,10 @@ namespace Abstractor.Test.Command
 
         public class FakeCommandHandler : ICommandHandler<FakeCommand>
         {
-            public void Handle(FakeCommand command)
+            public IEnumerable<IDomainEvent> Handle(FakeCommand command)
             {
                 command.HandlerExecuted = true;
+                yield break;
             }
         }
 

@@ -12,14 +12,14 @@ using Xunit;
 
 namespace Abstractor.Cqrs.Test.Operations.Dispatchers
 {
-    public class EventDispatcherTests
+    public class ApplicationEventDispatcherTests
     {
-        public class FakeEventListener : IEventListener
+        public class FakeApplicationEvent : IApplicationEvent
         {
         }
 
         [Theory, AutoMoqData]
-        public void Dispatch_NullEvent_ThrowsArgumentNullException(EventDispatcher dispatcher)
+        public void Dispatch_NullEvent_ThrowsArgumentNullException(ApplicationEventDispatcher dispatcher)
         {
             Assert.Throws<ArgumentNullException>(() => dispatcher.Dispatch(null));
         }
@@ -37,18 +37,18 @@ namespace Abstractor.Cqrs.Test.Operations.Dispatchers
         [Theory, AutoMoqData]
         public void Dispatch_SyncContext_BuildGenericType_ExecutesAllHandlersPassingTheEventListener(
             [Frozen] Mock<IContainer> container,
-            Mock<IEventHandler<FakeEventListener>> eventHandler1,
-            Mock<IEventHandler<FakeEventListener>> eventHandler2,
-            FakeEventListener eventListener,
-            EventDispatcher dispatcher)
+            Mock<IApplicationEventHandler<FakeApplicationEvent>> eventHandler1,
+            Mock<IApplicationEventHandler<FakeApplicationEvent>> eventHandler2,
+            FakeApplicationEvent eventListener,
+            ApplicationEventDispatcher dispatcher)
         {
             // Arrange
 
             var scheduler = new SynchronousTaskScheduler();
 
-            var genericTypeName = typeof (IEventHandler<FakeEventListener>).FullName;
+            var genericTypeName = typeof (IApplicationEventHandler<FakeApplicationEvent>).FullName;
 
-            var eventHandlers = new List<IEventHandler<FakeEventListener>>
+            var eventHandlers = new List<IApplicationEventHandler<FakeApplicationEvent>>
             {
                 eventHandler1.Object,
                 eventHandler2.Object
@@ -77,17 +77,17 @@ namespace Abstractor.Cqrs.Test.Operations.Dispatchers
         [Theory, AutoMoqData]
         public void Dispatch_SyncContext_NoHandlersRegistered_DoNothing(
             [Frozen] Mock<IContainer> container,
-            FakeEventListener eventListener,
-            EventDispatcher dispatcher)
+            FakeApplicationEvent eventListener,
+            ApplicationEventDispatcher dispatcher)
         {
             // Arrange
 
             var scheduler = new SynchronousTaskScheduler();
 
-            var genericTypeName = typeof (IEventHandler<FakeEventListener>).FullName;
+            var genericTypeName = typeof (IApplicationEventHandler<FakeApplicationEvent>).FullName;
 
             container.Setup(c => c.GetAllInstances(It.Is<Type>(t => t.FullName == genericTypeName)))
-                     .Returns(new List<IEventHandler<FakeEventListener>>());
+                     .Returns(new List<IApplicationEventHandler<FakeApplicationEvent>>());
 
             Task.Factory.StartNew(() =>
             {
@@ -103,18 +103,18 @@ namespace Abstractor.Cqrs.Test.Operations.Dispatchers
         [Theory, AutoMoqData]
         public void Dispatch_EventHandler1ThrowsException_ExceptionShouldBeSupressentAndEventHandler2BeExecuted(
             [Frozen] Mock<IContainer> container,
-            Mock<IEventHandler<FakeEventListener>> eventHandler1,
-            Mock<IEventHandler<FakeEventListener>> eventHandler2,
-            FakeEventListener eventListener,
-            EventDispatcher dispatcher)
+            Mock<IApplicationEventHandler<FakeApplicationEvent>> eventHandler1,
+            Mock<IApplicationEventHandler<FakeApplicationEvent>> eventHandler2,
+            FakeApplicationEvent eventListener,
+            ApplicationEventDispatcher dispatcher)
         {
             // Arrange
 
             var scheduler = new SynchronousTaskScheduler();
 
-            var genericTypeName = typeof (IEventHandler<FakeEventListener>).FullName;
+            var genericTypeName = typeof (IApplicationEventHandler<FakeApplicationEvent>).FullName;
 
-            var eventHandlers = new List<IEventHandler<FakeEventListener>>
+            var eventHandlers = new List<IApplicationEventHandler<FakeApplicationEvent>>
             {
                 eventHandler1.Object,
                 eventHandler2.Object
@@ -123,7 +123,7 @@ namespace Abstractor.Cqrs.Test.Operations.Dispatchers
             container.Setup(c => c.GetAllInstances(It.Is<Type>(t => t.FullName == genericTypeName)))
                      .Returns(eventHandlers);
 
-            eventHandler1.Setup(h => h.Handle(It.IsAny<FakeEventListener>())).Throws<Exception>();
+            eventHandler1.Setup(h => h.Handle(It.IsAny<FakeApplicationEvent>())).Throws<Exception>();
 
             Task.Factory.StartNew(() =>
             {

@@ -1,6 +1,8 @@
 using System;
-using System.Diagnostics;
+using System.Collections.Generic;
+using System.Linq;
 using Abstractor.Cqrs.Interfaces.CrossCuttingConcerns;
+using Abstractor.Cqrs.Interfaces.Events;
 using Abstractor.Cqrs.Interfaces.Operations;
 
 namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
@@ -9,7 +11,6 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
     ///     Validates the command <see cref="TCommand" /> using the <see cref="IValidator" />.
     /// </summary>
     /// <typeparam name="TCommand">Command to be handled.</typeparam>
-    [DebuggerStepThrough]
     public sealed class CommandValidationDecorator<TCommand> : ICommandHandler<TCommand>
         where TCommand : ICommand
     {
@@ -28,10 +29,11 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
         ///     Validates the command before his execution.
         /// </summary>
         /// <param name="command">Command to be handled.</param>
-        public void Handle(TCommand command)
+        /// <returns>List of domain events raised by the command, if any.</returns>
+        public IEnumerable<IDomainEvent> Handle(TCommand command)
         {
             _validator.Validate(command);
-            _handlerFactory().Handle(command);
+            return _handlerFactory().Handle(command)?.ToList();
         }
     }
 }

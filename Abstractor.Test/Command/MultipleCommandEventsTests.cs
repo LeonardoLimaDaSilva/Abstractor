@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Abstractor.Cqrs.Interfaces.Events;
@@ -15,9 +16,9 @@ namespace Abstractor.Test.Command
     public class MultipleCommandEventsTests : BaseTest
     {
         /// <summary>
-        ///     Command that is marked as an event listener.
+        ///     Command that is marked as an application event publisher.
         /// </summary>
-        public class FakeCommand : ICommand, IEventListener
+        public class FakeCommand : ICommand, IApplicationEvent
         {
             public bool CommandThrowsException { get; set; }
 
@@ -39,16 +40,17 @@ namespace Abstractor.Test.Command
         /// </summary>
         public class FakeCommandHandler : ICommandHandler<FakeCommand>
         {
-            public void Handle(FakeCommand command)
+            public IEnumerable<IDomainEvent> Handle(FakeCommand command)
             {
                 if (command.CommandThrowsException) throw new Exception();
+                yield break;
             }
         }
 
         /// <summary>
         ///     EventHandler1 that subscribes to FakeCommand.
         /// </summary>
-        public class OnFakeCommandHandled1 : IEventHandler<FakeCommand>
+        public class OnFakeCommandHandled1 : IApplicationEventHandler<FakeCommand>
         {
             public void Handle(FakeCommand command)
             {
@@ -63,7 +65,7 @@ namespace Abstractor.Test.Command
         /// <summary>
         ///     EventHandler2 that subscribes to FakeCommand.
         /// </summary>
-        public class OnFakeCommandHandled2 : IEventHandler<FakeCommand>
+        public class OnFakeCommandHandled2 : IApplicationEventHandler<FakeCommand>
         {
             public void Handle(FakeCommand command)
             {

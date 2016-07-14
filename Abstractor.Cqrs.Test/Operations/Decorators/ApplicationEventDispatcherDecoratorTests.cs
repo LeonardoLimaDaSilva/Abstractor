@@ -11,18 +11,18 @@ using Xunit;
 
 namespace Abstractor.Cqrs.Test.Operations.Decorators
 {
-    public class CommandEventDispatcherDecoratorTests
+    public class ApplicationEventDispatcherDecoratorTests
     {
-        public interface ICommandThatListensToEvents : ICommand, IEventListener
+        public interface ICommandThatSubscribesToEvents : ICommand, IApplicationEvent
         {
         }
 
         [Theory, AutoMoqData]
         public void Handle_Success_ShouldDispatchEventAfterCommandHandled(
-            [Frozen] Mock<ICommandHandler<ICommandThatListensToEvents>> commandHandler,
-            [Frozen] Mock<IEventDispatcher> eventDispatcher,
-            ICommandThatListensToEvents command,
-            CommandEventDispatcherDecorator<ICommandThatListensToEvents> decorator)
+            [Frozen] Mock<ICommandHandler<ICommandThatSubscribesToEvents>> commandHandler,
+            [Frozen] Mock<IApplicationEventDispatcher> eventDispatcher,
+            ICommandThatSubscribesToEvents command,
+            ApplicationEventDispatcherDecorator<ICommandThatSubscribesToEvents> decorator)
         {
             // Arrange and assert
 
@@ -38,14 +38,14 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
 
         [Theory, AutoMoqData]
         public void Handle_Exception_ShouldNotDispatchEvent(
-            [Frozen] Mock<ICommandHandler<ICommandThatListensToEvents>> commandHandler,
-            [Frozen] Mock<IEventDispatcher> eventDispatcher,
-            ICommandThatListensToEvents command,
-            CommandEventDispatcherDecorator<ICommandThatListensToEvents> decorator)
+            [Frozen] Mock<ICommandHandler<ICommandThatSubscribesToEvents>> commandHandler,
+            [Frozen] Mock<IApplicationEventDispatcher> eventDispatcher,
+            ICommandThatSubscribesToEvents command,
+            ApplicationEventDispatcherDecorator<ICommandThatSubscribesToEvents> decorator)
         {
             // Arrange
 
-            commandHandler.Setup(d => d.Handle(It.IsAny<ICommandThatListensToEvents>())).Throws<Exception>();
+            commandHandler.Setup(d => d.Handle(It.IsAny<ICommandThatSubscribesToEvents>())).Throws<Exception>();
 
             // Act
 
@@ -53,19 +53,19 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
 
             // Assert
 
-            eventDispatcher.Verify(d => d.Dispatch(It.IsAny<ICommandThatListensToEvents>()), Times.Never);
+            eventDispatcher.Verify(d => d.Dispatch(It.IsAny<ICommandThatSubscribesToEvents>()), Times.Never);
         }
 
         [Theory, AutoMoqData]
         public void Handle_CommandException_ShouldNotDispatchEvent_ShouldDispatchExceptionAndRethrow(
-            [Frozen] Mock<ICommandHandler<ICommandThatListensToEvents>> commandHandler,
-            [Frozen] Mock<IEventDispatcher> eventDispatcher,
-            ICommandThatListensToEvents command,
-            CommandEventDispatcherDecorator<ICommandThatListensToEvents> decorator)
+            [Frozen] Mock<ICommandHandler<ICommandThatSubscribesToEvents>> commandHandler,
+            [Frozen] Mock<IApplicationEventDispatcher> eventDispatcher,
+            ICommandThatSubscribesToEvents command,
+            ApplicationEventDispatcherDecorator<ICommandThatSubscribesToEvents> decorator)
         {
             // Arrange
 
-            commandHandler.Setup(d => d.Handle(It.IsAny<ICommandThatListensToEvents>())).Throws<CommandException>();
+            commandHandler.Setup(d => d.Handle(It.IsAny<ICommandThatSubscribesToEvents>())).Throws<CommandException>();
 
             // Act
 

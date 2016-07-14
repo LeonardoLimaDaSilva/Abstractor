@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Abstractor.Cqrs.Infrastructure.CrossCuttingConcerns;
 using Abstractor.Cqrs.Interfaces.CompositionRoot;
 using Abstractor.Cqrs.Interfaces.Events;
@@ -7,27 +6,26 @@ using Abstractor.Cqrs.Interfaces.Events;
 namespace Abstractor.Cqrs.Infrastructure.Operations.Dispatchers
 {
     /// <summary>
-    ///     Dispatcher for all the events that subscribes to the <see cref="IEventListener" />.
+    ///     Dispatcher for all the event handlers that subscribes to the <see cref="IApplicationEvent" />.
     /// </summary>
-    [DebuggerStepThrough]
-    public sealed class EventDispatcher : IEventDispatcher
+    public sealed class ApplicationEventDispatcher : IApplicationEventDispatcher
     {
         private readonly IContainer _container;
 
-        public EventDispatcher(IContainer container)
+        public ApplicationEventDispatcher(IContainer container)
         {
             _container = container;
         }
 
         /// <summary>
-        ///     Delegates the event listener and dispatches to all event handlers that subscribes to <see cref="IEventListener" />.
+        ///     Delegates the event and dispatches to all event handlers that subscribes to <see cref="IApplicationEvent" />.
         /// </summary>
-        /// <param name="eventListener"></param>
-        public void Dispatch(IEventListener eventListener)
+        /// <param name="applicationEvent">Event to be dispatched.</param>
+        public void Dispatch(IApplicationEvent applicationEvent)
         {
-            Guard.ArgumentIsNotNull(eventListener, nameof(eventListener));
+            Guard.ArgumentIsNotNull(applicationEvent, nameof(applicationEvent));
 
-            var handlerType = typeof (IEventHandler<>).MakeGenericType(eventListener.GetType());
+            var handlerType = typeof (IApplicationEventHandler<>).MakeGenericType(applicationEvent.GetType());
             dynamic handlers = _container.GetAllInstances(handlerType);
 
             foreach (var handler in handlers)
@@ -36,7 +34,7 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Dispatchers
                 {
                     try
                     {
-                        handler.Handle((dynamic) eventListener);
+                        handler.Handle((dynamic) applicationEvent);
                     }
                     catch
                     {

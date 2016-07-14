@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Abstractor.Cqrs.Infrastructure.CrossCuttingConcerns;
@@ -16,9 +17,9 @@ namespace Abstractor.Test.Command
     public class SingleCommandEventTests : BaseTest
     {
         /// <summary>
-        ///     Command that is marked as an event listener.
+        ///     Command that is marked as an event publisher.
         /// </summary>
-        public class FakeCommand : ICommand, IEventListener
+        public class FakeCommand : ICommand, IApplicationEvent
         {
             public bool CommandThrowsGenericException { get; set; }
 
@@ -34,17 +35,18 @@ namespace Abstractor.Test.Command
         /// </summary>
         public class FakeCommandHandler : ICommandHandler<FakeCommand>
         {
-            public void Handle(FakeCommand command)
+            public IEnumerable<IDomainEvent> Handle(FakeCommand command)
             {
                 if (command.CommandThrowsGenericException) throw new Exception();
                 if (command.CommandThrowsSpecificException) throw new SpecificException(command);
+                yield break;
             }
         }
 
         /// <summary>
         ///     Event handler that subscribes to FakeCommand.
         /// </summary>
-        public class OnFakeCommandHandled : IEventHandler<FakeCommand>
+        public class OnFakeCommandHandled : IApplicationEventHandler<FakeCommand>
         {
             public void Handle(FakeCommand command)
             {
@@ -68,7 +70,7 @@ namespace Abstractor.Test.Command
         /// <summary>
         ///     Event handler that subscribes to SpecificException.
         /// </summary>
-        public class OnSpecificException : IEventHandler<SpecificException>
+        public class OnSpecificException : IApplicationEventHandler<SpecificException>
         {
             public void Handle(SpecificException eventListener)
             {
@@ -110,9 +112,9 @@ namespace Abstractor.Test.Command
 
             command.EventHandlerExecuted.Should().Be.False();
         }
-        
+
         [Fact]
-        public void CommandThrowsSpecificException_EventHandlerShouldNotBeExecuted_ShouldHandleExceptionAndRethrow()
+        public void SyncContext_CommandThrowsSpecificException_EventHandlerShouldNotBeExecuted_ShouldHandleExceptionAndRethrow()
         {
             // Arrange
 

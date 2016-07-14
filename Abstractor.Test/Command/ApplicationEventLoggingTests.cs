@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Abstractor.Cqrs.Infrastructure.Operations;
@@ -8,21 +9,22 @@ using Xunit;
 
 namespace Abstractor.Test.Command
 {
-    public class EventLoggingTests : BaseTest
+    public class ApplicationEventLoggingTests : BaseTest
     {
-        public class FakeCommand : ICommand, IEventListener
+        public class FakeCommand : ICommand, IApplicationEvent
         {
         }
 
         public class FakeCommandHandler : ICommandHandler<FakeCommand>
         {
-            public void Handle(FakeCommand command)
+            public IEnumerable<IDomainEvent> Handle(FakeCommand command)
             {
+                yield break;
             }
         }
 
         [Log]
-        public class LoggedCommandHandled1 : IEventHandler<FakeCommand>
+        public class LoggedCommandHandled1 : IApplicationEventHandler<FakeCommand>
         {
             public void Handle(FakeCommand command)
             {
@@ -30,14 +32,14 @@ namespace Abstractor.Test.Command
         }
 
         [Log]
-        public class LoggedCommandHandled2 : IEventHandler<FakeCommand>
+        public class LoggedCommandHandled2 : IApplicationEventHandler<FakeCommand>
         {
             public void Handle(FakeCommand command)
             {
             }
         }
 
-        public class NonLoggedCommandHandled : IEventHandler<FakeCommand>
+        public class NonLoggedCommandHandled : IApplicationEventHandler<FakeCommand>
         {
             public void Handle(FakeCommand command)
             {
@@ -66,10 +68,10 @@ namespace Abstractor.Test.Command
             // Assert
 
             Logger.MessagesShouldBe(
-                "Executing event \"LoggedCommandHandled1\" with the listener parameters:",
+                "Executing event \"LoggedCommandHandled1\" with the parameters:",
                 "{}",
                 "Event \"LoggedCommandHandled1\" executed in 00:00:00.",
-                "Executing event \"LoggedCommandHandled2\" with the listener parameters:",
+                "Executing event \"LoggedCommandHandled2\" with the parameters:",
                 "{}",
                 "Event \"LoggedCommandHandled2\" executed in 00:00:00.");
         }

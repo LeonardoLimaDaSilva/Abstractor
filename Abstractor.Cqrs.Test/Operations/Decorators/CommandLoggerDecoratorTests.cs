@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using Abstractor.Cqrs.Infrastructure.Operations.Decorators;
 using Abstractor.Cqrs.Interfaces.CrossCuttingConcerns;
+using Abstractor.Cqrs.Interfaces.Events;
 using Abstractor.Cqrs.Interfaces.Operations;
 using Abstractor.Cqrs.Test.Helpers;
 using Moq;
@@ -23,12 +25,12 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
             public bool ThrowsException { get; set; }
 
             public bool HasInnerException { get; set; }
-
-            public void Handle(FakeCommand command)
+            
+            public IEnumerable<IDomainEvent> Handle(FakeCommand command)
             {
                 Executed = true;
 
-                if (!ThrowsException) return;
+                if (!ThrowsException) yield break;
 
                 if (!HasInnerException) throw new Exception("FakeCommandHandlerException.");
 
@@ -55,7 +57,7 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
 
             loggerSerializer.Setup(s => s.Serialize(command)).Returns("Serialized parameters");
 
-            stopwatch.Setup(s => s.GetElapsed()).Returns(TimeSpan.FromSeconds(1));
+            stopwatch.Setup(s => s.GetElapsed()).Returns(TimeSpan.Zero);
 
             // Act
 
@@ -68,7 +70,7 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
 
             logger.Verify(l => l.Log("Executing command \"FakeCommand\" with the parameters:"), Times.Once);
             logger.Verify(l => l.Log("Serialized parameters"), Times.Once);
-            logger.Verify(l => l.Log("Command \"FakeCommand\" executed in 00:00:01."), Times.Once);
+            logger.Verify(l => l.Log("Command \"FakeCommand\" executed in 00:00:00."), Times.Once);
 
             commandHandler.Executed.Should().Be.True();
         }
@@ -92,7 +94,7 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
 
             loggerSerializer.Setup(s => s.Serialize(command)).Returns("Serialized parameters");
 
-            stopwatch.Setup(s => s.GetElapsed()).Returns(TimeSpan.FromSeconds(1));
+            stopwatch.Setup(s => s.GetElapsed()).Returns(TimeSpan.Zero);
 
             loggerSerializer.Setup(s => s.Serialize(It.IsAny<object>()))
                             .Throws(new Exception("Serialization exception."));
@@ -110,7 +112,7 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
             logger.Verify(
                 l => l.Log("Could not serialize the parameters: Serialization exception."),
                 Times.Once);
-            logger.Verify(l => l.Log("Command \"FakeCommand\" executed in 00:00:01."), Times.Once);
+            logger.Verify(l => l.Log("Command \"FakeCommand\" executed in 00:00:00."), Times.Once);
 
             commandHandler.Executed.Should().Be.True();
         }
@@ -134,7 +136,7 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
 
             loggerSerializer.Setup(s => s.Serialize(command)).Returns("Serialized parameters");
 
-            stopwatch.Setup(s => s.GetElapsed()).Returns(TimeSpan.FromSeconds(1));
+            stopwatch.Setup(s => s.GetElapsed()).Returns(TimeSpan.Zero);
 
             // Act
 
@@ -148,7 +150,7 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
             logger.Verify(l => l.Log("Executing command \"FakeCommand\" with the parameters:"), Times.Once);
             logger.Verify(l => l.Log("Serialized parameters"), Times.Once);
             logger.Verify(l => l.Log("Exception caught: FakeCommandHandlerException."), Times.Once);
-            logger.Verify(l => l.Log("Command \"FakeCommand\" executed in 00:00:01."), Times.Once);
+            logger.Verify(l => l.Log("Command \"FakeCommand\" executed in 00:00:00."), Times.Once);
 
             commandHandler.Executed.Should().Be.True();
 
@@ -178,7 +180,7 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
 
             loggerSerializer.Setup(s => s.Serialize(command)).Returns("Serialized parameters");
 
-            stopwatch.Setup(s => s.GetElapsed()).Returns(TimeSpan.FromSeconds(1));
+            stopwatch.Setup(s => s.GetElapsed()).Returns(TimeSpan.Zero);
 
             // Act
 
@@ -193,7 +195,7 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
             logger.Verify(l => l.Log("Serialized parameters"), Times.Once);
             logger.Verify(l => l.Log("Exception caught: FakeCommandHandlerException."), Times.Once);
             logger.Verify(l => l.Log("Inner exception caught: FakeCommandHandlerInnerException."), Times.Once);
-            logger.Verify(l => l.Log("Command \"FakeCommand\" executed in 00:00:01."), Times.Once);
+            logger.Verify(l => l.Log("Command \"FakeCommand\" executed in 00:00:00."), Times.Once);
 
             commandHandler.Executed.Should().Be.True();
 

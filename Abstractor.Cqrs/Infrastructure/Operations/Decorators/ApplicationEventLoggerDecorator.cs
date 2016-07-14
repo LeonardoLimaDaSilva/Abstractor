@@ -1,25 +1,23 @@
-using System;
-using System.Threading.Tasks;
+﻿using System;
 using Abstractor.Cqrs.Interfaces.CrossCuttingConcerns;
-using Abstractor.Cqrs.Interfaces.Operations;
+using Abstractor.Cqrs.Interfaces.Events;
 
 namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
 {
     /// <summary>
-    ///     Logs the execution of the query handler.
+    ///     Logs the execution of the event handler.
     /// </summary>
-    /// <typeparam name="TQuery">Query to be handled.</typeparam>
-    /// <typeparam name="TResult">Return type.</typeparam>
-    public sealed class QueryAsyncLoggerDecorator<TQuery, TResult> : IQueryAsyncHandler<TQuery, TResult>
-        where TQuery : IQuery<TResult>
+    /// <typeparam name="TEvent">Application event in which the handler subscribes to.</typeparam>
+    public sealed class ApplicationEventLoggerDecorator<TEvent> : IApplicationEventHandler<TEvent>
+        where TEvent : IApplicationEvent
     {
-        private readonly Func<IQueryAsyncHandler<TQuery, TResult>> _handlerFactory;
+        private readonly Func<IApplicationEventHandler<TEvent>> _handlerFactory;
         private readonly ILogger _logger;
         private readonly ILoggerSerializer _loggerSerializer;
         private readonly IStopwatch _stopwatch;
 
-        public QueryAsyncLoggerDecorator(
-            Func<IQueryAsyncHandler<TQuery, TResult>> handlerFactory,
+        public ApplicationEventLoggerDecorator(
+            Func<IApplicationEventHandler<TEvent>> handlerFactory,
             IStopwatch stopwatch,
             ILoggerSerializer loggerSerializer,
             ILogger logger)
@@ -31,21 +29,22 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
         }
 
         /// <summary>
-        ///     Logs the execution of the query handler.
+        ///     Logs the execution of the event handler.
         /// </summary>
-        /// <param name="query">Query to be handled.</param>
-        /// <returns>Returns an Task of type <typeparamref name="TResult" />.</returns>
-        public Task<TResult> HandleAsync(TQuery query)
+        /// <param name="applicationEvent">Application event in which the handler subscribes to.</param>
+        public void Handle(TEvent applicationEvent)
         {
             _stopwatch.Start();
 
+            var handler = _handlerFactory();
+
             try
             {
-                _logger.Log($"Executing query \"{query.GetType().Name}\" with the parameters:");
+                _logger.Log($"Executing event \"{handler.GetType().Name}\" with the parameters:");
 
                 try
                 {
-                    var parameters = _loggerSerializer.Serialize(query);
+                    var parameters = _loggerSerializer.Serialize(applicationEvent);
                     _logger.Log(parameters);
                 }
                 catch (Exception ex)
@@ -53,7 +52,7 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
                     _logger.Log($"Could not serialize the parameters: {ex.Message}");
                 }
 
-                return _handlerFactory().HandleAsync(query);
+                handler.Handle(applicationEvent);
             }
             catch (Exception ex)
             {
@@ -68,7 +67,7 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
             {
                 _stopwatch.Stop();
 
-                _logger.Log($"Query \"{query.GetType().Name}\" executed in {_stopwatch.GetElapsed()}.");
+                _logger.Log($"Event \"{handler.GetType().Name}\" executed in {_stopwatch.GetElapsed()}.");
             }
         }
     }

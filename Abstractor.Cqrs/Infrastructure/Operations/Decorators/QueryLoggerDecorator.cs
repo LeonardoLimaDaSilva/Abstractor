@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics;
 using Abstractor.Cqrs.Interfaces.CrossCuttingConcerns;
 using Abstractor.Cqrs.Interfaces.Operations;
 
@@ -10,7 +9,6 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
     /// </summary>
     /// <typeparam name="TQuery">Query to be handled.</typeparam>
     /// <typeparam name="TResult">Return type.</typeparam>
-    [DebuggerStepThrough]
     public sealed class QueryLoggerDecorator<TQuery, TResult> : IQueryHandler<TQuery, TResult>
         where TQuery : IQuery<TResult>
     {

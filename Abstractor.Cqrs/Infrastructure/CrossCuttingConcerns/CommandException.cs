@@ -4,9 +4,9 @@ using Abstractor.Cqrs.Interfaces.Events;
 namespace Abstractor.Cqrs.Infrastructure.CrossCuttingConcerns
 {
     /// <summary>
-    ///     Base command exception that acts as an event listener.
+    ///     Base command exception that acts as an application event.
     /// </summary>
-    public class CommandException : Exception, IEventListener
+    public class CommandException : Exception, IApplicationEvent
     {
         public CommandException()
         {

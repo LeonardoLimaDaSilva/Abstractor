@@ -48,8 +48,7 @@ namespace Abstractor.Cqrs.AzureStorage.Queue
 
         public static TEntity ToEntity(CloudQueueMessage message)
         {
-            if (message == null)
-                return null;
+            if (message == null) return null;
 
             var json = message.AsString;
             var entity = JsonConvert.DeserializeObject<TEntity>(json);
