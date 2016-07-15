@@ -31,7 +31,7 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
             var domainEvents = new List<IDomainEvent>
             {
                 domainEvent1,
-                domainEvent2,
+                domainEvent2
             };
 
             commandHandler.Setup(d => d.Handle(command)).Returns(domainEvents);
@@ -57,7 +57,7 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
         {
             // Arrange
 
-            commandHandler.Setup(d => d.Handle(command)).Returns((IEnumerable<IDomainEvent>)null);
+            commandHandler.Setup(d => d.Handle(command)).Returns((IEnumerable<IDomainEvent>) null);
 
             // Act
 

@@ -52,7 +52,7 @@ namespace Abstractor.Test.Helpers
                         settings.PersistenceTypes = concreteTypes;
                         settings.ApplicationTypes = concreteTypes;
                     });
-                    
+
                     containerAdapter.RegisterSingleton<IUnitOfWork, FakeUnitOfWork>();
                     containerAdapter.RegisterSingleton<IStopwatch, FakeStopwatch>();
 

@@ -99,7 +99,7 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
                 loggerSerializer.Object,
                 logger.Object);
 
-            attributeFinder.Setup(f => f.Decorates(query.GetType(), typeof(LogAttribute))).Returns(true);
+            attributeFinder.Setup(f => f.Decorates(query.GetType(), typeof (LogAttribute))).Returns(true);
 
             loggerSerializer.Setup(s => s.Serialize(query)).Returns("Serialized parameters");
 
@@ -140,7 +140,7 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
                 loggerSerializer.Object,
                 logger.Object);
 
-            attributeFinder.Setup(f => f.Decorates(query.GetType(), typeof(LogAttribute))).Returns(true);
+            attributeFinder.Setup(f => f.Decorates(query.GetType(), typeof (LogAttribute))).Returns(true);
 
             loggerSerializer.Setup(s => s.Serialize(query)).Returns("Serialized parameters");
 
@@ -186,7 +186,7 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
                 loggerSerializer.Object,
                 logger.Object);
 
-            attributeFinder.Setup(f => f.Decorates(query.GetType(), typeof(LogAttribute))).Returns(true);
+            attributeFinder.Setup(f => f.Decorates(query.GetType(), typeof (LogAttribute))).Returns(true);
 
             loggerSerializer.Setup(s => s.Serialize(query)).Returns("Serialized parameters");
 
@@ -234,7 +234,7 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
                 loggerSerializer.Object,
                 logger.Object);
 
-            attributeFinder.Setup(f => f.Decorates(query.GetType(), typeof(LogAttribute))).Returns(true);
+            attributeFinder.Setup(f => f.Decorates(query.GetType(), typeof (LogAttribute))).Returns(true);
 
             loggerSerializer.Setup(s => s.Serialize(query)).Returns("Serialized parameters");
 

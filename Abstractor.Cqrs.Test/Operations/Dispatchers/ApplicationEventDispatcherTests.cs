@@ -23,7 +23,7 @@ namespace Abstractor.Cqrs.Test.Operations.Dispatchers
         {
             Assert.Throws<ArgumentNullException>(() => dispatcher.Dispatch(null));
         }
-        
+
         [Theory, AutoMoqData]
         public void Dispatch_SyncContext_BuildGenericType_ExecutesAllHandlersPassingTheEvent(
             [Frozen] Mock<IContainer> container,

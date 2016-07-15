@@ -19,15 +19,15 @@ namespace Abstractor.Cqrs.Infrastructure.CompositionRoot.Installers
             container.RegisterCollection(typeof (IApplicationEventHandler<>), settings.OperationAssemblies);
 
             container.RegisterSingleton<IDomainEventDispatcher, DomainEventDispatcher>();
-            container.RegisterCollection(typeof(IDomainEventHandler<>), settings.OperationAssemblies);
+            container.RegisterCollection(typeof (IDomainEventHandler<>), settings.OperationAssemblies);
 
             container.RegisterDecoratorSingleton(
                 typeof (IApplicationEventHandler<>),
                 typeof (ApplicationEventLoggerDecorator<>));
 
             container.RegisterDecoratorSingleton(
-                typeof(IDomainEventHandler<>),
-                typeof(DomainEventLoggerDecorator<>));
+                typeof (IDomainEventHandler<>),
+                typeof (DomainEventLoggerDecorator<>));
         }
     }
 }

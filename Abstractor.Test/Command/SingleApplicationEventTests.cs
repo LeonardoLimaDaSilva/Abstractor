@@ -114,7 +114,8 @@ namespace Abstractor.Test.Command
         }
 
         [Fact]
-        public void SyncContext_CommandThrowsSpecificException_EventHandlerShouldNotBeExecuted_ShouldHandleExceptionAndRethrow()
+        public void
+            SyncContext_CommandThrowsSpecificException_EventHandlerShouldNotBeExecuted_ShouldHandleExceptionAndRethrow()
         {
             // Arrange
 

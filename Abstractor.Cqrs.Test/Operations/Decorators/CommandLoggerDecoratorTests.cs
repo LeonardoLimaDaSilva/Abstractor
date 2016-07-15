@@ -26,7 +26,7 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
             public bool ThrowsException { get; set; }
 
             public bool HasInnerException { get; set; }
-            
+
             public IEnumerable<IDomainEvent> Handle(FakeCommand command)
             {
                 Executed = true;
@@ -95,7 +95,7 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
                 loggerSerializer.Object,
                 logger.Object);
 
-            attributeFinder.Setup(f => f.Decorates(command.GetType(), typeof(LogAttribute))).Returns(true);
+            attributeFinder.Setup(f => f.Decorates(command.GetType(), typeof (LogAttribute))).Returns(true);
 
             loggerSerializer.Setup(s => s.Serialize(command)).Returns("Serialized parameters");
 
@@ -136,7 +136,7 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
                 loggerSerializer.Object,
                 logger.Object);
 
-            attributeFinder.Setup(f => f.Decorates(command.GetType(), typeof(LogAttribute))).Returns(true);
+            attributeFinder.Setup(f => f.Decorates(command.GetType(), typeof (LogAttribute))).Returns(true);
 
             loggerSerializer.Setup(s => s.Serialize(command)).Returns("Serialized parameters");
 
@@ -182,7 +182,7 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
                 loggerSerializer.Object,
                 logger.Object);
 
-            attributeFinder.Setup(f => f.Decorates(command.GetType(), typeof(LogAttribute))).Returns(true);
+            attributeFinder.Setup(f => f.Decorates(command.GetType(), typeof (LogAttribute))).Returns(true);
 
             loggerSerializer.Setup(s => s.Serialize(command)).Returns("Serialized parameters");
 
@@ -230,7 +230,7 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
                 loggerSerializer.Object,
                 logger.Object);
 
-            attributeFinder.Setup(f => f.Decorates(command.GetType(), typeof(LogAttribute))).Returns(true);
+            attributeFinder.Setup(f => f.Decorates(command.GetType(), typeof (LogAttribute))).Returns(true);
 
             loggerSerializer.Setup(s => s.Serialize(command)).Returns("Serialized parameters");
 

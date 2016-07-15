@@ -93,7 +93,7 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
                 loggerSerializer.Object,
                 logger.Object);
 
-            attributeFinder.Setup(f => f.Decorates(domainEvent.GetType(), typeof(LogAttribute))).Returns(true);
+            attributeFinder.Setup(f => f.Decorates(domainEvent.GetType(), typeof (LogAttribute))).Returns(true);
 
             loggerSerializer.Setup(s => s.Serialize(domainEvent)).Returns("Serialized parameters");
 
@@ -134,7 +134,7 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
                 loggerSerializer.Object,
                 logger.Object);
 
-            attributeFinder.Setup(f => f.Decorates(domainEvent.GetType(), typeof(LogAttribute))).Returns(true);
+            attributeFinder.Setup(f => f.Decorates(domainEvent.GetType(), typeof (LogAttribute))).Returns(true);
 
             loggerSerializer.Setup(s => s.Serialize(domainEvent)).Returns("Serialized parameters");
 
@@ -171,7 +171,7 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
         {
             // Arrange
 
-            var eventHandler = new FakeEventHandler { ThrowsException = true };
+            var eventHandler = new FakeEventHandler {ThrowsException = true};
 
             var decorator = new DomainEventLoggerDecorator<FakeDomainEvent>(
                 () => eventHandler,
@@ -180,7 +180,7 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
                 loggerSerializer.Object,
                 logger.Object);
 
-            attributeFinder.Setup(f => f.Decorates(domainEvent.GetType(), typeof(LogAttribute))).Returns(true);
+            attributeFinder.Setup(f => f.Decorates(domainEvent.GetType(), typeof (LogAttribute))).Returns(true);
 
             loggerSerializer.Setup(s => s.Serialize(domainEvent)).Returns("Serialized parameters");
 
@@ -226,7 +226,7 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
                 loggerSerializer.Object,
                 logger.Object);
 
-            attributeFinder.Setup(f => f.Decorates(domainEvent.GetType(), typeof(LogAttribute))).Returns(true);
+            attributeFinder.Setup(f => f.Decorates(domainEvent.GetType(), typeof (LogAttribute))).Returns(true);
 
             loggerSerializer.Setup(s => s.Serialize(domainEvent)).Returns("Serialized parameters");
 

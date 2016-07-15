@@ -93,7 +93,7 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
                 loggerSerializer.Object,
                 logger.Object);
 
-            attributeFinder.Setup(f => f.Decorates(applicationEvent.GetType(), typeof(LogAttribute))).Returns(true);
+            attributeFinder.Setup(f => f.Decorates(applicationEvent.GetType(), typeof (LogAttribute))).Returns(true);
 
             loggerSerializer.Setup(s => s.Serialize(applicationEvent)).Returns("Serialized parameters");
 
@@ -108,7 +108,8 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
             stopwatch.Verify(s => s.Start(), Times.Once);
             stopwatch.Verify(s => s.Stop(), Times.Once);
 
-            logger.Verify(l => l.Log("Executing application event \"FakeEventHandler\" with the parameters:"), Times.Once);
+            logger.Verify(l => l.Log("Executing application event \"FakeEventHandler\" with the parameters:"),
+                Times.Once);
             logger.Verify(l => l.Log("Serialized parameters"), Times.Once);
             logger.Verify(l => l.Log("Application event \"FakeEventHandler\" executed in 00:00:00."), Times.Once);
 
@@ -134,7 +135,7 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
                 loggerSerializer.Object,
                 logger.Object);
 
-            attributeFinder.Setup(f => f.Decorates(applicationEvent.GetType(), typeof(LogAttribute))).Returns(true);
+            attributeFinder.Setup(f => f.Decorates(applicationEvent.GetType(), typeof (LogAttribute))).Returns(true);
 
             loggerSerializer.Setup(s => s.Serialize(applicationEvent)).Returns("Serialized parameters");
 
@@ -152,7 +153,8 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
             stopwatch.Verify(s => s.Start(), Times.Once);
             stopwatch.Verify(s => s.Stop(), Times.Once);
 
-            logger.Verify(l => l.Log("Executing application event \"FakeEventHandler\" with the parameters:"), Times.Once);
+            logger.Verify(l => l.Log("Executing application event \"FakeEventHandler\" with the parameters:"),
+                Times.Once);
             logger.Verify(
                 l => l.Log("Could not serialize the parameters: Serialization exception."),
                 Times.Once);
@@ -180,7 +182,7 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
                 loggerSerializer.Object,
                 logger.Object);
 
-            attributeFinder.Setup(f => f.Decorates(applicationEvent.GetType(), typeof(LogAttribute))).Returns(true);
+            attributeFinder.Setup(f => f.Decorates(applicationEvent.GetType(), typeof (LogAttribute))).Returns(true);
 
             loggerSerializer.Setup(s => s.Serialize(applicationEvent)).Returns("Serialized parameters");
 
@@ -195,7 +197,8 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
             stopwatch.Verify(s => s.Start(), Times.Once);
             stopwatch.Verify(s => s.Stop(), Times.Once);
 
-            logger.Verify(l => l.Log("Executing application event \"FakeEventHandler\" with the parameters:"), Times.Once);
+            logger.Verify(l => l.Log("Executing application event \"FakeEventHandler\" with the parameters:"),
+                Times.Once);
             logger.Verify(l => l.Log("Serialized parameters"), Times.Once);
             logger.Verify(l => l.Log("Exception caught: FakeEventHandlerException."), Times.Once);
             logger.Verify(l => l.Log("Application event \"FakeEventHandler\" executed in 00:00:00."), Times.Once);
@@ -226,7 +229,7 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
                 loggerSerializer.Object,
                 logger.Object);
 
-            attributeFinder.Setup(f => f.Decorates(applicationEvent.GetType(), typeof(LogAttribute))).Returns(true);
+            attributeFinder.Setup(f => f.Decorates(applicationEvent.GetType(), typeof (LogAttribute))).Returns(true);
 
             loggerSerializer.Setup(s => s.Serialize(applicationEvent)).Returns("Serialized parameters");
 
@@ -241,7 +244,8 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
             stopwatch.Verify(s => s.Start(), Times.Once);
             stopwatch.Verify(s => s.Stop(), Times.Once);
 
-            logger.Verify(l => l.Log("Executing application event \"FakeEventHandler\" with the parameters:"), Times.Once);
+            logger.Verify(l => l.Log("Executing application event \"FakeEventHandler\" with the parameters:"),
+                Times.Once);
             logger.Verify(l => l.Log("Serialized parameters"), Times.Once);
             logger.Verify(l => l.Log("Exception caught: FakeEventHandlerException."), Times.Once);
             logger.Verify(l => l.Log("Inner exception caught: FakeEventHandlerInnerException."), Times.Once);

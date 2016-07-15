@@ -21,8 +21,8 @@ namespace Abstractor.Cqrs.Infrastructure.CompositionRoot.Installers
             container.RegisterScoped<ICommandPostAction, CommandPostAction>();
 
             container.RegisterDecoratorTransient(
-                typeof(ICommandHandler<>),
-                typeof(DomainEventDispatcherDecorator<>));
+                typeof (ICommandHandler<>),
+                typeof (DomainEventDispatcherDecorator<>));
 
             container.RegisterDecoratorTransient(
                 typeof (ICommandHandler<>),

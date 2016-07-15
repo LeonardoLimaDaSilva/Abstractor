@@ -97,7 +97,7 @@ namespace Abstractor.Cqrs.Test.Operations.Dispatchers
 
             // Act
 
-            Assert.Throws<Exception>(()=>dispatcher.Dispatch(domainEvent));
+            Assert.Throws<Exception>(() => dispatcher.Dispatch(domainEvent));
 
             // Assert
 

@@ -11,8 +11,8 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
     public sealed class DomainEventLoggerDecorator<TEvent> : IDomainEventHandler<TEvent>
         where TEvent : IDomainEvent
     {
-        private readonly Func<IDomainEventHandler<TEvent>> _handlerFactory;
         private readonly IAttributeFinder _attributeFinder;
+        private readonly Func<IDomainEventHandler<TEvent>> _handlerFactory;
         private readonly ILogger _logger;
         private readonly ILoggerSerializer _loggerSerializer;
         private readonly IStopwatch _stopwatch;

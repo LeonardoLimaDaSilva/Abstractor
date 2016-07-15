@@ -13,8 +13,8 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
     public sealed class QueryAsyncLoggerDecorator<TQuery, TResult> : IQueryAsyncHandler<TQuery, TResult>
         where TQuery : IQuery<TResult>
     {
-        private readonly Func<IQueryAsyncHandler<TQuery, TResult>> _handlerFactory;
         private readonly IAttributeFinder _attributeFinder;
+        private readonly Func<IQueryAsyncHandler<TQuery, TResult>> _handlerFactory;
         private readonly ILogger _logger;
         private readonly ILoggerSerializer _loggerSerializer;
         private readonly IStopwatch _stopwatch;
@@ -42,7 +42,7 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
         {
             var handler = _handlerFactory();
 
-            if (!_attributeFinder.Decorates(query.GetType(), typeof(LogAttribute)))
+            if (!_attributeFinder.Decorates(query.GetType(), typeof (LogAttribute)))
                 return handler.HandleAsync(query);
 
             _stopwatch.Start();
