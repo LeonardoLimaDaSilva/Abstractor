@@ -39,9 +39,10 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
         /// <returns>List of domain events raised by the command, if any.</returns>
         public IEnumerable<IDomainEvent> Handle(TCommand command)
         {
-            var handler = _handlerFactory();
+            if (!_attributeFinder.Decorates(command.GetType(), typeof (TransactionalAttribute)))
+                return _handlerFactory().Handle(command)?.ToList();
 
-            var log = _attributeFinder.Decorates(handler.GetType(), typeof (LogAttribute));
+            var log = _attributeFinder.Decorates(command.GetType(), typeof (LogAttribute));
 
             if (log) _logger.Log("Starting transaction...");
 

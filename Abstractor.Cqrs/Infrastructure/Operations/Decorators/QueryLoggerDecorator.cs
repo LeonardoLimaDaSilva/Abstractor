@@ -13,17 +13,20 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
         where TQuery : IQuery<TResult>
     {
         private readonly Func<IQueryHandler<TQuery, TResult>> _handlerFactory;
+        private readonly IAttributeFinder _attributeFinder;
         private readonly ILogger _logger;
         private readonly ILoggerSerializer _loggerSerializer;
         private readonly IStopwatch _stopwatch;
 
         public QueryLoggerDecorator(
             Func<IQueryHandler<TQuery, TResult>> handlerFactory,
+            IAttributeFinder attributeFinder,
             IStopwatch stopwatch,
             ILoggerSerializer loggerSerializer,
             ILogger logger)
         {
             _handlerFactory = handlerFactory;
+            _attributeFinder = attributeFinder;
             _stopwatch = stopwatch;
             _loggerSerializer = loggerSerializer;
             _logger = logger;
@@ -36,6 +39,11 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
         /// <returns>Returns an object of type <typeparamref name="TResult" />.</returns>
         public TResult Handle(TQuery query)
         {
+            var handler = _handlerFactory();
+
+            if (!_attributeFinder.Decorates(query.GetType(), typeof (LogAttribute)))
+                return handler.Handle(query);
+
             _stopwatch.Start();
 
             try
@@ -52,7 +60,7 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
                     _logger.Log($"Could not serialize the parameters: {ex.Message}");
                 }
 
-                return _handlerFactory().Handle(query);
+                return handler.Handle(query);
             }
             catch (Exception ex)
             {

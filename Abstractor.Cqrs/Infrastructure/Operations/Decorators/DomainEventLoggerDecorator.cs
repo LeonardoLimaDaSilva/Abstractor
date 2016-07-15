@@ -12,17 +12,20 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
         where TEvent : IDomainEvent
     {
         private readonly Func<IDomainEventHandler<TEvent>> _handlerFactory;
+        private readonly IAttributeFinder _attributeFinder;
         private readonly ILogger _logger;
         private readonly ILoggerSerializer _loggerSerializer;
         private readonly IStopwatch _stopwatch;
 
         public DomainEventLoggerDecorator(
             Func<IDomainEventHandler<TEvent>> handlerFactory,
+            IAttributeFinder attributeFinder,
             IStopwatch stopwatch,
             ILoggerSerializer loggerSerializer,
             ILogger logger)
         {
             _handlerFactory = handlerFactory;
+            _attributeFinder = attributeFinder;
             _stopwatch = stopwatch;
             _loggerSerializer = loggerSerializer;
             _logger = logger;
@@ -34,6 +37,14 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
         /// <param name="domainEvent">Domain event in which the handler subscribes to.</param>
         public void Handle(TEvent domainEvent)
         {
+            var handler = _handlerFactory();
+
+            if (!_attributeFinder.Decorates(domainEvent.GetType(), typeof (LogAttribute)))
+            {
+                handler.Handle(domainEvent);
+                return;
+            }
+
             _stopwatch.Start();
 
             try
@@ -50,7 +61,7 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
                     _logger.Log($"Could not serialize the parameters: {ex.Message}");
                 }
 
-                _handlerFactory().Handle(domainEvent);
+                handler.Handle(domainEvent);
             }
             catch (Exception ex)
             {

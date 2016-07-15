@@ -1,5 +1,4 @@
 ﻿using Abstractor.Cqrs.Infrastructure.CrossCuttingConcerns;
-using Abstractor.Cqrs.Infrastructure.Operations;
 using Abstractor.Cqrs.Infrastructure.Operations.Decorators;
 using Abstractor.Cqrs.Infrastructure.Operations.Dispatchers;
 using Abstractor.Cqrs.Interfaces.CompositionRoot;
@@ -24,13 +23,11 @@ namespace Abstractor.Cqrs.Infrastructure.CompositionRoot.Installers
 
             container.RegisterDecoratorSingleton(
                 typeof (IApplicationEventHandler<>),
-                typeof (ApplicationEventLoggerDecorator<>),
-                typeof (LogAttribute));
+                typeof (ApplicationEventLoggerDecorator<>));
 
             container.RegisterDecoratorSingleton(
                 typeof(IDomainEventHandler<>),
-                typeof(DomainEventLoggerDecorator<>),
-                typeof(LogAttribute));
+                typeof(DomainEventLoggerDecorator<>));
         }
     }
 }

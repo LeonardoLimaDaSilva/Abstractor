@@ -12,17 +12,20 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
         where TEvent : IApplicationEvent
     {
         private readonly Func<IApplicationEventHandler<TEvent>> _handlerFactory;
+        private readonly IAttributeFinder _attributeFinder;
         private readonly ILogger _logger;
         private readonly ILoggerSerializer _loggerSerializer;
         private readonly IStopwatch _stopwatch;
 
         public ApplicationEventLoggerDecorator(
             Func<IApplicationEventHandler<TEvent>> handlerFactory,
+            IAttributeFinder attributeFinder,
             IStopwatch stopwatch,
             ILoggerSerializer loggerSerializer,
             ILogger logger)
         {
             _handlerFactory = handlerFactory;
+            _attributeFinder = attributeFinder;
             _stopwatch = stopwatch;
             _loggerSerializer = loggerSerializer;
             _logger = logger;
@@ -34,9 +37,15 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
         /// <param name="applicationEvent">Application event in which the handler subscribes to.</param>
         public void Handle(TEvent applicationEvent)
         {
-            _stopwatch.Start();
-
             var handler = _handlerFactory();
+
+            if (!_attributeFinder.Decorates(applicationEvent.GetType(), typeof (LogAttribute)))
+            {
+                handler.Handle(applicationEvent);
+                return;
+            }
+
+            _stopwatch.Start();
 
             try
             {

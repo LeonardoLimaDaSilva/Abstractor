@@ -21,9 +21,12 @@ namespace Abstractor.Cqrs.Infrastructure.CompositionRoot.Installers
             container.RegisterScoped<ICommandPostAction, CommandPostAction>();
 
             container.RegisterDecoratorTransient(
+                typeof(ICommandHandler<>),
+                typeof(DomainEventDispatcherDecorator<>));
+
+            container.RegisterDecoratorTransient(
                 typeof (ICommandHandler<>),
-                typeof (CommandTransactionDecorator<>),
-                typeof (TransactionalAttribute));
+                typeof (CommandTransactionDecorator<>));
 
             container.RegisterDecoratorTransient(
                 typeof (ICommandHandler<>),
@@ -43,8 +46,7 @@ namespace Abstractor.Cqrs.Infrastructure.CompositionRoot.Installers
 
             container.RegisterDecoratorSingleton(
                 typeof (ICommandHandler<>),
-                typeof (CommandLoggerDecorator<>),
-                typeof (LogAttribute));
+                typeof (CommandLoggerDecorator<>));
         }
     }
 }

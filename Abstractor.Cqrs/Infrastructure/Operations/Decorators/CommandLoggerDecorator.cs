@@ -15,17 +15,20 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
         where TCommand : ICommand
     {
         private readonly Func<ICommandHandler<TCommand>> _handlerFactory;
+        private readonly IAttributeFinder _attributeFinder;
         private readonly ILogger _logger;
         private readonly ILoggerSerializer _loggerSerializer;
         private readonly IStopwatch _stopwatch;
 
         public CommandLoggerDecorator(
             Func<ICommandHandler<TCommand>> handlerFactory,
+            IAttributeFinder attributeFinder,
             IStopwatch stopwatch,
             ILoggerSerializer loggerSerializer,
             ILogger logger)
         {
             _handlerFactory = handlerFactory;
+            _attributeFinder = attributeFinder;
             _stopwatch = stopwatch;
             _loggerSerializer = loggerSerializer;
             _logger = logger;
@@ -38,6 +41,9 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
         /// <returns>List of domain events raised by the command, if any.</returns>
         public IEnumerable<IDomainEvent> Handle(TCommand command)
         {
+            if(!_attributeFinder.Decorates(command.GetType(),typeof(LogAttribute)))
+                return _handlerFactory().Handle(command)?.ToList();
+
             _stopwatch.Start();
 
             try

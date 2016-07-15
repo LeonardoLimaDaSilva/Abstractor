@@ -89,12 +89,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Command\CommandLoggingTests.cs" />
-    <Compile Include="Command\ApplicationEventLoggingTests.cs" />
     <Compile Include="Command\MultipleApplicationEventsTests.cs" />
-    <Compile Include="Command\MultipleDomainEventTests.cs" />
-    <Compile Include="Command\SingleDomainEventTests.cs" />
-    <Compile Include="Query\QueryLoggingTests.cs" />
+    <Compile Include="Command\DomainEventTests.cs" />
     <Compile Include="Query\QueryDispatcherTests.cs" />
     <Compile Include="Command\SingleApplicationEventTests.cs" />
     <Compile Include="Command\CommandPostActionTests.cs" />
@@ -106,7 +102,6 @@
     <Compile Include="Helpers\AutoMoqDataAttribute.cs" />
     <Compile Include="Helpers\FakeStopwatch.cs" />
     <Compile Include="Helpers\FakeUnitOfWork.cs" />
-    <Compile Include="Helpers\FakeLogger.cs" />
     <Compile Include="Helpers\SynchronousTaskScheduler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

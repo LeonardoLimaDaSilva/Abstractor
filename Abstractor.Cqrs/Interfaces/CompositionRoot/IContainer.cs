@@ -13,7 +13,6 @@ namespace Abstractor.Cqrs.Interfaces.CompositionRoot
         IEnumerable<object> GetAllInstances(Type type);
         object GetCurrentLifetimeScope();
         IDisposable BeginLifetimeScope();
-        IEnumerable<IInstanceProducer> GetCurrentRegistrations();
         void RegisterScoped<TService, TImplementation>();
         void RegisterScoped(Type serviceType, Type implementationType);
         void RegisterTransient(Type serviceType, Type implementationType);
@@ -25,9 +24,7 @@ namespace Abstractor.Cqrs.Interfaces.CompositionRoot
             where TImplementation : class, TService;
 
         void RegisterDecoratorTransient(Type serviceType, Type decoratorType);
-        void RegisterDecoratorTransient(Type serviceType, Type decoratorType, Type customAttribute);
         void RegisterDecoratorSingleton(Type serviceType, Type decoratorType);
-        void RegisterDecoratorSingleton(Type serviceType, Type decoratorType, Type customAttribute);
 
         /// <summary>
         ///     Provides functionality for the deferred resolving of unregistered types.

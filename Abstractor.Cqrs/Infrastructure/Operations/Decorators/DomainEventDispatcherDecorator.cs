@@ -11,7 +11,7 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
     /// </summary>
     /// <typeparam name="TCommand">Command to be handled.</typeparam>
     public sealed class DomainEventDispatcherDecorator<TCommand> : ICommandHandler<TCommand>
-        where TCommand : ICommand, IDomainEvent
+        where TCommand : ICommand
     {
         private readonly IDomainEventDispatcher _eventDispatcher;
         private readonly Func<ICommandHandler<TCommand>> _handlerFactory;

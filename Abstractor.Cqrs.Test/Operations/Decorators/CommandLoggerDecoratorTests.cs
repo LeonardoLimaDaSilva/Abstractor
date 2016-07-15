@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Abstractor.Cqrs.Infrastructure.Operations;
 using Abstractor.Cqrs.Infrastructure.Operations.Decorators;
 using Abstractor.Cqrs.Interfaces.CrossCuttingConcerns;
 using Abstractor.Cqrs.Interfaces.Events;
@@ -39,7 +40,8 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
         }
 
         [Theory, AutoMoqData]
-        public void Handle_Success_ShouldLogMessagesAndCallMethods(
+        public void Handle_WithoutLogAttribute_ShouldNotLog(
+            [Frozen] Mock<IAttributeFinder> attributeFinder,
             [Frozen] Mock<ILogger> logger,
             [Frozen] Mock<IStopwatch> stopwatch,
             [Frozen] Mock<ILoggerSerializer> loggerSerializer,
@@ -51,6 +53,7 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
 
             var decorator = new CommandLoggerDecorator<FakeCommand>(
                 () => commandHandler,
+                attributeFinder.Object,
                 stopwatch.Object,
                 loggerSerializer.Object,
                 logger.Object);
@@ -65,18 +68,17 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
 
             // Assert
 
-            stopwatch.Verify(s => s.Start(), Times.Once());
-            stopwatch.Verify(s => s.Stop(), Times.Once());
+            stopwatch.Verify(s => s.Start(), Times.Never);
+            stopwatch.Verify(s => s.Stop(), Times.Never);
 
-            logger.Verify(l => l.Log("Executing command \"FakeCommand\" with the parameters:"), Times.Once);
-            logger.Verify(l => l.Log("Serialized parameters"), Times.Once);
-            logger.Verify(l => l.Log("Command \"FakeCommand\" executed in 00:00:00."), Times.Once);
+            logger.Verify(l => l.Log(It.IsAny<string>()), Times.Never);
 
             commandHandler.Executed.Should().Be.True();
         }
 
         [Theory, AutoMoqData]
-        public void Handle_ThrowsOnSerialize_ShouldLogException(
+        public void Handle_Success_ShouldLogMessagesAndCallMethods(
+            [Frozen] Mock<IAttributeFinder> attributeFinder,
             [Frozen] Mock<ILogger> logger,
             [Frozen] Mock<IStopwatch> stopwatch,
             [Frozen] Mock<ILoggerSerializer> loggerSerializer,
@@ -88,9 +90,53 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
 
             var decorator = new CommandLoggerDecorator<FakeCommand>(
                 () => commandHandler,
+                attributeFinder.Object,
                 stopwatch.Object,
                 loggerSerializer.Object,
                 logger.Object);
+
+            attributeFinder.Setup(f => f.Decorates(command.GetType(), typeof(LogAttribute))).Returns(true);
+
+            loggerSerializer.Setup(s => s.Serialize(command)).Returns("Serialized parameters");
+
+            stopwatch.Setup(s => s.GetElapsed()).Returns(TimeSpan.Zero);
+
+            // Act
+
+            decorator.Handle(command);
+
+            // Assert
+
+            stopwatch.Verify(s => s.Start(), Times.Once);
+            stopwatch.Verify(s => s.Stop(), Times.Once);
+
+            logger.Verify(l => l.Log("Executing command \"FakeCommand\" with the parameters:"), Times.Once);
+            logger.Verify(l => l.Log("Serialized parameters"), Times.Once);
+            logger.Verify(l => l.Log("Command \"FakeCommand\" executed in 00:00:00."), Times.Once);
+
+            commandHandler.Executed.Should().Be.True();
+        }
+
+        [Theory, AutoMoqData]
+        public void Handle_ThrowsOnSerialize_ShouldLogException(
+            [Frozen] Mock<IAttributeFinder> attributeFinder,
+            [Frozen] Mock<ILogger> logger,
+            [Frozen] Mock<IStopwatch> stopwatch,
+            [Frozen] Mock<ILoggerSerializer> loggerSerializer,
+            FakeCommand command)
+        {
+            // Arrange
+
+            var commandHandler = new FakeCommandHandler();
+
+            var decorator = new CommandLoggerDecorator<FakeCommand>(
+                () => commandHandler,
+                attributeFinder.Object,
+                stopwatch.Object,
+                loggerSerializer.Object,
+                logger.Object);
+
+            attributeFinder.Setup(f => f.Decorates(command.GetType(), typeof(LogAttribute))).Returns(true);
 
             loggerSerializer.Setup(s => s.Serialize(command)).Returns("Serialized parameters");
 
@@ -105,8 +151,8 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
 
             // Assert
 
-            stopwatch.Verify(s => s.Start(), Times.Once());
-            stopwatch.Verify(s => s.Stop(), Times.Once());
+            stopwatch.Verify(s => s.Start(), Times.Once);
+            stopwatch.Verify(s => s.Stop(), Times.Once);
 
             logger.Verify(l => l.Log("Executing command \"FakeCommand\" with the parameters:"), Times.Once);
             logger.Verify(
@@ -119,6 +165,7 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
 
         [Theory, AutoMoqData]
         public void Handle_CommandHandlerThrowsException_ShouldLogTheExceptionAndRethrow(
+            [Frozen] Mock<IAttributeFinder> attributeFinder,
             [Frozen] Mock<ILogger> logger,
             [Frozen] Mock<IStopwatch> stopwatch,
             [Frozen] Mock<ILoggerSerializer> loggerSerializer,
@@ -130,9 +177,12 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
 
             var decorator = new CommandLoggerDecorator<FakeCommand>(
                 () => commandHandler,
+                attributeFinder.Object,
                 stopwatch.Object,
                 loggerSerializer.Object,
                 logger.Object);
+
+            attributeFinder.Setup(f => f.Decorates(command.GetType(), typeof(LogAttribute))).Returns(true);
 
             loggerSerializer.Setup(s => s.Serialize(command)).Returns("Serialized parameters");
 
@@ -144,8 +194,8 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
 
             // Assert
 
-            stopwatch.Verify(s => s.Start(), Times.Once());
-            stopwatch.Verify(s => s.Stop(), Times.Once());
+            stopwatch.Verify(s => s.Start(), Times.Once);
+            stopwatch.Verify(s => s.Stop(), Times.Once);
 
             logger.Verify(l => l.Log("Executing command \"FakeCommand\" with the parameters:"), Times.Once);
             logger.Verify(l => l.Log("Serialized parameters"), Times.Once);
@@ -159,6 +209,7 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
 
         [Theory, AutoMoqData]
         public void Handle_CommandHandlerThrowsExceptionWithInnerException_ShouldLogTheExceptionsAndRethrow(
+            [Frozen] Mock<IAttributeFinder> attributeFinder,
             [Frozen] Mock<ILogger> logger,
             [Frozen] Mock<IStopwatch> stopwatch,
             [Frozen] Mock<ILoggerSerializer> loggerSerializer,
@@ -174,9 +225,12 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
 
             var decorator = new CommandLoggerDecorator<FakeCommand>(
                 () => commandHandler,
+                attributeFinder.Object,
                 stopwatch.Object,
                 loggerSerializer.Object,
                 logger.Object);
+
+            attributeFinder.Setup(f => f.Decorates(command.GetType(), typeof(LogAttribute))).Returns(true);
 
             loggerSerializer.Setup(s => s.Serialize(command)).Returns("Serialized parameters");
 
@@ -188,8 +242,8 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
 
             // Assert
 
-            stopwatch.Verify(s => s.Start(), Times.Once());
-            stopwatch.Verify(s => s.Stop(), Times.Once());
+            stopwatch.Verify(s => s.Start(), Times.Once);
+            stopwatch.Verify(s => s.Stop(), Times.Once);
 
             logger.Verify(l => l.Log("Executing command \"FakeCommand\" with the parameters:"), Times.Once);
             logger.Verify(l => l.Log("Serialized parameters"), Times.Once);

@@ -38,15 +38,6 @@ namespace Abstractor.Cqrs.SimpleInjector.Adapters
             return _container.BeginLifetimeScope();
         }
 
-        public IEnumerable<IInstanceProducer> GetCurrentRegistrations()
-        {
-            return _container
-                .GetCurrentRegistrations()
-                .Select(i => new InstanceProducerAdapter(
-                    i.GetInstance(),
-                    i.ServiceType));
-        }
-
         public void RegisterScoped<TService, TImplementation>()
         {
             _container.Register(typeof (TService), typeof (TImplementation), Lifestyle.Scoped);
@@ -84,31 +75,9 @@ namespace Abstractor.Cqrs.SimpleInjector.Adapters
             _container.RegisterDecorator(serviceType, decoratorType, Lifestyle.Transient);
         }
 
-        public void RegisterDecoratorTransient(Type serviceType, Type decoratorType, Type customAttribute)
-        {
-            _container.RegisterDecorator(
-                serviceType,
-                decoratorType,
-                Lifestyle.Transient,
-                c => c.ImplementationType
-                      .CustomAttributes
-                      .Any(a => a.AttributeType == customAttribute));
-        }
-
         public void RegisterDecoratorSingleton(Type serviceType, Type decoratorType)
         {
             _container.RegisterDecorator(serviceType, decoratorType, Lifestyle.Singleton);
-        }
-
-        public void RegisterDecoratorSingleton(Type serviceType, Type decoratorType, Type customAttribute)
-        {
-            _container.RegisterDecorator(
-                serviceType,
-                decoratorType,
-                Lifestyle.Singleton,
-                c => c.ImplementationType
-                      .CustomAttributes
-                      .Any(a => a.AttributeType == customAttribute));
         }
 
         public void RegisterLazySingleton<TService, TImplementation>()
