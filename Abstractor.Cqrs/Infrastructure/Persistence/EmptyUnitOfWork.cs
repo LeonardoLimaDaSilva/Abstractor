@@ -13,5 +13,12 @@ namespace Abstractor.Cqrs.Infrastructure.Persistence
         public void Commit()
         {
         }
+
+        /// <summary>
+        ///     Does nothing.
+        /// </summary>
+        public void Clear()
+        {
+        }
     }
 }

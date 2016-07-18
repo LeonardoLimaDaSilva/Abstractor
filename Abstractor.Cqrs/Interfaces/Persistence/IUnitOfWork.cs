@@ -9,5 +9,10 @@
         ///     Commits the changes.
         /// </summary>
         void Commit();
+
+        /// <summary>
+        ///     Clears all tracked states.
+        /// </summary>
+        void Clear();
     }
 }

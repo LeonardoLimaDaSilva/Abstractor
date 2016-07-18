@@ -61,6 +61,14 @@ namespace Abstractor.Cqrs.UnitOfWork.Persistence
             }
         }
 
+        public void Clear()
+        {
+            _efContext().Clear();
+            _queueContext().Clear();
+            _tableContext().Clear();
+            _blobContext().Clear();
+        }
+
         private void RollbackAll()
         {
             _logger.Log("Executing AzureQueueContext rollback...");

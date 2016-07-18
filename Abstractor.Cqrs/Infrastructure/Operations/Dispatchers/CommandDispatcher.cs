@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Abstractor.Cqrs.Infrastructure.CrossCuttingConcerns;
 using Abstractor.Cqrs.Interfaces.CompositionRoot;
 using Abstractor.Cqrs.Interfaces.Operations;
@@ -25,10 +26,15 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Dispatchers
         {
             Guard.ArgumentIsNotNull(command, nameof(command));
 
-            var handlerType = typeof (ICommandHandler<>).MakeGenericType(command.GetType());
-            dynamic handler = _container.GetInstance(handlerType);
-
-            handler.Handle((dynamic) command);
+            try
+            {
+                GetCommandHandler(command.GetType()).Handle((dynamic) command);
+            }
+            catch (CommandException ex)
+            {
+                GetCommandHandler(ex.GetType()).Handle((dynamic) ex);
+                throw;
+            }
         }
 
         /// <summary>
@@ -41,10 +47,24 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Dispatchers
         {
             Guard.ArgumentIsNotNull(command, nameof(command));
 
-            var handlerType = typeof (ICommandHandler<>).MakeGenericType(command.GetType());
-            dynamic handler = _container.GetInstance(handlerType);
+            await Task.Run(() =>
+            {
+                try
+                {
+                    GetCommandHandler(command.GetType()).Handle((dynamic)command); 
+                }
+                catch (CommandException ex)
+                {
+                    GetCommandHandler(ex.GetType()).Handle((dynamic)ex);
+                    throw;
+                }
+            });
+        }
 
-            await Task.Run(() => { handler.Handle((dynamic) command); });
+        private dynamic GetCommandHandler(Type commandType)
+        {
+            var handlerType = typeof (ICommandHandler<>).MakeGenericType(commandType);
+            return _container.GetInstance(handlerType);
         }
     }
 }

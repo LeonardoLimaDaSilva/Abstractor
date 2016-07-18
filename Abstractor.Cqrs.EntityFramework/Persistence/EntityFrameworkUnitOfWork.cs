@@ -2,6 +2,7 @@
 using System.Data.Entity;
 using System.Data.Entity.Validation;
 using System.Linq;
+using Abstractor.Cqrs.EntityFramework.Extensions;
 using Abstractor.Cqrs.Interfaces.CrossCuttingConcerns;
 using Abstractor.Cqrs.Interfaces.Persistence;
 
@@ -40,6 +41,11 @@ namespace Abstractor.Cqrs.EntityFramework.Persistence
 
                 throw;
             }
+        }
+
+        public void Clear()
+        {
+            _contextProvider().Clear();
         }
     }
 }

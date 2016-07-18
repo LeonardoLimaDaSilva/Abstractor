@@ -21,6 +21,11 @@ namespace Abstractor.Test.Helpers
             _commits.Add(new Tuple<int, bool>(Thread.CurrentThread.ManagedThreadId, true));
         }
 
+        public void Clear()
+        {
+            _commits.Clear();
+        }
+
         public void SetUp()
         {
             _commits.RemoveAll(t => t.Item1 == Thread.CurrentThread.ManagedThreadId);

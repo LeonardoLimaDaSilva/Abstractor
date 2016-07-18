@@ -46,7 +46,10 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
 
             if (log) _logger.Log("Starting transaction...");
 
+            _unitOfWork.Clear();
+
             var domainEvents = _handlerFactory().Handle(command)?.ToList();
+
             _unitOfWork.Commit();
 
             if (log) _logger.Log("Transaction committed.");

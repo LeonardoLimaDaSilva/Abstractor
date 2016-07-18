@@ -70,5 +70,13 @@ namespace Abstractor.Cqrs.Infrastructure.Persistence
             foreach (var context in _internalContext)
                 context.Value.Rollback();
         }
+
+        /// <summary>
+        ///     Clears the internal context.
+        /// </summary>
+        public void Clear()
+        {
+            _internalContext.Clear();
+        }
     }
 }

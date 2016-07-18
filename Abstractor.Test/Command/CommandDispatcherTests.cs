@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Abstractor.Cqrs.Infrastructure.CrossCuttingConcerns;
 using Abstractor.Cqrs.Interfaces.Events;
 using Abstractor.Cqrs.Interfaces.Operations;
 using Abstractor.Test.Helpers;
@@ -12,6 +13,10 @@ namespace Abstractor.Test.Command
         public class FakeCommand : ICommand
         {
             public bool HandlerExecuted { get; set; }
+
+            public bool ThrowCommandException { get; set; }
+
+            public bool ExceptionHandlerExecuted { get; set; }
         }
 
         public class FakeCommandHandler : ICommandHandler<FakeCommand>
@@ -19,6 +24,29 @@ namespace Abstractor.Test.Command
             public IEnumerable<IDomainEvent> Handle(FakeCommand command)
             {
                 command.HandlerExecuted = true;
+
+                if (command.ThrowCommandException)
+                    throw new FakeCommandException(command);
+
+                yield break;
+            }
+        }
+
+        public class FakeCommandException : CommandException
+        {
+            public FakeCommand FakeCommand { get; private set; }
+
+            public FakeCommandException(FakeCommand fakeCommand)
+            {
+                FakeCommand = fakeCommand;
+            }
+        }
+
+        public class FakeCommandExceptionHandler : ICommandHandler<FakeCommandException>
+        {
+            public IEnumerable<IDomainEvent> Handle(FakeCommandException command)
+            {
+                command.FakeCommand.ExceptionHandlerExecuted = true;
                 yield break;
             }
         }
@@ -67,6 +95,42 @@ namespace Abstractor.Test.Command
             // Assert
 
             command.HandlerExecuted.Should().Be.True();
+        }
+
+        [Fact]
+        public void Dispatch_ThrowsCommandException_ShouldExecuteExceptionHandlerAndRethrow()
+        {
+            // Arrange
+
+            var command = new FakeCommand {ThrowCommandException = true};
+
+            // Act
+
+            Assert.Throws<FakeCommandException>(() => CommandDispatcher.Dispatch(command));
+
+            // Assert
+
+            command.HandlerExecuted.Should().Be.True();
+
+            command.ExceptionHandlerExecuted.Should().Be.True();
+        }
+
+        [Fact]
+        public async void DispatchAsync_ThrowsCommandException_ShouldExecuteExceptionHandlerAndRethrow()
+        {
+            // Arrange
+
+            var command = new FakeCommand { ThrowCommandException = true };
+
+            // Act
+
+            await Assert.ThrowsAsync<FakeCommandException>(() => CommandDispatcher.DispatchAsync(command));
+
+            // Assert
+
+            command.HandlerExecuted.Should().Be.True();
+
+            command.ExceptionHandlerExecuted.Should().Be.True();
         }
     }
 }
