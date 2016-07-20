@@ -3,7 +3,7 @@
 namespace Abstractor.Cqrs.AzureStorage.Attributes
 {
     /// <summary>
-    ///     Especifica o nome do container do Azure Blob Storage que a classe está mapeada.
+    ///     Defines the container name of Azure Blob Storage that the class is mapped.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class, Inherited = false)]
     public class AzureContainerAttribute : Attribute

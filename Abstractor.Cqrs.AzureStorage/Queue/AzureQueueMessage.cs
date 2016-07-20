@@ -2,6 +2,9 @@ using System;
 
 namespace Abstractor.Cqrs.AzureStorage.Queue
 {
+    /// <summary>
+    ///     Minimal representation of an Azure Queue Message.
+    /// </summary>
     public class AzureQueueMessage
     {
         public string Id { get; set; }

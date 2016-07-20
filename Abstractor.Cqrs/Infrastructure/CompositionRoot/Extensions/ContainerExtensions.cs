@@ -25,7 +25,7 @@ namespace Abstractor.Cqrs.Infrastructure.CompositionRoot.Extensions
             settings.Invoke(crs);
 
             container.AllowResolvingFuncFactories();
-            container.Register(() => crs);
+            container.RegisterTransient(() => crs);
             container.RegisterAbstractorInstallers(crs);
         }
 

@@ -3,7 +3,7 @@
 namespace Abstractor.Cqrs.AzureStorage.Attributes
 {
     /// <summary>
-    ///     Especifica o nome da tabela do Azure Table Storage que a classe está mapeada.
+    ///     Defines the table name of Azure Blob Storage that the class is mapped.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class, Inherited = false)]
     public class AzureTableAttribute : Attribute

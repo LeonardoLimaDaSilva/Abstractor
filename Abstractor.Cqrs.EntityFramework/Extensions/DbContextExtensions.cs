@@ -8,7 +8,7 @@ namespace Abstractor.Cqrs.EntityFramework.Extensions
         /// <summary>
         ///     Detaches all entries from the change tracker.
         /// </summary>
-        /// <param name="dbContext"></param>
+        /// <param name="dbContext">Context to be cleared.</param>
         public static void Clear(this DbContext dbContext)
         {
             foreach (var entry in dbContext.ChangeTracker.Entries().Where(entry => entry.Entity != null))

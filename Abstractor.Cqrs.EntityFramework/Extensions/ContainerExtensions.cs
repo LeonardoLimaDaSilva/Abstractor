@@ -8,16 +8,16 @@ using Abstractor.Cqrs.Interfaces.Persistence;
 namespace Abstractor.Cqrs.EntityFramework.Extensions
 {
     /// <summary>
-    ///     Extensões do container de inversão de controle.
+    ///     Extensions for the inversion of control container abstraction.
     /// </summary>
     public static class ContainerExtensions
     {
         /// <summary>
-        ///     Registra o pacote de integração com o Entity Framework.
+        ///     Registers the Entity Framework integration packages.
         /// </summary>
-        /// <typeparam name="TContext">DbContext da aplicação.</typeparam>
-        /// <param name="container">Container de inversão de controle.</param>
-        /// <param name="customUnitOfWork">Registra o EntityFrameworkUnitOfWork apenas se não estiver usando um customizado.</param>
+        /// <typeparam name="TContext">Application context that implements <see cref="DbContext"/>.</typeparam>
+        /// <param name="container">Inversion of control container.</param>
+        /// <param name="customUnitOfWork">Registers the EntityFrameworkUnitOfWork only if a custom is not being used.</param>
         public static void RegisterEntityFramework<TContext>(this IContainer container, bool customUnitOfWork = false)
             where TContext : DbContext
         {

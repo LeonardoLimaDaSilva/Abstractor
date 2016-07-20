@@ -3,7 +3,7 @@
 namespace Abstractor.Cqrs.AzureStorage.Attributes
 {
     /// <summary>
-    ///     Especifica o nome da fila do Azure Queue Storage que a classe está mapeada.
+    ///     Defines the queue name of Azure Queue Storage that the class is mapped.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class, Inherited = false)]
     public class AzureQueueAttribute : Attribute

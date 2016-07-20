@@ -127,31 +127,31 @@ namespace Abstractor.Cqrs.Infrastructure.Persistence
         /// <summary>
         ///     Hook to the actual insert method of underlying persistence mechanism.
         /// </summary>
-        /// <param name="entity">Entity type</param>
+        /// <param name="entity">Entity to be inserted.</param>
         protected abstract void InsertEntity(TEntity entity);
 
         /// <summary>
         ///     Hook to the actual delete method of underlying persistence mechanism.
         /// </summary>
-        /// <param name="entity">Entity type</param>
+        /// <param name="entity">Entity to be deleted.</param>
         protected abstract void DeleteEntity(TEntity entity);
 
         /// <summary>
         ///     Hook to the actual update method of underlying persistence mechanism.
         /// </summary>
-        /// <param name="entity">Entity type</param>
+        /// <param name="entity">Entity to be updated.</param>
         protected abstract void UpdateEntity(TEntity entity);
 
         /// <summary>
         ///     Hook to the actual get method of underlying persistence mechanism.
         /// </summary>
-        /// <param name="entity">Entity type</param>
+        /// <param name="entity">Entity definition.</param>
         protected abstract TEntity Get(TEntity entity);
 
         /// <summary>
         ///     Adds an insert operation.
         /// </summary>
-        /// <param name="entity">Entity type.</param>
+        /// <param name="entity">Entity to be inserted.</param>
         public void Insert(TEntity entity)
         {
             Operations.Add(new BaseDataSetOperation
@@ -165,7 +165,7 @@ namespace Abstractor.Cqrs.Infrastructure.Persistence
         /// <summary>
         ///     Adds an update operation.
         /// </summary>
-        /// <param name="entity">Entity type.</param>
+        /// <param name="entity">Entity to be updated.</param>
         public void Update(TEntity entity)
         {
             Operations.Add(new BaseDataSetOperation
@@ -179,7 +179,7 @@ namespace Abstractor.Cqrs.Infrastructure.Persistence
         /// <summary>
         ///     Adds a delete operation.
         /// </summary>
-        /// <param name="entity">Entity type.</param>
+        /// <param name="entity">Entity to be deleted.</param>
         public void Delete(TEntity entity)
         {
             Operations.Add(new BaseDataSetOperation

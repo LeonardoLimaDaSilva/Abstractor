@@ -6,7 +6,7 @@ using Abstractor.Cqrs.Infrastructure.Domain;
 namespace Abstractor.Cqrs.AzureStorage.Blob
 {
     /// <summary>
-    ///     Representação simplificada de um blob.
+    ///     Minimal representation of an Azure Blob.
     /// </summary>
     public class AzureBlob : IDisposable
     {
@@ -26,11 +26,18 @@ namespace Abstractor.Cqrs.AzureStorage.Blob
             Stream = file.Stream;
         }
 
+        /// <summary>
+        ///     Disposes the stream.
+        /// </summary>
         public void Dispose()
         {
             Stream.Dispose();
         }
 
+        /// <summary>
+        ///     Converts to a generic file.
+        /// </summary>
+        /// <returns></returns>
         public GenericFile ToGeneric()
         {
             return new GenericFile(FileName, Stream);

@@ -4,15 +4,15 @@ using Abstractor.Cqrs.Infrastructure.Domain;
 namespace Abstractor.Cqrs.AzureStorage.Extensions
 {
     /// <summary>
-    ///     Extensões de <see cref="AzureBlob" />.
+    ///     Extensions for <see cref="AzureBlob" />.
     /// </summary>
     public static class AzureBlobExtensions
     {
         /// <summary>
-        ///     Converte um <see cref="AzureBlob" /> em <see cref="GenericFile" />.
+        ///     Converts an <see cref="AzureBlob" /> to a <see cref="GenericFile" />.
         /// </summary>
-        /// <param name="blob"></param>
-        /// <returns></returns>
+        /// <param name="blob">Azure Blob.</param>
+        /// <returns>Generic file.</returns>
         public static GenericFile ToGenericFile(this AzureBlob blob)
         {
             return new GenericFile(blob.FileName, blob.Stream);

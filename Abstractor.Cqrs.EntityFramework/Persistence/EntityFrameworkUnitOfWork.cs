@@ -8,6 +8,9 @@ using Abstractor.Cqrs.Interfaces.Persistence;
 
 namespace Abstractor.Cqrs.EntityFramework.Persistence
 {
+    /// <summary>
+    ///     Wraps the default DbContext Unit of Work for providing logging and a clearing method.
+    /// </summary>
     internal sealed class EntityFrameworkUnitOfWork : IUnitOfWork
     {
         private readonly Func<DbContext> _contextProvider;
@@ -21,6 +24,9 @@ namespace Abstractor.Cqrs.EntityFramework.Persistence
             _logger = logger;
         }
 
+        /// <summary>
+        ///     Commit the changes tracked by DbContext.
+        /// </summary>
         public void Commit()
         {
             try
@@ -43,6 +49,9 @@ namespace Abstractor.Cqrs.EntityFramework.Persistence
             }
         }
 
+        /// <summary>
+        ///     Detaches all entries from the DbContext change tracker.
+        /// </summary>
         public void Clear()
         {
             _contextProvider().Clear();

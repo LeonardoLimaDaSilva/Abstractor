@@ -7,7 +7,12 @@ using Microsoft.WindowsAzure.Storage.Blob;
 
 namespace Abstractor.Cqrs.AzureStorage.Blob
 {
-    public sealed class AzureBlobSet<TEntity> : BaseDataSet<TEntity> where TEntity : AzureBlob, new()
+    /// <summary>
+    ///     Azure Blob specific implementation of a data set.
+    /// </summary>
+    /// <typeparam name="TEntity">Entity type.</typeparam>
+    public sealed class AzureBlobSet<TEntity> : BaseDataSet<TEntity> 
+        where TEntity : AzureBlob, new()
     {
         private readonly CloudBlobContainer _container;
 
@@ -18,28 +23,50 @@ namespace Abstractor.Cqrs.AzureStorage.Blob
             _container.CreateIfNotExists();
         }
 
+        /// <summary>
+        ///     Uploads the Azure Blob stream to the container.
+        /// </summary>
+        /// <param name="entity">Entity to be inserted.</param>
         protected override void InsertEntity(TEntity entity)
         {
             var blobToUpload = _container.GetBlockBlobReference(entity.FileName);
             blobToUpload.UploadFromStream(entity.Stream);
         }
 
+        /// <summary>
+        ///     Removes the Azure Blob from the container.
+        /// </summary>
+        /// <param name="entity">Entity to be deleted.</param>
         protected override void DeleteEntity(TEntity entity)
         {
             var blobToDelete = _container.GetBlockBlobReference(entity.FileName);
             blobToDelete.Delete();
         }
 
+        /// <summary>
+        ///     Overwrites the Azure Blob into the container.
+        /// </summary>
+        /// <param name="entity">Entity to be updated.</param>
         protected override void UpdateEntity(TEntity entity)
         {
             InsertEntity(entity);
         }
 
+        /// <summary>
+        ///     Downloads the Azure Blob from the container.
+        /// </summary>
+        /// <param name="entity">Entity definition.</param>
+        /// <returns>Azure Blob.</returns>
         protected override TEntity Get(TEntity entity)
         {
             return Get(entity.FileName);
         }
 
+        /// <summary>
+        ///     Downloads the Azure Blob from the container.
+        /// </summary>
+        /// <param name="fileName">Azure Blob filename.</param>
+        /// <returns>Azure Blob.</returns>
         public TEntity Get(string fileName)
         {
             var blockBlob = _container.GetBlockBlobReference(fileName);
@@ -55,12 +82,22 @@ namespace Abstractor.Cqrs.AzureStorage.Blob
             };
         }
 
+        /// <summary>
+        ///     Gets the virtual path for the current filename.
+        /// </summary>
+        /// <param name="fileName">Azure Blob filename.</param>
+        /// <returns>Uri virtual path.</returns>
         public Uri GetVirtualPath(string fileName)
         {
             var blockBlob = _container.GetBlockBlobReference(fileName);
             return blockBlob.Uri;
         }
 
+        /// <summary>
+        ///     Verifies whether an Azure Blob exists with the specified filename in the container.
+        /// </summary>
+        /// <param name="fileName">Azure Blob filename.</param>
+        /// <returns></returns>
         public bool Exists(string fileName)
         {
             var blockBlob = _container.GetBlockBlobReference(fileName);

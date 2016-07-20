@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using Abstractor.Cqrs.Interfaces.Domain;
+﻿using Abstractor.Cqrs.Interfaces.Domain;
 
 namespace Abstractor.Cqrs.Interfaces.Persistence
 {
@@ -10,12 +9,6 @@ namespace Abstractor.Cqrs.Interfaces.Persistence
     public interface IAggregateReader<out TAggregate>
         where TAggregate : IAggregateRoot
     {
-        /// <summary>
-        ///     Returns a queryable list of instances of aggregate.
-        /// </summary>
-        /// <returns>Queryable list of aggregates.</returns>
-        IQueryable<TAggregate> Query();
-
         /// <summary>
         ///     Returns a single instance of the aggregate.
         /// </summary>

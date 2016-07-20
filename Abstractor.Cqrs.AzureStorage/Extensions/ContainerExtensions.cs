@@ -8,15 +8,15 @@ using Abstractor.Cqrs.Interfaces.CompositionRoot;
 namespace Abstractor.Cqrs.AzureStorage.Extensions
 {
     /// <summary>
-    ///     Extensões do container de inversão de controle.
+    ///     Extensions for the inversion of control container abstraction.
     /// </summary>
     public static class ContainerExtensions
     {
         /// <summary>
-        ///     Registra o pacote de integração com o Azure Table Storage.
+        ///     Registers the Azure Table Storage integration packages.
         /// </summary>
-        /// <typeparam name="TContext">Contexto da aplicação que implementa <see cref="AzureTableContext" />.</typeparam>
-        /// <param name="container">Container de inversão de controle.</param>
+        /// <typeparam name="TContext">Application context that implements <see cref="AzureTableContext" />.</typeparam>
+        /// <param name="container">Inversion of control container.</param>
         public static void RegisterAzureTable<TContext>(this IContainer container)
             where TContext : AzureTableContext
         {
@@ -27,10 +27,10 @@ namespace Abstractor.Cqrs.AzureStorage.Extensions
         }
 
         /// <summary>
-        ///     Registra o pacote de integração com o Azure Blob Storage.
+        ///     Registers the Azure Blob Storage integration packages.
         /// </summary>
-        /// <typeparam name="TContext">Contexto da aplicação que implementa <see cref="AzureBlobContext" />.</typeparam>
-        /// <param name="container">Container de inversão de controle.</param>
+        /// <typeparam name="TContext">Application context that implements <see cref="AzureBlobContext" />.</typeparam>
+        /// <param name="container">Inversion of control container.</param>
         public static void RegisterAzureBlob<TContext>(this IContainer container)
             where TContext : AzureBlobContext
         {
@@ -41,10 +41,10 @@ namespace Abstractor.Cqrs.AzureStorage.Extensions
         }
 
         /// <summary>
-        ///     Registra o pacote de integração com o Azure Queue Storage.
+        ///     Registers the Azure Queue Storage integration packages.
         /// </summary>
-        /// <typeparam name="TContext">Contexto da aplicação que implementa <see cref="AzureQueueContext" />.</typeparam>
-        /// <param name="container">Container de inversão de controle.</param>
+        /// <typeparam name="TContext">Application context that implements <see cref="AzureQueueContext" />.</typeparam>
+        /// <param name="container">Inversion of control container.</param>
         public static void RegisterAzureQueue<TContext>(this IContainer container)
             where TContext : AzureQueueContext
         {

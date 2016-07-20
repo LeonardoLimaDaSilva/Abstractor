@@ -1,13 +1,13 @@
-﻿using System;
-using Abstractor.Cqrs.AzureStorage.Queue;
+﻿using Abstractor.Cqrs.AzureStorage.Queue;
 
 namespace Abstractor.Cqrs.AzureStorage.Interfaces
 {
-    public interface IAzureQueueRepository<TEntity> where TEntity : AzureQueueMessage
+    /// <summary>
+    ///     Represents a repository of an Azure Queue.
+    /// </summary>
+    /// <typeparam name="TEntity">Entity type.</typeparam>
+    public interface IAzureQueueRepository<TEntity> : IQueueWriter<TEntity>, IQueueReader<TEntity> 
+        where TEntity : AzureQueueMessage
     {
-        void Add(TEntity entity);
-        void Delete(TEntity entity);
-        TEntity GetNext(TimeSpan? visibilityTimeout = null);
-        int Count();
     }
 }

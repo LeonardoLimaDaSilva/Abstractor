@@ -64,7 +64,8 @@
     <Compile Include="Interfaces\IAzureTableRepository.cs" />
     <Compile Include="Interfaces\IBlobReader.cs" />
     <Compile Include="Interfaces\IBlobWriter.cs" />
-    <Compile Include="Interfaces\IStorageSet.cs" />
+    <Compile Include="Interfaces\IQueueReader.cs" />
+    <Compile Include="Interfaces\IQueueWriter.cs" />
     <Compile Include="Interfaces\ITableReader.cs" />
     <Compile Include="Interfaces\ITableWriter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
