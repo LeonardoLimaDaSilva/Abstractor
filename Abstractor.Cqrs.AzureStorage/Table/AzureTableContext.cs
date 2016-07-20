@@ -11,6 +11,10 @@ namespace Abstractor.Cqrs.AzureStorage.Table
     {
         private readonly string _connectionString;
 
+        public AzureTableContext()
+        {
+        }
+
         public AzureTableContext(string connectionName)
         {
             _connectionString = ConfigurationManager.ConnectionStrings[connectionName].ToString();

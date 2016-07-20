@@ -11,6 +11,10 @@ namespace Abstractor.Cqrs.AzureStorage.Blob
     {
         private readonly string _connectionString;
 
+        public AzureBlobContext()
+        {
+        }
+
         public AzureBlobContext(string connectionName)
         {
             _connectionString = ConfigurationManager.ConnectionStrings[connectionName].ToString();

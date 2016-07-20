@@ -4,13 +4,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{9336F8CE-C046-4419-A8DA-75E915A6FBDA}</ProjectGuid>
+    <ProjectGuid>{6D74DD59-B219-48E1-B658-24431DE944E4}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Abstractor.Test</RootNamespace>
-    <AssemblyName>Abstractor.Test</AssemblyName>
+    <RootNamespace>Abstractor.Cqrs.UnitOfWork.Test</RootNamespace>
+    <AssemblyName>Abstractor.Cqrs.UnitOfWork.Test</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -34,8 +36,16 @@
       <HintPath>..\packages\Castle.Core.3.3.3\lib\net45\Castle.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Moq, Version=4.5.10.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
-      <HintPath>..\packages\Moq.4.5.10\lib\net45\Moq.dll</HintPath>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Moq, Version=4.5.16.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
+      <HintPath>..\packages\Moq.4.5.16\lib\net45\Moq.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Ploeh.AutoFixture, Version=3.49.0.0, Culture=neutral, PublicKeyToken=b24654c590009d4f, processorArchitecture=MSIL">
@@ -52,14 +62,6 @@
     </Reference>
     <Reference Include="SharpTestsEx, Version=1.2.1.0, Culture=neutral, PublicKeyToken=8c60d8070630b1c1, processorArchitecture=MSIL">
       <HintPath>..\packages\SharpTestsEx.1.2.1\lib\SharpTestsEx.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="SimpleInjector, Version=3.2.0.0, Culture=neutral, PublicKeyToken=984cb50dea722e99, processorArchitecture=MSIL">
-      <HintPath>..\packages\SimpleInjector.3.2.0\lib\net45\SimpleInjector.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="SimpleInjector.Extensions.LifetimeScoping, Version=3.2.0.0, Culture=neutral, PublicKeyToken=984cb50dea722e99, processorArchitecture=MSIL">
-      <HintPath>..\packages\SimpleInjector.Extensions.LifetimeScoping.3.2.0\lib\net40-client\SimpleInjector.Extensions.LifetimeScoping.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -89,36 +91,27 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Command\AggregateTests.cs" />
-    <Compile Include="Command\MultipleApplicationEventsTests.cs" />
-    <Compile Include="Command\DomainEventTests.cs" />
-    <Compile Include="Query\QueryDispatcherTests.cs" />
-    <Compile Include="Command\SingleApplicationEventTests.cs" />
-    <Compile Include="Command\CommandPostActionTests.cs" />
-    <Compile Include="Command\CommandValidationTests.cs" />
-    <Compile Include="Command\TransactionCommandTests.cs" />
-    <Compile Include="Helpers\CompositionRoot.cs" />
-    <Compile Include="Helpers\BaseTest.cs" />
-    <Compile Include="Command\CommandDispatcherTests.cs" />
+    <Compile Include="UnitOfWorkTests.cs" />
     <Compile Include="Helpers\AutoMoqDataAttribute.cs" />
-    <Compile Include="Helpers\FakeStopwatch.cs" />
-    <Compile Include="Helpers\FakeUnitOfWork.cs" />
-    <Compile Include="Helpers\SynchronousTaskScheduler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Abstractor.Cqrs.SimpleInjector\Abstractor.Cqrs.SimpleInjector.csproj">
-      <Project>{B2DE5824-5A4D-4370-9471-B5AC6310F026}</Project>
-      <Name>Abstractor.Cqrs.SimpleInjector</Name>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Abstractor.Cqrs.AzureStorage\Abstractor.Cqrs.AzureStorage.csproj">
+      <Project>{14D99482-1F46-4C48-ADBB-F2836198C73B}</Project>
+      <Name>Abstractor.Cqrs.AzureStorage</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Abstractor.Cqrs.UnitOfWork\Abstractor.Cqrs.UnitOfWork.csproj">
+      <Project>{CE4CFC78-3D0C-46D7-96BF-4308EC60E125}</Project>
+      <Name>Abstractor.Cqrs.UnitOfWork</Name>
     </ProjectReference>
     <ProjectReference Include="..\Abstractor.Cqrs\Abstractor.Cqrs.csproj">
       <Project>{5E7621D3-037F-4D21-A628-CCABB6A0AAF8}</Project>
       <Name>Abstractor.Cqrs</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="app.config" />
-    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

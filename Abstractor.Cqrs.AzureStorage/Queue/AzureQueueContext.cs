@@ -11,6 +11,10 @@ namespace Abstractor.Cqrs.AzureStorage.Queue
     {
         private readonly string _connectionString;
 
+        public AzureQueueContext()
+        {
+        }
+
         public AzureQueueContext(string connectionName)
         {
             _connectionString = ConfigurationManager.ConnectionStrings[connectionName].ToString();
