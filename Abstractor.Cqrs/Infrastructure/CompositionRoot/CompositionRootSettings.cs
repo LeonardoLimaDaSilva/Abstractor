@@ -10,17 +10,12 @@ namespace Abstractor.Cqrs.Infrastructure.CompositionRoot
     public sealed class CompositionRootSettings
     {
         /// <summary>
-        ///     Application assemblies that contains the operations handlers.
+        ///     Application assemblies that contains the concrete operations handlers.
         /// </summary>
-        public IEnumerable<Assembly> OperationAssemblies { get; set; }
+        public IEnumerable<Assembly> ApplicationAssemblies { get; set; }
 
         /// <summary>
-        ///     Implementation types from the persistence layer.
-        /// </summary>
-        public IEnumerable<Type> PersistenceTypes { get; set; }
-
-        /// <summary>
-        ///     Implementation types from the application layer.
+        ///     Concrete implementation types from the application.
         /// </summary>
         public IEnumerable<Type> ApplicationTypes { get; set; }
     }

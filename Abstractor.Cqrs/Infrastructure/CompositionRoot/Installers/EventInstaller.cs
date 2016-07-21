@@ -13,17 +13,21 @@ namespace Abstractor.Cqrs.Infrastructure.CompositionRoot.Installers
     {
         public void RegisterServices(IContainer container, CompositionRootSettings settings)
         {
-            Guard.ArgumentIsNotNull(settings.OperationAssemblies, nameof(settings.OperationAssemblies));
+            Guard.ArgumentIsNotNull(settings.ApplicationAssemblies, nameof(settings.ApplicationAssemblies));
 
             container.RegisterSingleton<IApplicationEventDispatcher, ApplicationEventDispatcher>();
-            container.RegisterCollection(typeof (IApplicationEventHandler<>), settings.OperationAssemblies);
+            container.RegisterCollection(typeof (IApplicationEventHandler<>), settings.ApplicationAssemblies);
 
             container.RegisterSingleton<IDomainEventDispatcher, DomainEventDispatcher>();
-            container.RegisterCollection(typeof (IDomainEventHandler<>), settings.OperationAssemblies);
+            container.RegisterCollection(typeof (IDomainEventHandler<>), settings.ApplicationAssemblies);
 
             container.RegisterDecoratorSingleton(
                 typeof (IApplicationEventHandler<>),
                 typeof (ApplicationEventLoggerDecorator<>));
+
+            container.RegisterDecoratorSingleton(
+                typeof(IApplicationEventHandler<>),
+                typeof(ApplicationEventLifetimeScopeDecorator<>));
 
             container.RegisterDecoratorSingleton(
                 typeof (IDomainEventHandler<>),

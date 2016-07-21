@@ -41,9 +41,7 @@ namespace Abstractor.Cqrs.Interfaces.CompositionRoot
         /// </summary>
         /// <typeparam name="TService">Type of abstraction.</typeparam>
         /// <typeparam name="TImplementation">Type of implementation.</typeparam>
-        void RegisterScoped<TService, TImplementation>()
-            where TService : class
-            where TImplementation : class, TService;
+        void RegisterScoped<TService, TImplementation>();
 
         /// <summary>
         ///     Registers that an instance of type <see cref="serviceType" /> will be returned when an instance of type

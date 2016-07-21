@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Configuration;
+using Abstractor.Cqrs.AzureStorage.Interfaces;
 using Abstractor.Cqrs.Infrastructure.Persistence;
 
 namespace Abstractor.Cqrs.AzureStorage.Blob
@@ -7,13 +8,9 @@ namespace Abstractor.Cqrs.AzureStorage.Blob
     /// <summary>
     ///     Overrides the hook necessary for constructing the specific Azure Blob data set.
     /// </summary>
-    public class AzureBlobContext : BaseDataContext
+    public class AzureBlobContext : BaseDataContext, IAzureBlobContext
     {
         private readonly string _connectionString;
-
-        public AzureBlobContext()
-        {
-        }
 
         public AzureBlobContext(string connectionName)
         {

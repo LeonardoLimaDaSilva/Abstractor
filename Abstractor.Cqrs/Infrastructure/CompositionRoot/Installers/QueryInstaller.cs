@@ -13,11 +13,11 @@ namespace Abstractor.Cqrs.Infrastructure.CompositionRoot.Installers
     {
         public void RegisterServices(IContainer container, CompositionRootSettings settings)
         {
-            Guard.ArgumentIsNotNull(settings.OperationAssemblies, nameof(settings.OperationAssemblies));
+            Guard.ArgumentIsNotNull(settings.ApplicationAssemblies, nameof(settings.ApplicationAssemblies));
 
             container.RegisterSingleton<IQueryDispatcher, QueryDispatcher>();
-            container.RegisterTransient(typeof (IQueryHandler<,>), settings.OperationAssemblies);
-            container.RegisterTransient(typeof (IQueryAsyncHandler<,>), settings.OperationAssemblies);
+            container.RegisterTransient(typeof (IQueryHandler<,>), settings.ApplicationAssemblies);
+            container.RegisterTransient(typeof (IQueryAsyncHandler<,>), settings.ApplicationAssemblies);
 
             container.RegisterDecoratorSingleton(
                 typeof (IQueryHandler<,>),

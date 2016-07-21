@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Data.Entity;
 using System.Data.Entity.Validation;
 using System.Linq;
 using Abstractor.Cqrs.EntityFramework.Extensions;
+using Abstractor.Cqrs.EntityFramework.Interfaces;
 using Abstractor.Cqrs.Interfaces.CrossCuttingConcerns;
 using Abstractor.Cqrs.Interfaces.Persistence;
 
@@ -13,14 +13,14 @@ namespace Abstractor.Cqrs.EntityFramework.Persistence
     /// </summary>
     internal sealed class EntityFrameworkUnitOfWork : IUnitOfWork
     {
-        private readonly Func<DbContext> _contextProvider;
+        private readonly IEntityFrameworkContext _context;
         private readonly ILogger _logger;
 
         public EntityFrameworkUnitOfWork(
-            Func<DbContext> contextProvider,
+            IEntityFrameworkContext context,
             ILogger logger)
         {
-            _contextProvider = contextProvider;
+            _context = context;
             _logger = logger;
         }
 
@@ -31,7 +31,7 @@ namespace Abstractor.Cqrs.EntityFramework.Persistence
         {
             try
             {
-                _contextProvider().SaveChanges();
+                _context.SaveChanges();
             }
             catch (DbEntityValidationException ex)
             {
@@ -54,7 +54,7 @@ namespace Abstractor.Cqrs.EntityFramework.Persistence
         /// </summary>
         public void Clear()
         {
-            _contextProvider().Clear();
+            _context.Clear();
         }
     }
 }

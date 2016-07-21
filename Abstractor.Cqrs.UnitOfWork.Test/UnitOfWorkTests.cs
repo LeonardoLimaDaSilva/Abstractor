@@ -1,5 +1,6 @@
 ﻿using System;
-using System.Data.Entity;
+using Abstractor.Cqrs.AzureStorage.Interfaces;
+using Abstractor.Cqrs.EntityFramework.Interfaces;
 using Abstractor.Cqrs.Interfaces.CrossCuttingConcerns;
 using Abstractor.Cqrs.UnitOfWork.Test.Helpers;
 using Moq;
@@ -36,16 +37,19 @@ namespace Abstractor.Cqrs.UnitOfWork.Test
         }
 
         [Theory, AutoMoqData]
-        public void Commit_DbContextThrowsException_ShouldLogExceptionAndRethrow(
+        public void Commit_EntityFrameworkThrowsException_ShouldLogExceptionRollbackAllAndRethrow(
             [Frozen]Mock<ILogger> logger,
-            [Frozen]Mock<DbContext> dbContext,
+            [Frozen]Mock<IEntityFrameworkContext> efContext,
+            [Frozen]Mock<IAzureQueueContext> aqContext,
+            [Frozen]Mock<IAzureTableContext> atContext,
+            [Frozen]Mock<IAzureBlobContext> abContext,
             Persistence.UnitOfWork uow)
         {
             // Arrange
 
             var exception = new Exception("Exception");
 
-            dbContext.Setup(c => c.SaveChanges()).Throws(exception);
+            efContext.Setup(c => c.SaveChanges()).Throws(exception);
 
             // Act
 
@@ -55,9 +59,33 @@ namespace Abstractor.Cqrs.UnitOfWork.Test
 
             // Assert
 
-            logger.Verify(l => l.Log(It.IsAny<string>()), Times.Once);
-            
+            logger.Verify(l => l.Log(It.IsAny<string>()), Times.Exactly(7));
+
+            abContext.Verify(c=>c.SaveChanges(),Times.Once);
+
+            logger.Verify(l => l.Log("Azure Blob context commited."), Times.Once);
+
+            atContext.Verify(c => c.SaveChanges(), Times.Once);
+
+            logger.Verify(l => l.Log("Azure Table context commited."), Times.Once);
+
+            aqContext.Verify(c => c.SaveChanges(), Times.Once);
+
+            logger.Verify(l => l.Log("Azure Queue context commited."), Times.Once);
+
             logger.Verify(l => l.Log("Exception caught: Exception"), Times.Once);
+
+            aqContext.Verify(c => c.Rollback(), Times.Once);
+
+            logger.Verify(l => l.Log("Executing Azure Queue context rollback..."), Times.Once);
+
+            atContext.Verify(c => c.Rollback(), Times.Once);
+
+            logger.Verify(l => l.Log("Executing Azure Table context rollback..."), Times.Once);
+
+            abContext.Verify(c => c.Rollback(), Times.Once);
+
+            logger.Verify(l => l.Log("Executing Azure Blob context rollback..."), Times.Once);
         }
     }
 }

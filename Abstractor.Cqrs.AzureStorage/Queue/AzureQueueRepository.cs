@@ -10,11 +10,11 @@ namespace Abstractor.Cqrs.AzureStorage.Queue
     internal sealed class AzureQueueRepository<TEntity> : IAzureQueueRepository<TEntity>
         where TEntity : AzureQueueMessage, new()
     {
-        private readonly Func<AzureQueueContext> _contextProvider;
+        private readonly AzureQueueContext _context;
 
-        public AzureQueueRepository(Func<AzureQueueContext> contextProvider)
+        public AzureQueueRepository(IAzureQueueContext context)
         {
-            _contextProvider = contextProvider;
+            _context = (AzureQueueContext)context;
         }
 
         /// <summary>
@@ -23,8 +23,8 @@ namespace Abstractor.Cqrs.AzureStorage.Queue
         /// <param name="entity">Entity to be added.</param>
         public void Add(TEntity entity)
         {
-            var tbset = _contextProvider().Set<TEntity>();
-            tbset.Insert(entity);
+            var set = _context.Set<TEntity>();
+            set.Insert(entity);
         }
 
         /// <summary>
@@ -33,8 +33,8 @@ namespace Abstractor.Cqrs.AzureStorage.Queue
         /// <param name="entity">Entity to be removed.</param>
         public void Delete(TEntity entity)
         {
-            var tbset = _contextProvider().Set<TEntity>();
-            tbset.Delete(entity);
+            var set = _context.Set<TEntity>();
+            set.Delete(entity);
         }
 
         /// <summary>
@@ -44,8 +44,8 @@ namespace Abstractor.Cqrs.AzureStorage.Queue
         /// <returns>Message.</returns>
         public TEntity GetNext(TimeSpan? visibilityTimeout = null)
         {
-            var tbset = (AzureQueueSet<TEntity>) _contextProvider().Set<TEntity>();
-            return tbset.GetNext(visibilityTimeout);
+            var set = (AzureQueueSet<TEntity>) _context.Set<TEntity>();
+            return set.GetNext(visibilityTimeout);
         }
 
         /// <summary>
@@ -54,8 +54,8 @@ namespace Abstractor.Cqrs.AzureStorage.Queue
         /// <returns>Number of messages.</returns>
         public int Count()
         {
-            var tbset = (AzureQueueSet<TEntity>) _contextProvider().Set<TEntity>();
-            return tbset.Count();
+            var set = (AzureQueueSet<TEntity>) _context.Set<TEntity>();
+            return set.Count();
         }
     }
 }

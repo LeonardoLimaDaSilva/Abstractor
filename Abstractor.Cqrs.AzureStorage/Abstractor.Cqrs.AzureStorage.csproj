@@ -59,11 +59,15 @@
     <Compile Include="Extensions\AzureBlobExtensions.cs" />
     <Compile Include="Extensions\ContainerExtensions.cs" />
     <Compile Include="Extensions\EntityExtensions.cs" />
+    <Compile Include="Interfaces\IAzureBlobContext.cs" />
     <Compile Include="Interfaces\IAzureBlobRepository.cs" />
+    <Compile Include="Interfaces\IAzureQueueContext.cs" />
     <Compile Include="Interfaces\IAzureQueueRepository.cs" />
+    <Compile Include="Interfaces\IAzureTableContext.cs" />
     <Compile Include="Interfaces\IAzureTableRepository.cs" />
     <Compile Include="Interfaces\IBlobReader.cs" />
     <Compile Include="Interfaces\IBlobWriter.cs" />
+    <Compile Include="Interfaces\IDataContext.cs" />
     <Compile Include="Interfaces\IQueueReader.cs" />
     <Compile Include="Interfaces\IQueueWriter.cs" />
     <Compile Include="Interfaces\ITableReader.cs" />

@@ -48,8 +48,7 @@ namespace Abstractor.Test.Helpers
 
                     containerAdapter.RegisterAbstractor(settings =>
                     {
-                        settings.OperationAssemblies = currentAssembly;
-                        settings.PersistenceTypes = concreteTypes;
+                        settings.ApplicationAssemblies = currentAssembly;
                         settings.ApplicationTypes = concreteTypes;
                     });
 

@@ -75,6 +75,7 @@
     <Compile Include="Infrastructure\Domain\QueueMessage.cs" />
     <Compile Include="Infrastructure\Domain\ValueObject.cs" />
     <Compile Include="Infrastructure\CrossCuttingConcerns\AttributeFinder.cs" />
+    <Compile Include="Infrastructure\Operations\Decorators\ApplicationEventLifetimeScopeDecorator.cs" />
     <Compile Include="Infrastructure\Operations\Decorators\CommandLoggerDecorator.cs" />
     <Compile Include="Infrastructure\Operations\Decorators\ApplicationEventLoggerDecorator.cs" />
     <Compile Include="Infrastructure\Operations\Decorators\DomainEventDispatcherDecorator.cs" />

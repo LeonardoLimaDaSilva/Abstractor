@@ -10,11 +10,11 @@ namespace Abstractor.Cqrs.AzureStorage.Blob
     internal sealed class AzureBlobRepository<TEntity> : IAzureBlobRepository<TEntity>
         where TEntity : AzureBlob, new()
     {
-        private readonly Func<AzureBlobContext> _contextProvider;
+        private readonly AzureBlobContext _context;
 
-        public AzureBlobRepository(Func<AzureBlobContext> contextProvider)
+        public AzureBlobRepository(IAzureBlobContext context)
         {
-            _contextProvider = contextProvider;
+            _context = (AzureBlobContext)context;
         }
 
         /// <summary>
@@ -24,8 +24,8 @@ namespace Abstractor.Cqrs.AzureStorage.Blob
         /// <returns></returns>
         public bool Exists(string fileName)
         {
-            var dataSet = (AzureBlobSet<TEntity>) _contextProvider().Set<TEntity>();
-            return dataSet.Exists(fileName);
+            var set = (AzureBlobSet<TEntity>) _context.Set<TEntity>();
+            return set.Exists(fileName);
         }
 
         /// <summary>
@@ -34,12 +34,12 @@ namespace Abstractor.Cqrs.AzureStorage.Blob
         /// <param name="entity">Entity to be saved.</param>
         public void Save(TEntity entity)
         {
-            var dataSet = _contextProvider().Set<TEntity>();
+            var set = _context.Set<TEntity>();
 
             if (!Exists(entity.FileName))
-                dataSet.Insert(entity);
+                set.Insert(entity);
             else
-                dataSet.Update(entity);
+                set.Update(entity);
         }
 
         /// <summary>
@@ -48,8 +48,8 @@ namespace Abstractor.Cqrs.AzureStorage.Blob
         /// <param name="entity">Entity to be removed.</param>
         public void Delete(TEntity entity)
         {
-            var dataSet = _contextProvider().Set<TEntity>();
-            dataSet.Delete(entity);
+            var set = _context.Set<TEntity>();
+            set.Delete(entity);
         }
 
         /// <summary>
@@ -59,8 +59,8 @@ namespace Abstractor.Cqrs.AzureStorage.Blob
         /// <returns></returns>
         public TEntity Get(string fileName)
         {
-            var dataSet = (AzureBlobSet<TEntity>) _contextProvider().Set<TEntity>();
-            return dataSet.Get(fileName);
+            var set = (AzureBlobSet<TEntity>) _context.Set<TEntity>();
+            return set.Get(fileName);
         }
 
         /// <summary>
@@ -70,8 +70,8 @@ namespace Abstractor.Cqrs.AzureStorage.Blob
         /// <returns>Uri virtual path.</returns>
         public Uri GetVirtualPath(string fileName)
         {
-            var dataSet = (AzureBlobSet<TEntity>) _contextProvider().Set<TEntity>();
-            return dataSet.GetVirtualPath(fileName);
+            var set = (AzureBlobSet<TEntity>) _context.Set<TEntity>();
+            return set.GetVirtualPath(fileName);
         }
     }
 }

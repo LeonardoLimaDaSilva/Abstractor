@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Data.Entity;
 using System.Data.Entity.Validation;
 using System.Linq;
-using Abstractor.Cqrs.AzureStorage.Blob;
-using Abstractor.Cqrs.AzureStorage.Queue;
-using Abstractor.Cqrs.AzureStorage.Table;
+using Abstractor.Cqrs.AzureStorage.Interfaces;
+using Abstractor.Cqrs.EntityFramework.Extensions;
+using Abstractor.Cqrs.EntityFramework.Interfaces;
 using Abstractor.Cqrs.Interfaces.CrossCuttingConcerns;
 using Abstractor.Cqrs.Interfaces.Persistence;
 
@@ -16,24 +15,24 @@ namespace Abstractor.Cqrs.UnitOfWork.Persistence
     /// </summary>
     public class UnitOfWork : IUnitOfWork
     {
-        private readonly Func<AzureBlobContext> _blobContext;
-        private readonly Func<DbContext> _efContext;
         private readonly ILogger _logger;
-        private readonly Func<AzureQueueContext> _queueContext;
-        private readonly Func<AzureTableContext> _tableContext;
+        private readonly IAzureBlobContext _blobContext;
+        private readonly IAzureTableContext _tableContext;
+        private readonly IAzureQueueContext _queueContext;
+        private readonly IEntityFrameworkContext _entityContext;
 
         public UnitOfWork(
             ILogger logger,
-            Func<AzureBlobContext> blobContext,
-            Func<AzureTableContext> tableContext,
-            Func<AzureQueueContext> queueContext,
-            Func<DbContext> efContext)
+            IAzureBlobContext blobContext,
+            IAzureTableContext tableContext,
+            IAzureQueueContext queueContext,
+            IEntityFrameworkContext entityContext)
         {
             _logger = logger;
             _blobContext = blobContext;
             _tableContext = tableContext;
             _queueContext = queueContext;
-            _efContext = efContext;
+            _entityContext = entityContext;
         }
 
         /// <summary>
@@ -43,16 +42,16 @@ namespace Abstractor.Cqrs.UnitOfWork.Persistence
         {
             try
             {
-                _blobContext().SaveChanges();
+                _blobContext.SaveChanges();
                 _logger.Log("Azure Blob context commited.");
 
-                _tableContext().SaveChanges();
+                _tableContext.SaveChanges();
                 _logger.Log("Azure Table context commited.");
 
-                _queueContext().SaveChanges();
+                _queueContext.SaveChanges();
                 _logger.Log("Azure Queue context commited.");
 
-                _efContext().SaveChanges();
+                _entityContext.SaveChanges();
                 _logger.Log("Entity Framework context commited.");
             }
             catch (DbEntityValidationException ex)
@@ -69,7 +68,6 @@ namespace Abstractor.Cqrs.UnitOfWork.Persistence
             catch (Exception ex)
             {
                 _logger.Log($"Exception caught: {ex.Message}");
-                _logger.Log(ex.Message);
 
                 RollbackAll();
 
@@ -83,16 +81,16 @@ namespace Abstractor.Cqrs.UnitOfWork.Persistence
         public void Clear()
         {
             _logger.Log("Clearing Entity Framework context...");
-            _efContext().Clear();
+            _entityContext.Clear();
 
             _logger.Log("Clearing Azure Queue context...");
-            _queueContext().Clear();
+            _queueContext.Clear();
 
             _logger.Log("Clearing Azure Table context...");
-            _tableContext().Clear();
+            _tableContext.Clear();
 
             _logger.Log("Clearing Azure Blob context...");
-            _blobContext().Clear();
+            _blobContext.Clear();
         }
 
         /// <summary>
@@ -101,13 +99,13 @@ namespace Abstractor.Cqrs.UnitOfWork.Persistence
         private void RollbackAll()
         {
             _logger.Log("Executing Azure Queue context rollback...");
-            _queueContext().Rollback();
+            _queueContext.Rollback();
 
             _logger.Log("Executing Azure Table context rollback...");
-            _tableContext().Rollback();
+            _tableContext.Rollback();
 
             _logger.Log("Executing Azure Blob context rollback...");
-            _blobContext().Rollback();
+            _blobContext.Rollback();
         }
     }
 }

@@ -49,7 +49,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Extensions\ContainerExtensions.cs" />
-    <Compile Include="Extensions\DbContextExtensions.cs" />
+    <Compile Include="Extensions\EntityFrameworkContextExtensions.cs" />
+    <Compile Include="Interfaces\IEntityFrameworkContext.cs" />
     <Compile Include="Interfaces\IEntityFrameworkRepository.cs" />
     <Compile Include="Persistence\EntityFrameworkRepository.cs" />
     <Compile Include="Persistence\EntityFrameworkUnitOfWork.cs" />

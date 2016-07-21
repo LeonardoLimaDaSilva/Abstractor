@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Abstractor.Cqrs.AzureStorage.Interfaces;
 using Microsoft.WindowsAzure.Storage.Table;
 
@@ -12,11 +11,11 @@ namespace Abstractor.Cqrs.AzureStorage.Table
     internal sealed class AzureTableRepository<TEntity> : IAzureTableRepository<TEntity>
         where TEntity : ITableEntity, new()
     {
-        private readonly Func<AzureTableContext> _contextProvider;
+        private readonly AzureTableContext _context;
 
-        public AzureTableRepository(Func<AzureTableContext> contextProvider)
+        public AzureTableRepository(IAzureTableContext context)
         {
-            _contextProvider = contextProvider;
+            _context = (AzureTableContext)context;
         }
 
         /// <summary>
@@ -27,8 +26,8 @@ namespace Abstractor.Cqrs.AzureStorage.Table
         /// <returns></returns>
         public bool Exists(string rowKey, string partitionKey = null)
         {
-            var tbset = (AzureTableSet<TEntity>) _contextProvider().Set<TEntity>();
-            return tbset.Get(rowKey, partitionKey) != null;
+            var set = (AzureTableSet<TEntity>) _context.Set<TEntity>();
+            return set.Get(rowKey, partitionKey) != null;
         }
 
         /// <summary>
@@ -37,12 +36,12 @@ namespace Abstractor.Cqrs.AzureStorage.Table
         /// <param name="entity">Table entity.</param>
         public void Save(TEntity entity)
         {
-            var tbset = _contextProvider().Set<TEntity>();
+            var set = _context.Set<TEntity>();
 
             if (Exists(entity.RowKey, entity.PartitionKey))
-                tbset.Update(entity);
+                set.Update(entity);
             else
-                tbset.Insert(entity);
+                set.Insert(entity);
         }
 
         /// <summary>
@@ -51,8 +50,8 @@ namespace Abstractor.Cqrs.AzureStorage.Table
         /// <param name="entity">Table entity.</param>
         public void Delete(TEntity entity)
         {
-            var tbset = _contextProvider().Set<TEntity>();
-            tbset.Delete(entity);
+            var set = _context.Set<TEntity>();
+            set.Delete(entity);
         }
 
         /// <summary>
@@ -62,8 +61,8 @@ namespace Abstractor.Cqrs.AzureStorage.Table
         /// <returns></returns>
         public IEnumerable<TEntity> GetAll(string partitionKey = null)
         {
-            var tbset = (AzureTableSet<TEntity>) _contextProvider().Set<TEntity>();
-            return tbset.GetAll(partitionKey);
+            var set = (AzureTableSet<TEntity>) _context.Set<TEntity>();
+            return set.GetAll(partitionKey);
         }
 
         /// <summary>
@@ -74,8 +73,8 @@ namespace Abstractor.Cqrs.AzureStorage.Table
         /// <returns></returns>
         public TEntity Get(string rowKey, string partitionKey = null)
         {
-            var tbset = (AzureTableSet<TEntity>) _contextProvider().Set<TEntity>();
-            return tbset.Get(rowKey, partitionKey);
+            var set = (AzureTableSet<TEntity>) _context.Set<TEntity>();
+            return set.Get(rowKey, partitionKey);
         }
     }
 }

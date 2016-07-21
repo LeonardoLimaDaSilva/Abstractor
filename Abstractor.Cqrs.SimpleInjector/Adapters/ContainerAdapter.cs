@@ -66,8 +66,6 @@ namespace Abstractor.Cqrs.SimpleInjector.Adapters
         /// <typeparam name="TService">Type of abstraction.</typeparam>
         /// <typeparam name="TImplementation">Type of the implementation.</typeparam>
         public void RegisterScoped<TService, TImplementation>()
-            where TService : class
-            where TImplementation : class, TService
         {
             _container.Register(typeof (TService), typeof (TImplementation), Lifestyle.Scoped);
         }

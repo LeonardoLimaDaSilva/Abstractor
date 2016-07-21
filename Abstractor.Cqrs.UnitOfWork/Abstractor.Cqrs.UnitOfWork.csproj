@@ -49,7 +49,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Persistence\DbContextExtensions.cs" />
     <Compile Include="Persistence\UnitOfWork.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -57,6 +56,10 @@
     <ProjectReference Include="..\Abstractor.Cqrs.AzureStorage\Abstractor.Cqrs.AzureStorage.csproj">
       <Project>{14D99482-1F46-4C48-ADBB-F2836198C73B}</Project>
       <Name>Abstractor.Cqrs.AzureStorage</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Abstractor.Cqrs.EntityFramework\Abstractor.Cqrs.EntityFramework.csproj">
+      <Project>{4778C8F9-872D-4DEF-A62D-21F260F66274}</Project>
+      <Name>Abstractor.Cqrs.EntityFramework</Name>
     </ProjectReference>
     <ProjectReference Include="..\Abstractor.Cqrs\Abstractor.Cqrs.csproj">
       <Project>{5E7621D3-037F-4D21-A628-CCABB6A0AAF8}</Project>

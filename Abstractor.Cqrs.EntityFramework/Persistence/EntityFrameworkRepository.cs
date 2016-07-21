@@ -1,5 +1,4 @@
-﻿using System;
-using System.Data.Entity;
+﻿using System.Data.Entity;
 using System.Linq;
 using Abstractor.Cqrs.EntityFramework.Interfaces;
 using Abstractor.Cqrs.Infrastructure.CrossCuttingConcerns;
@@ -14,11 +13,12 @@ namespace Abstractor.Cqrs.EntityFramework.Persistence
     internal sealed class EntityFrameworkRepository<TAggregate> : IEntityFrameworkRepository<TAggregate>
         where TAggregate : AggregateRoot
     {
-        private readonly Func<DbContext> _contextProvider;
+        private readonly DbContext _context;
 
-        public EntityFrameworkRepository(Func<DbContext> contextProvider)
+        public EntityFrameworkRepository(IEntityFrameworkContext context)
         {
-            _contextProvider = contextProvider;
+            // ReSharper disable once SuspiciousTypeConversion.Global
+            _context = (DbContext) context;
         }
 
         /// <summary>
@@ -29,7 +29,7 @@ namespace Abstractor.Cqrs.EntityFramework.Persistence
         {
             Guard.ArgumentIsNotNull(aggregate, nameof(aggregate));
 
-            _contextProvider().Entry(aggregate).State = EntityState.Added;
+            _context.Entry(aggregate).State = EntityState.Added;
         }
 
         /// <summary>
@@ -40,7 +40,7 @@ namespace Abstractor.Cqrs.EntityFramework.Persistence
         {
             Guard.ArgumentIsNotNull(aggregate, nameof(aggregate));
 
-            _contextProvider().Entry(aggregate).State = EntityState.Deleted;
+            _context.Entry(aggregate).State = EntityState.Deleted;
         }
 
         /// <summary>
@@ -52,7 +52,7 @@ namespace Abstractor.Cqrs.EntityFramework.Persistence
         {
             Guard.ArgumentIsNotNull(aggregate, nameof(aggregate));
 
-            _contextProvider().Entry(aggregate).State = EntityState.Modified;
+            _context.Entry(aggregate).State = EntityState.Modified;
         }
 
         /// <summary>
@@ -61,7 +61,7 @@ namespace Abstractor.Cqrs.EntityFramework.Persistence
         /// <returns>Queryable list of aggregates.</returns>
         public IQueryable<TAggregate> Query()
         {
-            return _contextProvider().Set<TAggregate>();
+            return _context.Set<TAggregate>();
         }
 
         /// <summary>
@@ -73,7 +73,7 @@ namespace Abstractor.Cqrs.EntityFramework.Persistence
         {
             Guard.ArgumentIsNotNull(primaryKey, nameof(primaryKey));
 
-            return _contextProvider().Set<TAggregate>().Find(primaryKey);
+            return _context.Set<TAggregate>().Find(primaryKey);
         }
     }
 }

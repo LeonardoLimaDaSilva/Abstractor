@@ -1,5 +1,6 @@
 using System;
 using System.Configuration;
+using Abstractor.Cqrs.AzureStorage.Interfaces;
 using Abstractor.Cqrs.Infrastructure.Persistence;
 
 namespace Abstractor.Cqrs.AzureStorage.Queue
@@ -7,13 +8,9 @@ namespace Abstractor.Cqrs.AzureStorage.Queue
     /// <summary>
     ///     Overrides the hook necessary for constructing the specific Azure Queue data set.
     /// </summary>
-    public class AzureQueueContext : BaseDataContext
+    public class AzureQueueContext : BaseDataContext, IAzureQueueContext
     {
         private readonly string _connectionString;
-
-        public AzureQueueContext()
-        {
-        }
 
         public AzureQueueContext(string connectionName)
         {

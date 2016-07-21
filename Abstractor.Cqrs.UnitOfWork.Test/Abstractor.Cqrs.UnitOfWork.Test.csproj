@@ -36,14 +36,6 @@
       <HintPath>..\packages\Castle.Core.3.3.3\lib\net45\Castle.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Moq, Version=4.5.16.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
       <HintPath>..\packages\Moq.4.5.16\lib\net45\Moq.dll</HintPath>
       <Private>True</Private>
@@ -103,6 +95,10 @@
     <ProjectReference Include="..\Abstractor.Cqrs.AzureStorage\Abstractor.Cqrs.AzureStorage.csproj">
       <Project>{14D99482-1F46-4C48-ADBB-F2836198C73B}</Project>
       <Name>Abstractor.Cqrs.AzureStorage</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Abstractor.Cqrs.EntityFramework\Abstractor.Cqrs.EntityFramework.csproj">
+      <Project>{4778C8F9-872D-4DEF-A62D-21F260F66274}</Project>
+      <Name>Abstractor.Cqrs.EntityFramework</Name>
     </ProjectReference>
     <ProjectReference Include="..\Abstractor.Cqrs.UnitOfWork\Abstractor.Cqrs.UnitOfWork.csproj">
       <Project>{CE4CFC78-3D0C-46D7-96BF-4308EC60E125}</Project>

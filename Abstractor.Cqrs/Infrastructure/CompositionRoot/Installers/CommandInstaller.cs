@@ -14,10 +14,10 @@ namespace Abstractor.Cqrs.Infrastructure.CompositionRoot.Installers
     {
         public void RegisterServices(IContainer container, CompositionRootSettings settings)
         {
-            Guard.ArgumentIsNotNull(settings.OperationAssemblies, nameof(settings.OperationAssemblies));
+            Guard.ArgumentIsNotNull(settings.ApplicationAssemblies, nameof(settings.ApplicationAssemblies));
 
             container.RegisterSingleton<ICommandDispatcher, CommandDispatcher>();
-            container.RegisterTransient(typeof (ICommandHandler<>), settings.OperationAssemblies);
+            container.RegisterTransient(typeof (ICommandHandler<>), settings.ApplicationAssemblies);
             container.RegisterScoped<ICommandPostAction, CommandPostAction>();
 
             container.RegisterDecoratorTransient(
