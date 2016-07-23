@@ -68,7 +68,7 @@ namespace Abstractor.Cqrs.UnitOfWork.Persistence
         public void Clear()
         {
             _logger.Log("Clearing Entity Framework context...");
-            _entityContext.Clear();
+            _entityContext.ChangeTracker().Clear();
 
             _logger.Log("Clearing Azure Queue context...");
             _queueContext.Clear();

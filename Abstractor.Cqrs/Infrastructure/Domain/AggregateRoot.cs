@@ -12,10 +12,7 @@ namespace Abstractor.Cqrs.Infrastructure.Domain
     {
         private readonly List<IDomainEvent> _domainEvents;
 
-        public IReadOnlyCollection<IDomainEvent> DomainEvents
-        {
-            get { return new ReadOnlyCollection<IDomainEvent>(_domainEvents); }
-        }
+        public IReadOnlyCollection<IDomainEvent> DomainEvents => new ReadOnlyCollection<IDomainEvent>(_domainEvents);
 
         protected AggregateRoot()
         {

@@ -34,7 +34,7 @@ namespace Abstractor.Test.Command
 
         public class FakeCommandException : CommandException
         {
-            public FakeCommand FakeCommand { get; private set; }
+            public FakeCommand FakeCommand { get; }
 
             public FakeCommandException(FakeCommand fakeCommand)
             {

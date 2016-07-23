@@ -54,7 +54,7 @@ namespace Abstractor.Cqrs.EntityFramework.Persistence
         /// </summary>
         public void Clear()
         {
-            _context.Clear();
+            _context.ChangeTracker().Clear();
         }
     }
 }

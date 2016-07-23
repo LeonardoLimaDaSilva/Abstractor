@@ -1,5 +1,6 @@
 ﻿using System;
 using Abstractor.Cqrs.AzureStorage.Interfaces;
+using Abstractor.Cqrs.EntityFramework.Extensions;
 using Abstractor.Cqrs.EntityFramework.Interfaces;
 using Abstractor.Cqrs.Interfaces.CrossCuttingConcerns;
 using Abstractor.Cqrs.UnitOfWork.Test.Helpers;
@@ -223,14 +224,18 @@ namespace Abstractor.Cqrs.UnitOfWork.Test
             [Frozen]Mock<IAzureQueueContext> aqContext,
             [Frozen]Mock<IAzureTableContext> atContext,
             [Frozen]Mock<IAzureBlobContext> abContext,
+            [Frozen]Mock<IEntityFrameworkChangeTracker> changeTracker,
             Persistence.UnitOfWork uow)
         {
+            EntityFrameworkContextExtensions.Factory = efc => changeTracker.Object;
+
             // Act
 
             uow.Clear();
 
             // Assert
-            
+
+            changeTracker.Verify(t => t.Clear(), Times.Once);
             aqContext.Verify(c => c.Clear(), Times.Once);
             atContext.Verify(c => c.Clear(), Times.Once);
             abContext.Verify(c => c.Clear(), Times.Once);

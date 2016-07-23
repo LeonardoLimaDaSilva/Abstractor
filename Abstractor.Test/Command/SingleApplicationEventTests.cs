@@ -59,7 +59,7 @@ namespace Abstractor.Test.Command
         /// </summary>
         public class SpecificException : CommandException
         {
-            public FakeCommand Command { get; private set; }
+            public FakeCommand Command { get; }
 
             public SpecificException(FakeCommand command)
             {

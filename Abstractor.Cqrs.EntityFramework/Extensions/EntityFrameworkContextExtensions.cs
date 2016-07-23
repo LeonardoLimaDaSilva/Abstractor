@@ -1,23 +1,27 @@
-﻿using System.Data.Entity;
-using System.Linq;
+﻿using System;
 using Abstractor.Cqrs.EntityFramework.Interfaces;
+using Abstractor.Cqrs.EntityFramework.Persistence;
 
 namespace Abstractor.Cqrs.EntityFramework.Extensions
 {
+    /// <summary>
+    ///     Provides an amenable way for mocking the extension method.
+    /// </summary>
     public static class EntityFrameworkContextExtensions
     {
         /// <summary>
-        ///     Detaches all entries from the change tracker.
+        ///     Delegate factory for the EntityFrameworkChangeTracker.
         /// </summary>
-        /// <param name="efContext">DbContext abstraction.</param>
-        public static void Clear(this IEntityFrameworkContext efContext)
-        {
-            // ReSharper disable once SuspiciousTypeConversion.Global
-            var dbContext = efContext as DbContext;
-            if (dbContext == null) return;
+        public static Func<IEntityFrameworkContext, IEntityFrameworkChangeTracker> Factory { get; set; }
 
-            foreach (var entry in dbContext.ChangeTracker.Entries().Where(entry => entry.Entity != null))
-                entry.State = EntityState.Detached;
+        static EntityFrameworkContextExtensions()
+        {
+            Factory = x => new EntityFrameworkChangeTracker(x);
+        }
+
+        public static IEntityFrameworkChangeTracker ChangeTracker(this IEntityFrameworkContext efContext)
+        {
+            return Factory(efContext);
         }
     }
 }
