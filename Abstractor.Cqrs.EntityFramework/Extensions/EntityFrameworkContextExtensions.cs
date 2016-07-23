@@ -13,7 +13,10 @@ namespace Abstractor.Cqrs.EntityFramework.Extensions
         public static void Clear(this IEntityFrameworkContext efContext)
         {
             // ReSharper disable once SuspiciousTypeConversion.Global
-            foreach (var entry in ((DbContext)efContext).ChangeTracker.Entries().Where(entry => entry.Entity != null))
+            var dbContext = efContext as DbContext;
+            if (dbContext == null) return;
+
+            foreach (var entry in dbContext.ChangeTracker.Entries().Where(entry => entry.Entity != null))
                 entry.State = EntityState.Detached;
         }
     }

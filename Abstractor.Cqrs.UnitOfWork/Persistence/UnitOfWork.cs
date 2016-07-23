@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Data.Entity.Validation;
-using System.Linq;
 using Abstractor.Cqrs.AzureStorage.Interfaces;
 using Abstractor.Cqrs.EntityFramework.Extensions;
 using Abstractor.Cqrs.EntityFramework.Interfaces;
@@ -53,17 +51,6 @@ namespace Abstractor.Cqrs.UnitOfWork.Persistence
 
                 _entityContext.SaveChanges();
                 _logger.Log("Entity Framework context commited.");
-            }
-            catch (DbEntityValidationException ex)
-            {
-                _logger.Log($"Entity Framework validation exception caught: {ex.Message}");
-                _logger.Log(ex.EntityValidationErrors
-                              .SelectMany(eve => eve.ValidationErrors)
-                              .Aggregate(string.Empty, (c, ve) => c + $"{ve.PropertyName}: {ve.ErrorMessage}"));
-
-                RollbackAll();
-
-                throw;
             }
             catch (Exception ex)
             {
