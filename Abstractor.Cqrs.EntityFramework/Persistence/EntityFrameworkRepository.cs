@@ -2,7 +2,7 @@
 using System.Linq;
 using Abstractor.Cqrs.EntityFramework.Interfaces;
 using Abstractor.Cqrs.Infrastructure.CrossCuttingConcerns;
-using Abstractor.Cqrs.Infrastructure.Domain;
+using Abstractor.Cqrs.Interfaces.Domain;
 
 namespace Abstractor.Cqrs.EntityFramework.Persistence
 {
@@ -11,7 +11,7 @@ namespace Abstractor.Cqrs.EntityFramework.Persistence
     /// </summary>
     /// <typeparam name="TAggregate">Aggregate type.</typeparam>
     internal sealed class EntityFrameworkRepository<TAggregate> : IEntityFrameworkRepository<TAggregate>
-        where TAggregate : AggregateRoot
+        where TAggregate : class, IAggregateRoot, new()
     {
         private readonly DbContext _context;
 

@@ -1,5 +1,5 @@
 ﻿using System.Linq;
-using Abstractor.Cqrs.Infrastructure.Domain;
+using Abstractor.Cqrs.Interfaces.Domain;
 using Abstractor.Cqrs.Interfaces.Persistence;
 
 namespace Abstractor.Cqrs.EntityFramework.Interfaces
@@ -9,7 +9,7 @@ namespace Abstractor.Cqrs.EntityFramework.Interfaces
     /// </summary>
     /// <typeparam name="TAggregate">Aggregate type.</typeparam>
     public interface IEntityFrameworkRepository<TAggregate> : IRepository<TAggregate>
-        where TAggregate : AggregateRoot
+        where TAggregate : IAggregateRoot
     {
         /// <summary>
         ///     Returns a queryable list of instances of aggregate.
