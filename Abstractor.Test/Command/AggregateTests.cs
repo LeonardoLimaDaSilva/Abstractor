@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Abstractor.Cqrs.Infrastructure.Domain;
 using Abstractor.Cqrs.Infrastructure.Operations;
@@ -11,11 +12,12 @@ namespace Abstractor.Test.Command
 {
     public class AggregateTests : BaseTest
     {
-        public class FakeAggregate : AggregateRoot
+        public class FakeAggregate : AggregateRoot<Guid>
         {
             private readonly ExecuteOperation _command;
 
             public FakeAggregate(ExecuteOperation command)
+                :base(Guid.Empty)
             {
                 _command = command;
             }
@@ -24,8 +26,8 @@ namespace Abstractor.Test.Command
             {
                 if (!_command.AllowExecuteOperations) return;
 
-                ApplyEvent(new OperationExecuted(_command));
-                ApplyEvent(new OperationExecuted(_command));
+                Emit(new OperationExecuted(_command));
+                Emit(new OperationExecuted(_command));
             }
         }
 
@@ -56,7 +58,7 @@ namespace Abstractor.Test.Command
 
                 aggregate.Execute();
 
-                return aggregate.DomainEvents;
+                return aggregate.EmittedEvents;
             }
         }
 
