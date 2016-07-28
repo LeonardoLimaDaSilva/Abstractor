@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Abstractor.Cqrs.Infrastructure.Domain;
 using Abstractor.Cqrs.Test.Helpers;
 using SharpTestsEx;
@@ -29,6 +30,29 @@ namespace Abstractor.Cqrs.Test.Domain
             public ConcreteEntity3(Guid id)
                 : base(id)
             {
+            }
+        }
+
+        private class ConcreteEntity4 : Entity<ConcreteEntity4Id>
+        {
+            public ConcreteEntity4(ConcreteEntity4Id id) 
+                : base(id)
+            {
+            }
+        }
+
+        private class ConcreteEntity4Id : ValueObject<ConcreteEntity4Id>
+        {
+            private Guid Id { get;  }
+
+            public ConcreteEntity4Id(Guid id)
+            {
+                Id = id;
+            }
+
+            protected override IEnumerable<object> GetAttributesToIncludeInEqualityCheck()
+            {
+                yield return Id;
             }
         }
 
@@ -64,11 +88,13 @@ namespace Abstractor.Cqrs.Test.Domain
         }
 
         [Fact]
-        public void Equals_DifferentEntitiesWithSameIds_ShouldBeTrue()
+        public void Equals_DifferentEntitiesWithSameIds_ShouldBeFalse()
         {
-            var entity1 = new ConcreteEntity(Guid.Parse("c480311c-3838-4449-bf99-e37e32a4b376"));
-            var entity2 = new ConcreteEntity2(Guid.Parse("c480311c-3838-4449-bf99-e37e32a4b376"));
-            var entity3 = new ConcreteEntity3(Guid.Parse("c480311c-3838-4449-bf99-e37e32a4b376"));
+            var guid = Guid.Parse("c480311c-3838-4449-bf99-e37e32a4b376");
+
+            var entity1 = new ConcreteEntity(guid);
+            var entity2 = new ConcreteEntity2(guid);
+            var entity3 = new ConcreteEntity3(guid);
 
             entity1.Equals(entity2).Should().Be.False();
             entity2.Equals(entity1).Should().Be.False();
@@ -120,6 +146,16 @@ namespace Abstractor.Cqrs.Test.Domain
         {
             var entity1 = new ConcreteEntity(Guid.Parse("c480311c-3838-4449-bf99-e37e32a4b376"));
             var entity2 = new ConcreteEntity(Guid.Parse("c480311c-3838-4449-bf99-e37e32a4b376"));
+
+            entity1.Equals(entity2).Should().Be.True();
+            entity2.Equals(entity1).Should().Be.True();
+        }
+
+        [Fact]
+        public void Equals_SameValueObjectIds_ShouldBeTrue()
+        {
+            var entity1 = new ConcreteEntity4(new ConcreteEntity4Id(Guid.Parse("c480311c-3838-4449-bf99-e37e32a4b376")));
+            var entity2 = new ConcreteEntity4(new ConcreteEntity4Id(Guid.Parse("c480311c-3838-4449-bf99-e37e32a4b376")));
 
             entity1.Equals(entity2).Should().Be.True();
             entity2.Equals(entity1).Should().Be.True();

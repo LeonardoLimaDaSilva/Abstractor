@@ -23,7 +23,7 @@ namespace Abstractor.Cqrs.AzureStorage.Blob
         /// <summary>
         ///     Converts a generic file into an Azure Blob and saves into the container.
         /// </summary>
-        /// <param name="file">Generic file.</param>
+        /// <param name="file">File to be saved.</param>
         public void Save(GenericFile file)
         {
             _repository.Save(CreateInstance(file));
@@ -32,7 +32,7 @@ namespace Abstractor.Cqrs.AzureStorage.Blob
         /// <summary>
         ///     Converts a generic file into an Azure Blob and removes from the container.
         /// </summary>
-        /// <param name="file"></param>
+        /// <param name="file">File to be deleted.</param>
         public void Delete(GenericFile file)
         {
             _repository.Delete(CreateInstance(file));
@@ -41,11 +41,21 @@ namespace Abstractor.Cqrs.AzureStorage.Blob
         /// <summary>
         ///     Gets an Azure Blob with the specified file name from the container and converts to a generic file.
         /// </summary>
-        /// <param name="fileName"></param>
+        /// <param name="fileName">Name of file to be returned.</param>
         /// <returns></returns>
         public GenericFile Get(string fileName)
         {
             return _repository.Get(fileName).ToGenericFile();
+        }
+
+        /// <summary>
+        ///     Gets an Uri that contains the virtual path of the specified file.
+        /// </summary>
+        /// <param name="fileName">Name that identifies the file.</param>
+        /// <returns></returns>
+        public Uri GetVirtualPath(string fileName)
+        {
+            return _repository.GetVirtualPath(fileName);
         }
 
         /// <summary>
