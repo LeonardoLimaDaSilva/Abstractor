@@ -83,7 +83,7 @@ namespace Abstractor.Cqrs.Test.Operations.Dispatchers
         {
             // Arrange
 
-            var commandException = new CommandException();
+            var commandException = new CommandException("Exception");
 
             commandHandler.Setup(h => h.Handle(It.IsAny<FakeCommand>())).Throws(commandException);
 

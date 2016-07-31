@@ -1,4 +1,7 @@
-﻿using Abstractor.Cqrs.Infrastructure.Persistence;
+﻿using System;
+using System.Collections.Generic;
+using System.Reflection;
+using Abstractor.Cqrs.Infrastructure.Persistence;
 using Abstractor.Cqrs.Test.Helpers;
 using Moq;
 using SharpTestsEx;
@@ -89,6 +92,37 @@ namespace Abstractor.Cqrs.Test.Persistence
             context.Dispose();
 
             // Assert
+
+            dataSet1.Verify(s => s.Dispose(), Times.Once);
+            dataSet2.Verify(s => s.Dispose(), Times.Once);
+        }
+
+        [Theory, AutoMoqData]
+        public void Clear_MultipleDataSets_ShouldDisposeAndClearAllInternalContexts(
+            Mock<BaseDataSet<int>> dataSet1,
+            Mock<BaseDataSet<string>> dataSet2,
+            FakeDataContext context)
+        {
+            // Arrange
+
+            context.SetUpDataSet(dataSet1.Object);
+            context.Set<int>();
+
+            context.SetUpDataSet(dataSet2.Object);
+            context.Set<string>();
+
+            var internalContext = (IDictionary<string, IBaseDataSet>)typeof(BaseDataContext).GetField("_internalContext", BindingFlags.NonPublic | BindingFlags.Instance)?.GetValue(context);
+            if (internalContext == null) throw new Exception("Cannot get the value of _internalContext.");
+
+            internalContext.Count.Should().Be(2);
+
+            // Act
+
+            context.Clear();
+
+            // Assert
+
+            internalContext.Count.Should().Be(0);
 
             dataSet1.Verify(s => s.Dispose(), Times.Once);
             dataSet2.Verify(s => s.Dispose(), Times.Once);

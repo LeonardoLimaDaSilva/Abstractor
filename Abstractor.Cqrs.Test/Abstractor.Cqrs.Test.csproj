@@ -36,6 +36,7 @@
       <HintPath>..\packages\Castle.Core.3.3.3\lib\net45\Castle.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="Moq, Version=4.5.10.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
       <HintPath>..\packages\Moq.4.5.10\lib\net45\Moq.dll</HintPath>
       <Private>True</Private>
@@ -86,6 +87,7 @@
     <Compile Include="CrossCuttingConcerns\DefaultStopwatchTests.cs" />
     <Compile Include="CrossCuttingConcerns\EmptyLoggerTests.cs" />
     <Compile Include="CrossCuttingConcerns\GuardTests.cs" />
+    <Compile Include="CrossCuttingConcerns\JsonLoggerSerializerTests.cs" />
     <Compile Include="CrossCuttingConcerns\SystemClockTests.cs" />
     <Compile Include="Domain\EntityTests.cs" />
     <Compile Include="Domain\GenericFileTests.cs" />

@@ -5,6 +5,7 @@ using Abstractor.Cqrs.EntityFramework.Extensions;
 using Abstractor.Cqrs.EntityFramework.Interfaces;
 using Abstractor.Cqrs.Infrastructure.CompositionRoot;
 using Abstractor.Cqrs.Infrastructure.CompositionRoot.Extensions;
+using Abstractor.Cqrs.Interfaces.CrossCuttingConcerns;
 using Abstractor.Cqrs.Interfaces.Persistence;
 using Abstractor.Cqrs.SimpleInjector.Adapters;
 using Abstractor.Cqrs.UnitOfWork.Extensions;
@@ -70,6 +71,32 @@ namespace Abstractor.Test.CompositionRoot
             }
         }
 
+        public class FakeEfContextWithDependencyInjection : IEntityFrameworkContext
+        {
+            private readonly ILogger _logger;
+
+            public FakeEfContextWithDependencyInjection(ILogger logger)
+            {
+                _logger = logger;
+            }
+
+            public int SaveChanges()
+            {
+                _logger.Log("Changes saved.");
+                return 0;
+            }
+        }
+
+        public class FakeLogger : ILogger
+        {
+            public string Message { get; private set; }
+
+            public void Log(string message)
+            {
+                Message = message;
+            }
+        }
+
         public ContainerAdapter BuildNewAdapter(Container container)
         {
             container.Options.DefaultScopedLifestyle = new LifetimeScopeLifestyle();
@@ -90,6 +117,8 @@ namespace Abstractor.Test.CompositionRoot
                     settings.ApplicationAssemblies = currentAssembly;
                     settings.ApplicationTypes = concreteTypes;
                 });
+
+            container.Register<ILogger, FakeLogger>(Lifestyle.Singleton);
 
             return containerAdapter;
         }
@@ -202,6 +231,30 @@ namespace Abstractor.Test.CompositionRoot
                 using (container.BeginLifetimeScope())
                 {
                     Assert.Throws<ActivationException>(() => container.GetInstance<IUnitOfWork>());
+                }
+            }
+        }
+
+        [Fact]
+        public void RegisterEntityFrameworkWithDependencyInjection_ShouldResolveWithoutErrors()
+        {
+            using (var container = new Container())
+            {
+                var adapter = BuildNewAdapter(container);
+
+                adapter.RegisterEntityFramework<FakeEfContextWithDependencyInjection>();
+
+                using (container.BeginLifetimeScope())
+                {
+                    var logger = (FakeLogger)container.GetInstance<ILogger>();
+                    var uow = container.GetInstance<IUnitOfWork>();
+                    uow.GetType()
+                        .FullName.Should()
+                        .Be("Abstractor.Cqrs.EntityFramework.Persistence.EntityFrameworkUnitOfWork");
+
+                    uow.Commit();
+
+                    logger.Message.Should().Be("Changes saved.");
                 }
             }
         }

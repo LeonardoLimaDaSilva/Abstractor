@@ -76,6 +76,7 @@ namespace Abstractor.Cqrs.Infrastructure.Persistence
         /// </summary>
         public void Clear()
         {
+            Dispose();
             _internalContext.Clear();
         }
     }

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Abstractor.Cqrs.Infrastructure.CrossCuttingConcerns;
-using Abstractor.Cqrs.Infrastructure.Persistence;
 using Abstractor.Cqrs.Interfaces.CompositionRoot;
 using Abstractor.Cqrs.Interfaces.CrossCuttingConcerns;
 using Abstractor.Cqrs.Interfaces.Events;
