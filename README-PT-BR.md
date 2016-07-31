@@ -6,6 +6,8 @@ Framework que fornece base para a aplicação do padrão CQRS (Command and Query
 
 Fornece um algorítimo genérico de compensação que permite que sejam criadas implementações de Unidades de Trabalho de forma simplificada através de pontos de extensão (ver o módulo Abstractor.Cqrs.AzureStorage, para ver um exemplo de extensão para o serviço de Armazenamento em Nuvem do Azure). Utiliza o paradigma de Programação Orientada a Aspectos (Aspected-Oriented Programming), possibilitando a composição da aplicação de forma altamente desacoplada e modularizada, favorecendo a estruturação de uma arquitetura hexagonal.
 
+Fornece a funcionalidade de logging através de todo o framework, possibilitando o rastreamento completo do ciclo de vida da aplicação.
+
 # Abstractor.Cqrs.EntityFramework
 
 Implementação dos padrões de Repositório Genérico e Unidade de Trabalho para o Entity Framework.
