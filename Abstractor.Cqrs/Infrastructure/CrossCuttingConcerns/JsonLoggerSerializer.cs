@@ -15,7 +15,13 @@ namespace Abstractor.Cqrs.Infrastructure.CrossCuttingConcerns
         /// <returns>Serialized string.</returns>
         public string Serialize(object value)
         {
-            return JsonConvert.SerializeObject(value, Formatting.Indented);
+            return JsonConvert.SerializeObject(
+                value,
+                Formatting.Indented,
+                new JsonSerializerSettings
+                {
+                    ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                });
         }
     }
 }
