@@ -6,7 +6,6 @@ using Abstractor.Cqrs.Infrastructure.Persistence;
 using Abstractor.Cqrs.Interfaces.CompositionRoot;
 using Abstractor.Cqrs.Interfaces.CrossCuttingConcerns;
 using Abstractor.Cqrs.Interfaces.Events;
-using Abstractor.Cqrs.Interfaces.Persistence;
 
 namespace Abstractor.Cqrs.Infrastructure.CompositionRoot.Installers
 {
@@ -18,7 +17,6 @@ namespace Abstractor.Cqrs.Infrastructure.CompositionRoot.Installers
         public void RegisterServices(IContainer container, CompositionRootSettings settings)
         {
             // Registers the default implementations
-            container.RegisterLazySingleton<IUnitOfWork, EmptyUnitOfWork>();
             container.RegisterLazySingleton<ILogger, EmptyLogger>();
             container.RegisterLazySingleton<ILoggerSerializer, JsonLoggerSerializer>();
             container.RegisterLazySingleton<IStopwatch, DefaultStopwatch>();

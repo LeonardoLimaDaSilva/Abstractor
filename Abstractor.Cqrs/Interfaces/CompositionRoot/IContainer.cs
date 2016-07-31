@@ -110,6 +110,15 @@ namespace Abstractor.Cqrs.Interfaces.CompositionRoot
             where TImplementation : class, TService;
 
         /// <summary>
+        ///     Provides functionality for the deferred resolving of unregistered types.
+        /// </summary>
+        /// <typeparam name="TService">Type of abstraction.</typeparam>
+        /// <typeparam name="TImplementation">Type of implementation.</typeparam>
+        void RegisterLazyScoped<TService, TImplementation>()
+            where TService : class
+            where TImplementation : class, TService;
+
+        /// <summary>
         ///     Provides functionality for resolving delegates of type <see cref="Func{T}" />.
         /// </summary>
         void AllowResolvingFuncFactories();

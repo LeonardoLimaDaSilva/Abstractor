@@ -18,7 +18,7 @@ namespace Abstractor.Cqrs.SimpleInjector.Adapters
         public ContainerAdapter(Container container)
         {
             _container = container;
-            _container.RegisterSingleton(typeof (IContainer), this);
+            _container.RegisterSingleton(typeof(IContainer), this);
         }
 
         /// <summary>
@@ -67,7 +67,7 @@ namespace Abstractor.Cqrs.SimpleInjector.Adapters
         /// <typeparam name="TImplementation">Type of the implementation.</typeparam>
         public void RegisterScoped<TService, TImplementation>()
         {
-            _container.Register(typeof (TService), typeof (TImplementation), Lifestyle.Scoped);
+            _container.Register(typeof(TService), typeof(TImplementation), Lifestyle.Scoped);
         }
 
         /// <summary>
@@ -124,7 +124,7 @@ namespace Abstractor.Cqrs.SimpleInjector.Adapters
             where TService : class
             where TImplementation : class, TService
         {
-            _container.Register(typeof (TService), typeof (TImplementation), Lifestyle.Singleton);
+            _container.Register(typeof(TService), typeof(TImplementation), Lifestyle.Singleton);
         }
 
         /// <summary>
@@ -158,13 +158,32 @@ namespace Abstractor.Cqrs.SimpleInjector.Adapters
             where TService : class
             where TImplementation : class, TService
         {
-            var registration = new Lazy<Registration>(() =>
-                Lifestyle.Singleton
-                         .CreateRegistration<TService, TImplementation>(_container));
+            var registration = new Lazy<Registration>(
+                () => Lifestyle.Singleton
+                    .CreateRegistration<TService, TImplementation>(_container));
 
             _container.ResolveUnregisteredType += (sender, e) =>
             {
-                if (e.UnregisteredServiceType == typeof (TService))
+                if (e.UnregisteredServiceType == typeof(TService))
+                    e.Register(registration.Value);
+            };
+        }
+
+        /// <summary>
+        ///     Provides functionality for the deferred resolving of unregistered types.
+        /// </summary>
+        /// <typeparam name="TService">Type of abstraction.</typeparam>
+        /// <typeparam name="TImplementation">Type of the implementation.</typeparam>
+        public void RegisterLazyScoped<TService, TImplementation>() where TService : class
+            where TImplementation : class, TService
+        {
+            var registration = new Lazy<Registration>(
+                () => Lifestyle.Scoped
+                    .CreateRegistration<TService, TImplementation>(_container));
+
+            _container.ResolveUnregisteredType += (sender, e) =>
+            {
+                if (e.UnregisteredServiceType == typeof(TService))
                     e.Register(registration.Value);
             };
         }
@@ -178,11 +197,11 @@ namespace Abstractor.Cqrs.SimpleInjector.Adapters
             {
                 var type = e.UnregisteredServiceType;
 
-                if (!type.IsGenericType || type.GetGenericTypeDefinition() != typeof (Func<>)) return;
+                if (!type.IsGenericType || type.GetGenericTypeDefinition() != typeof(Func<>)) return;
 
                 var serviceType = type.GetGenericArguments().First();
                 var registration = _container.GetRegistration(serviceType, true);
-                var funcType = typeof (Func<>).MakeGenericType(serviceType);
+                var funcType = typeof(Func<>).MakeGenericType(serviceType);
 
                 // Constructs the Func<> delegate and registers into the container
                 var factoryDelegate = Expression.Lambda(funcType, registration.BuildExpression()).Compile();

@@ -98,7 +98,6 @@
     <Compile Include="Infrastructure\Persistence\BaseDataSet.cs" />
     <Compile Include="Infrastructure\Persistence\BaseDataSetOperation.cs" />
     <Compile Include="Infrastructure\Persistence\BaseDataSetOperationType.cs" />
-    <Compile Include="Infrastructure\Persistence\EmptyUnitOfWork.cs" />
     <Compile Include="Infrastructure\Persistence\IBaseDataSet.cs" />
     <Compile Include="Interfaces\CompositionRoot\IContainer.cs" />
     <Compile Include="Interfaces\CrossCuttingConcerns\IAttributeFinder.cs" />

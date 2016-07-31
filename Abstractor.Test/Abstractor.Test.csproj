@@ -92,6 +92,7 @@
     <Compile Include="Command\AggregateTests.cs" />
     <Compile Include="Command\MultipleApplicationEventsTests.cs" />
     <Compile Include="Command\DomainEventTests.cs" />
+    <Compile Include="CompositionRoot\CompositionRootTests.cs" />
     <Compile Include="Query\QueryDispatcherTests.cs" />
     <Compile Include="Command\SingleApplicationEventTests.cs" />
     <Compile Include="Command\CommandPostActionTests.cs" />
@@ -107,9 +108,21 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Abstractor.Cqrs.AzureStorage\Abstractor.Cqrs.AzureStorage.csproj">
+      <Project>{14d99482-1f46-4c48-adbb-f2836198c73b}</Project>
+      <Name>Abstractor.Cqrs.AzureStorage</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Abstractor.Cqrs.EntityFramework\Abstractor.Cqrs.EntityFramework.csproj">
+      <Project>{4778c8f9-872d-4def-a62d-21f260f66274}</Project>
+      <Name>Abstractor.Cqrs.EntityFramework</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Abstractor.Cqrs.SimpleInjector\Abstractor.Cqrs.SimpleInjector.csproj">
       <Project>{B2DE5824-5A4D-4370-9471-B5AC6310F026}</Project>
       <Name>Abstractor.Cqrs.SimpleInjector</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Abstractor.Cqrs.UnitOfWork\Abstractor.Cqrs.UnitOfWork.csproj">
+      <Project>{ce4cfc78-3d0c-46d7-96bf-4308ec60e125}</Project>
+      <Name>Abstractor.Cqrs.UnitOfWork</Name>
     </ProjectReference>
     <ProjectReference Include="..\Abstractor.Cqrs\Abstractor.Cqrs.csproj">
       <Project>{5E7621D3-037F-4D21-A628-CCABB6A0AAF8}</Project>
