@@ -4,7 +4,7 @@
 
 Framework que fornece base para a aplicação do padrão CQRS (Command and Query Responsibility Segregation) de arquitetura, e alguns padrões táticos comuns do DDD (Domain-Driven Design), como Agregações, Entidades,	Objetos de Valor, Eventos de Domínio e de Aplicação.
 
-Fornece um algorítimo genérico de compensação que permite que sejam criadas implementações de Unidades de Trabalho de forma simplificada através de pontos de extensão (ver o módulo Abstractor.Cqrs.AzureStorage, para ver um exemplo de extensão para o serviço de Armazenamento em Nuvem do Azure). Utiliza o paradigma de Programação Orientada a Aspectos (Aspected-Oriented Programming), possibilitando a composição da aplicação de forma altamente desacoplada e modularizada, favorecendo a implementação de uma arquitetura hexagonal.
+Fornece um algorítimo genérico de compensação que permite que sejam criadas implementações de Unidades de Trabalho de forma simplificada através de pontos de extensão (ver o módulo Abstractor.Cqrs.AzureStorage, para ver um exemplo de extensão para o serviço de Armazenamento em Nuvem do Azure). Utiliza o paradigma de Programação Orientada a Aspectos (Aspected-Oriented Programming), possibilitando a composição da aplicação de forma altamente desacoplada e modularizada, favorecendo a estruturação de uma arquitetura hexagonal.
 
 # Abstractor.Cqrs.EntityFramework
 
@@ -12,7 +12,7 @@ Implementação dos padrões de Repositório Genérico e Unidade de Trabalho par
 		
 # Abstractor.Cqrs.AzureStorage
 
-Implementa o padrão Repositório Genérico para as bibliotecas do serviço de Armazenamento em Nuvem do Azure. Utiliza o algorítimo genérico de compensação, implementado no módulo Abstractor.Cqrs, que permite a execução de operações completamente transacionais entre múltiplos contêineres, tabelas e filas.
+Implementa o padrão Repositório Genérico para as bibliotecas do serviço de Armazenamento em Nuvem do Azure. Utiliza o algorítimo genérico de compensação, implementado no módulo Abstractor.Cqrs, que permite a execução de operações transacionais entre múltiplos contêineres, tabelas e filas.
 		
 # Abstractor.Cqrs.UnitOfWork
 
