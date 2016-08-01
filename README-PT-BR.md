@@ -23,3 +23,7 @@ Coordena e sincroniza os contextos definidos nos módulos Abstractor.Cqrs.AzureS
 # Abstractor.Cqrs.SimpleInjector
 
 Implementa o padrão Adaptador para o contêiner de inversão de controle do Simple Injector. Deve ser utilizado como base para a implementação futura de adaptadores para outros contêineres.
+
+<hr />
+
+<a href="https://github.com/LeonardoLimaDaSilva/Abstractor/blob/master/README.md">Versão em inglês</a>
