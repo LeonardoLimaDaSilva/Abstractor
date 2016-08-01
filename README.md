@@ -23,3 +23,7 @@ Coordinates and synchronizes the contexts defined in Abstractor.Cqrs.AzureStorag
 # Abstractor.Cqrs.SimpleInjector
 
 Implements the Adapter pattern for the Simple Injector inversion of control container. It should be used as a basis for future implementation of other containers adapters.
+
+<hr />
+
+<a href="https://github.com/LeonardoLimaDaSilva/Abstractor/blob/master/README-PT-BR.md">Portuguese version</a>
