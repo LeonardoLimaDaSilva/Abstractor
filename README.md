@@ -4,7 +4,7 @@
 
 Framework that provides the basis for the application of CQRS (Command and Query Responsibility Segregation) pattern of architecture, and some common tactical patterns of DDD (Domain-Driven Design ), namely,  Aggregates, Entities, Value Objects, Domain Events and Application Events.
 
-Provides a generic compensation algorithm that allows that custom Units of Work are implementated in a simplified way through extension points (see Abstractor.Cqrs.AzureStorage module for an extension example for the Azure Cloud Storage service). It implements the AOP (Aspected-Oriented Programming) paradigm, enabling the application composition in a highly decoupled and modularized way, favoring the structuring of a hexagonal architecture.
+Provides a generic compensation algorithm that allows that custom Units of Work are implementated in a simplified way through extension points (see Abstractor.Cqrs.AzureStorage module for an extension example for the Azure Cloud Storage service). It implements the AOP (Aspect-Oriented Programming) paradigm, enabling the application composition in a highly decoupled and modularized way, favoring the structuring of a hexagonal architecture.
 
 Provides logging functionality throughout the framework, enabling the tracking of the entire application lifecycle.
 
