@@ -1,4 +1,5 @@
 using System;
+using Abstractor.Cqrs.Infrastructure.CompositionRoot.Exceptions;
 using Abstractor.Cqrs.Infrastructure.CrossCuttingConcerns;
 using Abstractor.Cqrs.Infrastructure.Operations.Dispatchers;
 using Abstractor.Cqrs.Interfaces.CompositionRoot;
@@ -190,6 +191,46 @@ namespace Abstractor.Cqrs.Test.Operations.Dispatchers
             // Assert
 
             commandHandler.Verify(t => t.Handle(It.IsAny<ICommand>()), Times.Once);
+        }
+
+        [Theory, AutoMoqData]
+        public void Dispatch_CommandThrowsActivationException_ShouldThrowCommandHandlerNotFoundException(
+            [Frozen] Mock<IContainer> container,
+            [Frozen] Mock<ICommandHandler<ICommand>> commandHandler,
+            FakeCommand command,
+            CommandDispatcher dispatcher)
+        {
+            // Arrange
+
+            commandHandler.Setup(h => h.Handle(It.IsAny<FakeCommand>())).Throws<Exception>();
+
+            container.Setup(c => c.GetInstance(It.IsAny<Type>())).Throws<Exception>();
+
+            container.Setup(c => c.IsActivationException(It.IsAny<Exception>())).Returns(true);
+
+            // Act and assert
+
+            Assert.Throws<CommandHandlerNotFoundException>(() => dispatcher.Dispatch(command));
+        }
+
+        [Theory, AutoMoqData]
+        public async void DispatchAsync_CommandThrowsActivationException_ShouldThrowCommandHandlerNotFoundException(
+            [Frozen] Mock<IContainer> container,
+            [Frozen] Mock<ICommandHandler<ICommand>> commandHandler,
+            FakeCommand command,
+            CommandDispatcher dispatcher)
+        {
+            // Arrange
+
+            commandHandler.Setup(h => h.Handle(It.IsAny<FakeCommand>())).Throws<Exception>();
+
+            container.Setup(c => c.GetInstance(It.IsAny<Type>())).Throws<Exception>();
+
+            container.Setup(c => c.IsActivationException(It.IsAny<Exception>())).Returns(true);
+
+            // Act and assert
+
+            await Assert.ThrowsAsync<CommandHandlerNotFoundException>(() => dispatcher.DispatchAsync(command));
         }
     }
 }

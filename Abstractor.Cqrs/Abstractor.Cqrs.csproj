@@ -53,7 +53,8 @@
   <ItemGroup>
     <Compile Include="Infrastructure\CompositionRoot\CompositionRootSettings.cs" />
     <Compile Include="Infrastructure\CompositionRoot\Exceptions\MultipleQueryHandlersException.cs" />
-    <Compile Include="Infrastructure\CompositionRoot\Exceptions\NoQueryHandlersException.cs" />
+    <Compile Include="Infrastructure\CompositionRoot\Exceptions\CommandHandlerNotFoundException.cs" />
+    <Compile Include="Infrastructure\CompositionRoot\Exceptions\QueryHandlersNotFoundException.cs" />
     <Compile Include="Infrastructure\CompositionRoot\Extensions\ContainerExtensions.cs" />
     <Compile Include="Infrastructure\CompositionRoot\Extensions\ReflectionExtensions.cs" />
     <Compile Include="Infrastructure\CompositionRoot\ImplementationConvention.cs" />

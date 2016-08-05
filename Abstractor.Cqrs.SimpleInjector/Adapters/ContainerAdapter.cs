@@ -219,5 +219,15 @@ namespace Abstractor.Cqrs.SimpleInjector.Adapters
         {
             _container.Register(instanceCreator);
         }
+
+        /// <summary>
+        ///     Verify whether the exception is an activation exception.
+        /// </summary>
+        /// <param name="exception">Exception to be verified.</param>
+        /// <returns></returns>
+        public bool IsActivationException(Exception exception)
+        {
+            return exception is ActivationException;
+        }
     }
 }

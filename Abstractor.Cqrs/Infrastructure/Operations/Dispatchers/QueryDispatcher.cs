@@ -35,7 +35,7 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Dispatchers
             try
             {
                 dynamic handler = _container.GetAllInstances(handlerType).SingleOrDefault();
-                if (handler == null) throw new NoQueryHandlersException(query.GetType());
+                if (handler == null) throw new QueryHandlersNotFoundException(query.GetType());
 
                 return handler.Handle((dynamic)query);
             }
@@ -60,7 +60,7 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Dispatchers
             try
             {
                 dynamic handler = _container.GetAllInstances(handlerType).SingleOrDefault();
-                if (handler == null) throw new NoQueryHandlersException(query.GetType());
+                if (handler == null) throw new QueryHandlersNotFoundException(query.GetType());
 
                 return await handler.HandleAsync((dynamic)query);
             }

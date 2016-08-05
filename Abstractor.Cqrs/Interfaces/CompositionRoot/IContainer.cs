@@ -130,5 +130,12 @@ namespace Abstractor.Cqrs.Interfaces.CompositionRoot
         /// <param name="instanceCreator"><see cref="Func{T}" /> delegate.</param>
         void RegisterTransient<TService>(Func<TService> instanceCreator)
             where TService : class;
+
+        /// <summary>
+        ///     Verify whether the exception is an activation exception.
+        /// </summary>
+        /// <param name="exception">Exception to be verified.</param>
+        /// <returns></returns>
+        bool IsActivationException(Exception exception);
     }
 }

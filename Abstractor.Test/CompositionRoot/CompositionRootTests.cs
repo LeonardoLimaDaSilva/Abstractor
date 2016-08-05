@@ -197,6 +197,7 @@ namespace Abstractor.Test.CompositionRoot
 
                 using (container.BeginLifetimeScope())
                 {
+                    // ReSharper disable once AccessToDisposedClosure
                     Assert.Throws<ActivationException>(() => container.GetInstance<IUnitOfWork>());
                 }
             }
@@ -213,6 +214,7 @@ namespace Abstractor.Test.CompositionRoot
 
                 using (container.BeginLifetimeScope())
                 {
+                    // ReSharper disable once AccessToDisposedClosure
                     Assert.Throws<ActivationException>(() => container.GetInstance<IUnitOfWork>());
                 }
             }
@@ -230,6 +232,7 @@ namespace Abstractor.Test.CompositionRoot
 
                 using (container.BeginLifetimeScope())
                 {
+                    // ReSharper disable once AccessToDisposedClosure
                     Assert.Throws<ActivationException>(() => container.GetInstance<IUnitOfWork>());
                 }
             }

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Abstractor.Cqrs.Infrastructure.CompositionRoot.Exceptions;
 using Abstractor.Cqrs.Infrastructure.CrossCuttingConcerns;
 using Abstractor.Cqrs.Interfaces.Events;
 using Abstractor.Cqrs.Interfaces.Operations;
@@ -49,6 +50,10 @@ namespace Abstractor.Test.Command
                 command.FakeCommand.ExceptionHandlerExecuted = true;
                 yield break;
             }
+        }
+
+        public class FakeCommandWithNoHandler : ICommand
+        {
         }
 
         [Fact]
@@ -131,6 +136,18 @@ namespace Abstractor.Test.Command
             command.HandlerExecuted.Should().Be.True();
 
             command.ExceptionHandlerExecuted.Should().Be.True();
+        }
+
+        [Fact]
+        public void Dispatch_FakeCommandWithNoHandler_ShouldThrowException()
+        {
+            // Arrange
+
+            var command = new FakeCommandWithNoHandler();
+
+            // Act and assert
+
+            Assert.Throws<CommandHandlerNotFoundException>(() => CommandDispatcher.Dispatch(command));
         }
     }
 }

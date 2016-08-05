@@ -9,7 +9,10 @@ namespace Abstractor.Test.Query
 {
     public class MultipleQueryHandlersTests : BaseTest
     {
-        public class FakeRepository : 
+        // Classes should be able to handle multiple queries of distinct types,
+        // E.g. repositories should be able to handle an optimized query and return the results 
+        // directly to the consumer via tailored DTOs
+        public class MultipleQueryHandler : 
             IQueryHandler<FakeQuery1, FakeQuery1Result>,
             IQueryHandler<FakeQuery2, FakeQuery2Result>,
             IQueryHandler<FakeQuery3, FakeCommonResult>,
@@ -177,7 +180,7 @@ namespace Abstractor.Test.Query
 
             // Act and assert
 
-            Assert.Throws<NoQueryHandlersException>(() => QueryDispatcher.Dispatch(query));
+            Assert.Throws<QueryHandlersNotFoundException>(() => QueryDispatcher.Dispatch(query));
         }
 
         [Fact]
@@ -249,7 +252,7 @@ namespace Abstractor.Test.Query
 
             // Act and assert
 
-            await Assert.ThrowsAsync<NoQueryHandlersException>(() => QueryDispatcher.DispatchAsync(query));
+            await Assert.ThrowsAsync<QueryHandlersNotFoundException>(() => QueryDispatcher.DispatchAsync(query));
         }
     }
 }

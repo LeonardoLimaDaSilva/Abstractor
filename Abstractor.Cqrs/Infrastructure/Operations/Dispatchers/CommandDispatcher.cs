@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Abstractor.Cqrs.Infrastructure.CompositionRoot.Exceptions;
 using Abstractor.Cqrs.Infrastructure.CrossCuttingConcerns;
 using Abstractor.Cqrs.Interfaces.CompositionRoot;
 using Abstractor.Cqrs.Interfaces.Operations;
@@ -64,7 +65,18 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Dispatchers
         private dynamic GetCommandHandler(Type commandType)
         {
             var handlerType = typeof (ICommandHandler<>).MakeGenericType(commandType);
-            return _container.GetInstance(handlerType);
+
+            try
+            {
+                return _container.GetInstance(handlerType);
+            }
+            catch (Exception ex)
+            {
+                if (_container.IsActivationException(ex))
+                    throw new CommandHandlerNotFoundException(commandType);
+
+                throw;
+            }
         }
     }
 }
