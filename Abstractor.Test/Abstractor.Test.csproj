@@ -106,6 +106,7 @@
     <Compile Include="Helpers\FakeUnitOfWork.cs" />
     <Compile Include="Helpers\SynchronousTaskScheduler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Query\MultipleQueryHandlersTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Abstractor.Cqrs.AzureStorage\Abstractor.Cqrs.AzureStorage.csproj">

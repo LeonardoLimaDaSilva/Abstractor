@@ -16,8 +16,9 @@ namespace Abstractor.Cqrs.Infrastructure.CompositionRoot.Installers
             Guard.ArgumentIsNotNull(settings.ApplicationAssemblies, nameof(settings.ApplicationAssemblies));
 
             container.RegisterSingleton<IQueryDispatcher, QueryDispatcher>();
-            container.RegisterTransient(typeof (IQueryHandler<,>), settings.ApplicationAssemblies);
-            container.RegisterTransient(typeof (IQueryAsyncHandler<,>), settings.ApplicationAssemblies);
+
+            container.RegisterCollection(typeof(IQueryHandler<,>), settings.ApplicationAssemblies);
+            container.RegisterCollection(typeof(IQueryAsyncHandler<,>), settings.ApplicationAssemblies);
 
             container.RegisterDecoratorSingleton(
                 typeof (IQueryHandler<,>),

@@ -1,4 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
+using Abstractor.Cqrs.Infrastructure.CompositionRoot.Exceptions;
 using Abstractor.Cqrs.Infrastructure.CrossCuttingConcerns;
 using Abstractor.Cqrs.Interfaces.CompositionRoot;
 using Abstractor.Cqrs.Interfaces.Operations;
@@ -28,9 +31,18 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Dispatchers
             Guard.ArgumentIsNotNull(query, nameof(query));
 
             var handlerType = typeof (IQueryHandler<,>).MakeGenericType(query.GetType(), typeof (TResult));
-            dynamic handler = _container.GetInstance(handlerType);
 
-            return handler.Handle((dynamic) query);
+            try
+            {
+                dynamic handler = _container.GetAllInstances(handlerType).SingleOrDefault();
+                if (handler == null) throw new NoQueryHandlersException(query.GetType());
+
+                return handler.Handle((dynamic)query);
+            }
+            catch (InvalidOperationException)
+            {
+                throw new MultipleQueryHandlersException(query.GetType());
+            }
         }
 
         /// <summary>
@@ -44,9 +56,18 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Dispatchers
             Guard.ArgumentIsNotNull(query, nameof(query));
 
             var handlerType = typeof (IQueryAsyncHandler<,>).MakeGenericType(query.GetType(), typeof (TResult));
-            dynamic handler = _container.GetInstance(handlerType);
 
-            return await handler.HandleAsync((dynamic) query);
+            try
+            {
+                dynamic handler = _container.GetAllInstances(handlerType).SingleOrDefault();
+                if (handler == null) throw new NoQueryHandlersException(query.GetType());
+
+                return await handler.HandleAsync((dynamic)query);
+            }
+            catch (InvalidOperationException)
+            {
+                throw new MultipleQueryHandlersException(query.GetType());
+            }
         }
     }
 }
