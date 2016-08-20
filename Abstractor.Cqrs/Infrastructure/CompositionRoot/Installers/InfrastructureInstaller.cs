@@ -5,6 +5,7 @@ using Abstractor.Cqrs.Infrastructure.CrossCuttingConcerns;
 using Abstractor.Cqrs.Interfaces.CompositionRoot;
 using Abstractor.Cqrs.Interfaces.CrossCuttingConcerns;
 using Abstractor.Cqrs.Interfaces.Events;
+using Abstractor.Cqrs.Interfaces.Operations;
 
 namespace Abstractor.Cqrs.Infrastructure.CompositionRoot.Installers
 {
@@ -29,8 +30,9 @@ namespace Abstractor.Cqrs.Infrastructure.CompositionRoot.Installers
             foreach (var type in settings.ApplicationTypes)
             {
                 var interfaces = ExcludeEventHandlersInterfaces(type).ToList();
-                if (interfaces.Any())
-                    container.RegisterTransient(interfaces.Last(), type);
+
+                foreach (var i in interfaces)
+                    container.RegisterTransient(i, type);
             }
         }
 
@@ -43,6 +45,9 @@ namespace Abstractor.Cqrs.Infrastructure.CompositionRoot.Installers
         {
             return type.GetInterfaces().Where(i =>
                 (i.IsGenericType && (
+                    i.GetGenericTypeDefinition() != typeof(ICommandHandler<>) &&
+                    i.GetGenericTypeDefinition() != typeof(IQueryHandler<,>) &&
+                    i.GetGenericTypeDefinition() != typeof(IQueryAsyncHandler<,>) &&
                     i.GetGenericTypeDefinition() != typeof (IDomainEventHandler<>) &&
                     i.GetGenericTypeDefinition() != typeof (IApplicationEventHandler<>)
                     ))

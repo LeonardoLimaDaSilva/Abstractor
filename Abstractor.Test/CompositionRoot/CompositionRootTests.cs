@@ -16,7 +16,7 @@ using Xunit;
 
 namespace Abstractor.Test.CompositionRoot
 {
-    public class CompositionRootTests
+    public class ContextsRegisteringTests
     {
         public class FakeEfContext : IEntityFrameworkContext
         {
@@ -138,6 +138,9 @@ namespace Abstractor.Test.CompositionRoot
                     uow.GetType()
                         .FullName.Should()
                         .Be("Abstractor.Cqrs.EntityFramework.Persistence.EntityFrameworkUnitOfWork");
+
+                    uow.Commit();
+                    uow.Clear();
                 }
             }
         }
@@ -159,6 +162,9 @@ namespace Abstractor.Test.CompositionRoot
                 {
                     var uow = container.GetInstance<IUnitOfWork>();
                     uow.GetType().FullName.Should().Be("Abstractor.Cqrs.UnitOfWork.Persistence.UnitOfWork");
+
+                    uow.Commit();
+                    uow.Clear();
                 }
             }
         }
@@ -180,6 +186,9 @@ namespace Abstractor.Test.CompositionRoot
                 {
                     var uow = container.GetInstance<IUnitOfWork>();
                     uow.GetType().FullName.Should().Be("Abstractor.Cqrs.UnitOfWork.Persistence.UnitOfWork");
+
+                    uow.Commit();
+                    uow.Clear();
                 }
             }
         }
@@ -256,6 +265,7 @@ namespace Abstractor.Test.CompositionRoot
                         .Be("Abstractor.Cqrs.EntityFramework.Persistence.EntityFrameworkUnitOfWork");
 
                     uow.Commit();
+                    uow.Clear();
 
                     logger.Message.Should().Be("Changes saved.");
                 }
