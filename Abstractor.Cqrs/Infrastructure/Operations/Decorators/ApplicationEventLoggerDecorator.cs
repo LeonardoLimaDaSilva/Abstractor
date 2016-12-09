@@ -1,4 +1,5 @@
 ﻿using System;
+using Abstractor.Cqrs.Infrastructure.CompositionRoot;
 using Abstractor.Cqrs.Interfaces.CrossCuttingConcerns;
 using Abstractor.Cqrs.Interfaces.Events;
 
@@ -14,6 +15,7 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
         private readonly IAttributeFinder _attributeFinder;
         private readonly Func<IApplicationEventHandler<TEvent>> _handlerFactory;
         private readonly ILogger _logger;
+        private readonly GlobalSettings _settings;
         private readonly ILoggerSerializer _loggerSerializer;
         private readonly IStopwatch _stopwatch;
 
@@ -22,13 +24,15 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
             IAttributeFinder attributeFinder,
             IStopwatch stopwatch,
             ILoggerSerializer loggerSerializer,
-            ILogger logger)
+            ILogger logger,
+            GlobalSettings settings)
         {
             _handlerFactory = handlerFactory;
             _attributeFinder = attributeFinder;
             _stopwatch = stopwatch;
             _loggerSerializer = loggerSerializer;
             _logger = logger;
+            _settings = settings;
         }
 
         /// <summary>
@@ -39,7 +43,7 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
         {
             var handler = _handlerFactory();
 
-            if (!_attributeFinder.Decorates(applicationEvent.GetType(), typeof (LogAttribute)))
+            if (!_attributeFinder.Decorates(applicationEvent.GetType(), typeof (LogAttribute)) && !_settings.EnableLogging)
             {
                 handler.Handle(applicationEvent);
                 return;

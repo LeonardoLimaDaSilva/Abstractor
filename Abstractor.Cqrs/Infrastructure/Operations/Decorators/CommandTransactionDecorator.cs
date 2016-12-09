@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Abstractor.Cqrs.Infrastructure.CompositionRoot;
 using Abstractor.Cqrs.Interfaces.CrossCuttingConcerns;
 using Abstractor.Cqrs.Interfaces.Events;
 using Abstractor.Cqrs.Interfaces.Operations;
@@ -15,17 +16,20 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
     public sealed class CommandTransactionDecorator<TCommand> : ICommandHandler<TCommand>
         where TCommand : ICommand
     {
+        private readonly GlobalSettings _settings;
         private readonly IAttributeFinder _attributeFinder;
         private readonly Func<ICommandHandler<TCommand>> _handlerFactory;
         private readonly ILogger _logger;
         private readonly IUnitOfWork _unitOfWork;
 
         public CommandTransactionDecorator(
+            GlobalSettings settings,
             IAttributeFinder attributeFinder,
             ILogger logger,
             IUnitOfWork unitOfWork,
             Func<ICommandHandler<TCommand>> handlerFactory)
         {
+            _settings = settings;
             _attributeFinder = attributeFinder;
             _logger = logger;
             _unitOfWork = unitOfWork;
@@ -39,10 +43,10 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
         /// <returns>List of domain events raised by the command, if any.</returns>
         public IEnumerable<IDomainEvent> Handle(TCommand command)
         {
-            if (!_attributeFinder.Decorates(command.GetType(), typeof (TransactionalAttribute)))
+            if (!_attributeFinder.Decorates(command.GetType(), typeof(TransactionalAttribute)) && !_settings.EnableTransactions)
                 return _handlerFactory().Handle(command)?.ToList();
 
-            var log = _attributeFinder.Decorates(command.GetType(), typeof (LogAttribute));
+            var log = _attributeFinder.Decorates(command.GetType(), typeof(LogAttribute)) || _settings.EnableLogging;
 
             if (log) _logger.Log("Starting transaction...");
 

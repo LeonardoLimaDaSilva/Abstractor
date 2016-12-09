@@ -15,18 +15,26 @@ namespace Abstractor.Cqrs.Infrastructure.CompositionRoot.Extensions
         ///     Registers the framework dependencies into the inversion of control container.
         /// </summary>
         /// <param name="container">Inversion of control container.</param>
-        /// <param name="settings">Composition settings.</param>
-        public static void RegisterAbstractor(this IContainer container, Action<CompositionRootSettings> settings)
+        /// <param name="compositionSettings">Composition settings.</param>
+        /// <param name="globalSettings">Global settings.</param>
+        public static void RegisterAbstractor(this IContainer container, Action<CompositionRootSettings> compositionSettings, Action<GlobalSettings> globalSettings = null)
         {
             Guard.ArgumentIsNotNull(container, nameof(container));
-            Guard.ArgumentIsNotNull(settings, nameof(settings));
+            Guard.ArgumentIsNotNull(compositionSettings, nameof(compositionSettings));
 
             var crs = new CompositionRootSettings();
-            settings.Invoke(crs);
+            compositionSettings.Invoke(crs);
 
             container.AllowResolvingFuncFactories();
-            container.RegisterTransient(() => crs);
+            container.RegisterSingleton(() => crs);
             container.RegisterAbstractorInstallers(crs);
+
+            if (globalSettings == null) return;
+
+            var gs = new GlobalSettings();
+
+            globalSettings.Invoke(gs);
+            container.RegisterSingleton(() => gs);
         }
 
         /// <summary>

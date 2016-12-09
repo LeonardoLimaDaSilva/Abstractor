@@ -124,11 +124,11 @@ namespace Abstractor.Cqrs.Interfaces.CompositionRoot
         void AllowResolvingFuncFactories();
 
         /// <summary>
-        ///     Registers the specified delegate that allows returning transient instances of <see cref="TService" />.
+        ///     Registers the specified delegate that allows returning singleton instances of <see cref="TService" />.
         /// </summary>
         /// <typeparam name="TService">Type to be registered.</typeparam>
         /// <param name="instanceCreator"><see cref="Func{T}" /> delegate.</param>
-        void RegisterTransient<TService>(Func<TService> instanceCreator)
+        void RegisterSingleton<TService>(Func<TService> instanceCreator)
             where TService : class;
 
         /// <summary>

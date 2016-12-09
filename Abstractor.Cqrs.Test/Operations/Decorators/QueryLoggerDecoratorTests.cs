@@ -1,4 +1,5 @@
 using System;
+using Abstractor.Cqrs.Infrastructure.CompositionRoot;
 using Abstractor.Cqrs.Infrastructure.Operations;
 using Abstractor.Cqrs.Infrastructure.Operations.Decorators;
 using Abstractor.Cqrs.Interfaces.CrossCuttingConcerns;
@@ -54,7 +55,8 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
                 attributeFinder.Object,
                 stopwatch.Object,
                 loggerSerializer.Object,
-                logger.Object);
+                logger.Object,
+                new GlobalSettings());
 
             // Act
 
@@ -66,6 +68,41 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
             stopwatch.Verify(s => s.Stop(), Times.Never);
 
             logger.Verify(l => l.Log(It.IsAny<string>()), Times.Never);
+        }
+
+        [Theory, AutoMoqData]
+        public void Handle_WithoutLogAttributeAndGloballyEnabled_ShouldLog(
+            [Frozen] Mock<IAttributeFinder> attributeFinder,
+            [Frozen] Mock<ILogger> logger,
+            [Frozen] Mock<IStopwatch> stopwatch,
+            [Frozen] Mock<ILoggerSerializer> loggerSerializer,
+            FakeQuery query)
+        {
+            // Arrange
+
+            var queryHandler = new FakeQueryHandler();
+
+            var decorator = new QueryLoggerDecorator<FakeQuery, FakeResult>(
+                () => queryHandler,
+                attributeFinder.Object,
+                stopwatch.Object,
+                loggerSerializer.Object,
+                logger.Object,
+                new GlobalSettings
+                {
+                    EnableLogging = true
+                });
+
+            // Act
+
+            decorator.Handle(query).Should().Not.Be.Null();
+
+            // Assert
+
+            stopwatch.Verify(s => s.Start(), Times.Once);
+            stopwatch.Verify(s => s.Stop(), Times.Once);
+
+            logger.Verify(l => l.Log(It.IsAny<string>()), Times.AtLeastOnce);
         }
 
         [Theory, AutoMoqData]
@@ -85,7 +122,8 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
                 attributeFinder.Object,
                 stopwatch.Object,
                 loggerSerializer.Object,
-                logger.Object);
+                logger.Object,
+                new GlobalSettings());
 
             attributeFinder.Setup(f => f.Decorates(query.GetType(), typeof (LogAttribute))).Returns(true);
 
@@ -124,7 +162,8 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
                 attributeFinder.Object,
                 stopwatch.Object,
                 loggerSerializer.Object,
-                logger.Object);
+                logger.Object,
+                new GlobalSettings());
 
             attributeFinder.Setup(f => f.Decorates(query.GetType(), typeof (LogAttribute))).Returns(true);
 
@@ -168,7 +207,8 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
                 attributeFinder.Object,
                 stopwatch.Object,
                 loggerSerializer.Object,
-                logger.Object);
+                logger.Object,
+                new GlobalSettings());
 
             attributeFinder.Setup(f => f.Decorates(query.GetType(), typeof (LogAttribute))).Returns(true);
 
@@ -214,7 +254,8 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
                 attributeFinder.Object,
                 stopwatch.Object,
                 loggerSerializer.Object,
-                logger.Object);
+                logger.Object,
+                new GlobalSettings());
 
             attributeFinder.Setup(f => f.Decorates(query.GetType(), typeof (LogAttribute))).Returns(true);
 
@@ -238,7 +279,7 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
             logger.Verify(l => l.Log("Query \"FakeQuery\" executed in 00:00:00."), Times.Once);
 
             exception.Message.Should().Be("FakeQueryHandlerException.");
-            exception.InnerException.Message.Should().Be("FakeQueryHandlerInnerException.");
+            exception.InnerException?.Message.Should().Be("FakeQueryHandlerInnerException.");
         }
     }
 }

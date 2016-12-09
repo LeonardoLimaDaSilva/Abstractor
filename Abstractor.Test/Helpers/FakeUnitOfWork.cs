@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading;
 using Abstractor.Cqrs.Interfaces.Persistence;
@@ -7,6 +8,7 @@ using SharpTestsEx;
 
 namespace Abstractor.Test.Helpers
 {
+    [ExcludeFromCodeCoverage]
     public class FakeUnitOfWork : IUnitOfWork
     {
         private readonly List<Tuple<int, bool>> _commits;
@@ -30,7 +32,7 @@ namespace Abstractor.Test.Helpers
         {
             _commits.RemoveAll(t => t.Item1 == Thread.CurrentThread.ManagedThreadId);
         }
-
+        
         public void CommittedShouldBe(bool expected)
         {
             _commits.SingleOrDefault(t => t.Item1 == Thread.CurrentThread.ManagedThreadId)

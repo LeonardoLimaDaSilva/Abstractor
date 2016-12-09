@@ -1,8 +1,10 @@
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 
 namespace Abstractor.Test.Helpers
 {
+    [ExcludeFromCodeCoverage]
     public class SynchronousTaskScheduler : TaskScheduler
     {
         protected override void QueueTask(Task task)
