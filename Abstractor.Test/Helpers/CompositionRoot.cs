@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using Abstractor.Cqrs.Infrastructure.CompositionRoot;
 using Abstractor.Cqrs.Infrastructure.CompositionRoot.Extensions;
 using Abstractor.Cqrs.Interfaces.CrossCuttingConcerns;
@@ -12,6 +13,7 @@ namespace Abstractor.Test.Helpers
     /// <summary>
     ///     Composition root implemented as a thread-safe singleton.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public class CompositionRoot
     {
         private static readonly object Lock = new object();
@@ -46,11 +48,17 @@ namespace Abstractor.Test.Helpers
 
                     var containerAdapter = new ContainerAdapter(_container);
 
-                    containerAdapter.RegisterAbstractor(settings =>
-                    {
-                        settings.ApplicationAssemblies = currentAssembly;
-                        settings.ApplicationTypes = concreteTypes;
-                    });
+                    containerAdapter.RegisterAbstractor(
+                        cs =>
+                        {
+                            cs.ApplicationAssemblies = currentAssembly;
+                            cs.ApplicationTypes = concreteTypes;
+                        },
+                        gs =>
+                        {
+                            gs.EnableTransactions = false;
+                            gs.EnableLogging = false;
+                        });
 
                     containerAdapter.RegisterSingleton<IUnitOfWork, FakeUnitOfWork>();
                     containerAdapter.RegisterSingleton<IStopwatch, FakeStopwatch>();

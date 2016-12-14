@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Abstractor.Cqrs.Infrastructure.CompositionRoot.Exceptions;
 using Abstractor.Cqrs.Interfaces.Operations;
@@ -12,6 +13,7 @@ namespace Abstractor.Test.Query
         // Classes should be able to handle multiple queries of distinct types,
         // E.g. repositories should be able to handle an optimized query and return the results 
         // directly to the consumer via tailored DTOs
+        [ExcludeFromCodeCoverage]
         public class MultipleQueryHandler : 
             IQueryHandler<FakeQuery1, FakeQuery1Result>,
             IQueryHandler<FakeQuery2, FakeQuery2Result>,
@@ -64,6 +66,7 @@ namespace Abstractor.Test.Query
         }
 
         // Duplicate implementations of a query handler are not permitted
+        [ExcludeFromCodeCoverage]
         public class Fake2Repository : 
             IQueryHandler<FakeQuery1, FakeQuery1Result>,
             IQueryAsyncHandler<FakeQuery1, FakeQuery1Result>
@@ -79,34 +82,42 @@ namespace Abstractor.Test.Query
             }
         }
 
+        [ExcludeFromCodeCoverage]
         public class FakeQuery1 : IQuery<FakeQuery1Result>
         {
         }
 
+        [ExcludeFromCodeCoverage]
         public class FakeQuery2 : IQuery<FakeQuery2Result>
         {
         }
 
+        [ExcludeFromCodeCoverage]
         public class FakeQuery3 : IQuery<FakeCommonResult>
         {
         }
 
+        [ExcludeFromCodeCoverage]
         public class FakeQuery4 : IQuery<FakeCommonResult>
         {
         }
 
+        [ExcludeFromCodeCoverage]
         public class FakeQueryWithNoHandlers : IQuery<FakeCommonResult>
         {
         }
 
+        [ExcludeFromCodeCoverage]
         public class FakeQuery1Result
         {
         }
 
+        [ExcludeFromCodeCoverage]
         public class FakeQuery2Result
         {
         }
 
+        [ExcludeFromCodeCoverage]
         public class FakeCommonResult
         {
         }

@@ -58,6 +58,7 @@
     <Compile Include="Infrastructure\CompositionRoot\Exceptions\QueryHandlersNotFoundException.cs" />
     <Compile Include="Infrastructure\CompositionRoot\Extensions\ContainerExtensions.cs" />
     <Compile Include="Infrastructure\CompositionRoot\Extensions\ReflectionExtensions.cs" />
+    <Compile Include="Infrastructure\CompositionRoot\GlobalSettings.cs" />
     <Compile Include="Infrastructure\CompositionRoot\ImplementationConvention.cs" />
     <Compile Include="Infrastructure\CompositionRoot\Installers\CommandInstaller.cs" />
     <Compile Include="Infrastructure\CompositionRoot\Installers\EventInstaller.cs" />

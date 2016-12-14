@@ -1,4 +1,5 @@
 ﻿using System;
+using Abstractor.Cqrs.Infrastructure.CompositionRoot;
 using Abstractor.Cqrs.Infrastructure.Operations;
 using Abstractor.Cqrs.Infrastructure.Operations.Decorators;
 using Abstractor.Cqrs.Interfaces.CrossCuttingConcerns;
@@ -54,7 +55,8 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
                 attributeFinder.Object,
                 stopwatch.Object,
                 loggerSerializer.Object,
-                logger.Object);
+                logger.Object,
+                new GlobalSettings());
 
             loggerSerializer.Setup(s => s.Serialize(applicationEvent)).Returns("Serialized parameters");
 
@@ -70,6 +72,47 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
             stopwatch.Verify(s => s.Stop(), Times.Never());
 
             logger.Verify(l => l.Log(It.IsAny<string>()), Times.Never);
+
+            eventHandler.Executed.Should().Be.True();
+        }
+
+        [Theory, AutoMoqData]
+        public void Handle_WithoutLogAttributeAndGloballyEnabled_ShouldLog(
+            [Frozen] Mock<IAttributeFinder> attributeFinder,
+            [Frozen] Mock<ILogger> logger,
+            [Frozen] Mock<IStopwatch> stopwatch,
+            [Frozen] Mock<ILoggerSerializer> loggerSerializer,
+            FakeApplicationEvent applicationEvent)
+        {
+            // Arrange
+
+            var eventHandler = new FakeEventHandler();
+
+            var decorator = new ApplicationEventLoggerDecorator<FakeApplicationEvent>(
+                () => eventHandler,
+                attributeFinder.Object,
+                stopwatch.Object,
+                loggerSerializer.Object,
+                logger.Object,
+                new GlobalSettings
+                {
+                    EnableLogging = true
+                });
+
+            loggerSerializer.Setup(s => s.Serialize(applicationEvent)).Returns("Serialized parameters");
+
+            stopwatch.Setup(s => s.GetElapsed()).Returns(TimeSpan.Zero);
+
+            // Act
+
+            decorator.Handle(applicationEvent);
+
+            // Assert
+
+            stopwatch.Verify(s => s.Start(), Times.Once);
+            stopwatch.Verify(s => s.Stop(), Times.Once);
+
+            logger.Verify(l => l.Log(It.IsAny<string>()), Times.AtLeastOnce);
 
             eventHandler.Executed.Should().Be.True();
         }
@@ -91,7 +134,8 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
                 attributeFinder.Object,
                 stopwatch.Object,
                 loggerSerializer.Object,
-                logger.Object);
+                logger.Object,
+                new GlobalSettings());
 
             attributeFinder.Setup(f => f.Decorates(applicationEvent.GetType(), typeof (LogAttribute))).Returns(true);
 
@@ -133,7 +177,8 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
                 attributeFinder.Object,
                 stopwatch.Object,
                 loggerSerializer.Object,
-                logger.Object);
+                logger.Object,
+                new GlobalSettings());
 
             attributeFinder.Setup(f => f.Decorates(applicationEvent.GetType(), typeof (LogAttribute))).Returns(true);
 
@@ -180,7 +225,8 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
                 attributeFinder.Object,
                 stopwatch.Object,
                 loggerSerializer.Object,
-                logger.Object);
+                logger.Object,
+                new GlobalSettings());
 
             attributeFinder.Setup(f => f.Decorates(applicationEvent.GetType(), typeof (LogAttribute))).Returns(true);
 
@@ -227,7 +273,8 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
                 attributeFinder.Object,
                 stopwatch.Object,
                 loggerSerializer.Object,
-                logger.Object);
+                logger.Object,
+                new GlobalSettings());
 
             attributeFinder.Setup(f => f.Decorates(applicationEvent.GetType(), typeof (LogAttribute))).Returns(true);
 

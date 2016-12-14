@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using Abstractor.Cqrs.AzureStorage.Extensions;
 using Abstractor.Cqrs.AzureStorage.Interfaces;
 using Abstractor.Cqrs.EntityFramework.Extensions;
@@ -26,6 +27,7 @@ namespace Abstractor.Test.CompositionRoot
             }
         }
 
+        [ExcludeFromCodeCoverage]
         public class FakeBlobContext : IAzureBlobContext
         {
             public void SaveChanges()
@@ -35,12 +37,13 @@ namespace Abstractor.Test.CompositionRoot
             public void Clear()
             {
             }
-
+            
             public void Rollback()
             {
             }
         }
 
+        [ExcludeFromCodeCoverage]
         public class FakeQueueContext : IAzureQueueContext
         {
             public void SaveChanges()
@@ -56,6 +59,7 @@ namespace Abstractor.Test.CompositionRoot
             }
         }
 
+        [ExcludeFromCodeCoverage]
         public class FakeTableContext : IAzureTableContext
         {
             public void SaveChanges()

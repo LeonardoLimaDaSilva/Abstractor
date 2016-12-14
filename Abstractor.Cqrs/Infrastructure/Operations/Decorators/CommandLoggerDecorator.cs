@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Abstractor.Cqrs.Infrastructure.CompositionRoot;
 using Abstractor.Cqrs.Interfaces.CrossCuttingConcerns;
 using Abstractor.Cqrs.Interfaces.Events;
 using Abstractor.Cqrs.Interfaces.Operations;
@@ -17,6 +18,7 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
         private readonly IAttributeFinder _attributeFinder;
         private readonly Func<ICommandHandler<TCommand>> _handlerFactory;
         private readonly ILogger _logger;
+        private readonly GlobalSettings _settings;
         private readonly ILoggerSerializer _loggerSerializer;
         private readonly IStopwatch _stopwatch;
 
@@ -25,13 +27,15 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
             IAttributeFinder attributeFinder,
             IStopwatch stopwatch,
             ILoggerSerializer loggerSerializer,
-            ILogger logger)
+            ILogger logger,
+            GlobalSettings settings)
         {
             _handlerFactory = handlerFactory;
             _attributeFinder = attributeFinder;
             _stopwatch = stopwatch;
             _loggerSerializer = loggerSerializer;
             _logger = logger;
+            _settings = settings;
         }
 
         /// <summary>
@@ -41,7 +45,7 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
         /// <returns>List of domain events raised by the command, if any.</returns>
         public IEnumerable<IDomainEvent> Handle(TCommand command)
         {
-            if (!_attributeFinder.Decorates(command.GetType(), typeof (LogAttribute)))
+            if (!_attributeFinder.Decorates(command.GetType(), typeof (LogAttribute)) && !_settings.EnableLogging)
                 return _handlerFactory().Handle(command)?.ToList();
 
             _stopwatch.Start();

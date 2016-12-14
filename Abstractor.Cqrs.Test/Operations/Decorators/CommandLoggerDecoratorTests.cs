@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Abstractor.Cqrs.Infrastructure.CompositionRoot;
 using Abstractor.Cqrs.Infrastructure.Operations;
 using Abstractor.Cqrs.Infrastructure.Operations.Decorators;
 using Abstractor.Cqrs.Interfaces.CrossCuttingConcerns;
@@ -56,7 +57,8 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
                 attributeFinder.Object,
                 stopwatch.Object,
                 loggerSerializer.Object,
-                logger.Object);
+                logger.Object,
+                new GlobalSettings());
 
             loggerSerializer.Setup(s => s.Serialize(command)).Returns("Serialized parameters");
 
@@ -72,6 +74,47 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
             stopwatch.Verify(s => s.Stop(), Times.Never);
 
             logger.Verify(l => l.Log(It.IsAny<string>()), Times.Never);
+
+            commandHandler.Executed.Should().Be.True();
+        }
+
+        [Theory, AutoMoqData]
+        public void Handle_WithoutLogAttributeAndGloballyEnabled_ShouldLog(
+            [Frozen] Mock<IAttributeFinder> attributeFinder,
+            [Frozen] Mock<ILogger> logger,
+            [Frozen] Mock<IStopwatch> stopwatch,
+            [Frozen] Mock<ILoggerSerializer> loggerSerializer,
+            FakeCommand command)
+        {
+            // Arrange
+
+            var commandHandler = new FakeCommandHandler();
+
+            var decorator = new CommandLoggerDecorator<FakeCommand>(
+                () => commandHandler,
+                attributeFinder.Object,
+                stopwatch.Object,
+                loggerSerializer.Object,
+                logger.Object,
+                new GlobalSettings
+                {
+                    EnableLogging = true
+                });
+
+            loggerSerializer.Setup(s => s.Serialize(command)).Returns("Serialized parameters");
+
+            stopwatch.Setup(s => s.GetElapsed()).Returns(TimeSpan.Zero);
+
+            // Act
+
+            decorator.Handle(command);
+
+            // Assert
+
+            stopwatch.Verify(s => s.Start(), Times.Once);
+            stopwatch.Verify(s => s.Stop(), Times.Once);
+
+            logger.Verify(l => l.Log(It.IsAny<string>()), Times.AtLeastOnce);
 
             commandHandler.Executed.Should().Be.True();
         }
@@ -93,7 +136,8 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
                 attributeFinder.Object,
                 stopwatch.Object,
                 loggerSerializer.Object,
-                logger.Object);
+                logger.Object,
+                new GlobalSettings());
 
             attributeFinder.Setup(f => f.Decorates(command.GetType(), typeof (LogAttribute))).Returns(true);
 
@@ -134,7 +178,8 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
                 attributeFinder.Object,
                 stopwatch.Object,
                 loggerSerializer.Object,
-                logger.Object);
+                logger.Object,
+                new GlobalSettings());
 
             attributeFinder.Setup(f => f.Decorates(command.GetType(), typeof (LogAttribute))).Returns(true);
 
@@ -180,7 +225,8 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
                 attributeFinder.Object,
                 stopwatch.Object,
                 loggerSerializer.Object,
-                logger.Object);
+                logger.Object,
+                new GlobalSettings());
 
             attributeFinder.Setup(f => f.Decorates(command.GetType(), typeof (LogAttribute))).Returns(true);
 
@@ -228,7 +274,8 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
                 attributeFinder.Object,
                 stopwatch.Object,
                 loggerSerializer.Object,
-                logger.Object);
+                logger.Object,
+                new GlobalSettings());
 
             attributeFinder.Setup(f => f.Decorates(command.GetType(), typeof (LogAttribute))).Returns(true);
 
@@ -254,7 +301,7 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
             commandHandler.Executed.Should().Be.True();
 
             exception.Message.Should().Be("FakeCommandHandlerException.");
-            exception.InnerException.Message.Should().Be("FakeCommandHandlerInnerException.");
+            exception.InnerException?.Message.Should().Be("FakeCommandHandlerInnerException.");
         }
     }
 }
