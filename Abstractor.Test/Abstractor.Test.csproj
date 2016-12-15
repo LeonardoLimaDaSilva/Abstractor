@@ -95,6 +95,7 @@
     <Compile Include="CompositionRoot\ClassesWithMultipleInterfacesTests.cs" />
     <Compile Include="CompositionRoot\CompositionRootTests.cs" />
     <Compile Include="Command\CommandHandlerWithCustomInterfaceTests.cs" />
+    <Compile Include="Helpers\FakeLogger.cs" />
     <Compile Include="Query\QueryHandlerWithCustomInterfaceTests.cs" />
     <Compile Include="Query\QueryDispatcherTests.cs" />
     <Compile Include="Command\SingleApplicationEventTests.cs" />

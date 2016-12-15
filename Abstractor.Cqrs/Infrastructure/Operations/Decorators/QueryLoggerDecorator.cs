@@ -15,7 +15,7 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
     {
         private readonly IAttributeFinder _attributeFinder;
         private readonly Func<IQueryHandler<TQuery, TResult>> _handlerFactory;
-        private readonly ILogger _logger;
+        private readonly Func<ILogger> _logger;
         private readonly GlobalSettings _settings;
         private readonly ILoggerSerializer _loggerSerializer;
         private readonly IStopwatch _stopwatch;
@@ -25,7 +25,7 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
             IAttributeFinder attributeFinder,
             IStopwatch stopwatch,
             ILoggerSerializer loggerSerializer,
-            ILogger logger,
+            Func<ILogger> logger,
             GlobalSettings settings)
         {
             _handlerFactory = handlerFactory;
@@ -50,28 +50,30 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
 
             _stopwatch.Start();
 
+            var logger = _logger();
+
             try
             {
-                _logger.Log($"Executing query \"{query.GetType().Name}\" with the parameters:");
+                logger.Log($"Executing query \"{query.GetType().Name}\" with the parameters:");
 
                 try
                 {
                     var parameters = _loggerSerializer.Serialize(query);
-                    _logger.Log(parameters);
+                    logger.Log(parameters);
                 }
                 catch (Exception ex)
                 {
-                    _logger.Log($"Could not serialize the parameters: {ex.Message}");
+                    logger.Log($"Could not serialize the parameters: {ex.Message}");
                 }
 
                 return handler.Handle(query);
             }
             catch (Exception ex)
             {
-                _logger.Log("Exception caught: " + ex.Message);
+                logger.Log("Exception caught: " + ex.Message);
 
                 if (ex.InnerException != null)
-                    _logger.Log("Inner exception caught: " + ex.InnerException.Message);
+                    logger.Log("Inner exception caught: " + ex.InnerException.Message);
 
                 throw;
             }
@@ -79,7 +81,7 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
             {
                 _stopwatch.Stop();
 
-                _logger.Log($"Query \"{query.GetType().Name}\" executed in {_stopwatch.GetElapsed()}.");
+                logger.Log($"Query \"{query.GetType().Name}\" executed in {_stopwatch.GetElapsed()}.");
             }
         }
     }

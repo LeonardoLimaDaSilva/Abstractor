@@ -62,6 +62,7 @@ namespace Abstractor.Test.Helpers
 
                     containerAdapter.RegisterSingleton<IUnitOfWork, FakeUnitOfWork>();
                     containerAdapter.RegisterSingleton<IStopwatch, FakeStopwatch>();
+                    containerAdapter.RegisterScoped<ILogger, FakeLogger>();
 
                     _container.Verify();
                 }

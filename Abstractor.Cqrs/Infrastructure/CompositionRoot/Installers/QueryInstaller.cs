@@ -21,20 +21,20 @@ namespace Abstractor.Cqrs.Infrastructure.CompositionRoot.Installers
             container.RegisterCollection(typeof(IQueryAsyncHandler<,>), settings.ApplicationAssemblies);
 
             container.RegisterDecoratorSingleton(
-                typeof (IQueryHandler<,>),
-                typeof (QueryLifetimeScopeDecorator<,>));
+                typeof(IQueryHandler<,>),
+                typeof(QueryLoggerDecorator<,>));
 
             container.RegisterDecoratorSingleton(
-                typeof (IQueryHandler<,>),
-                typeof (QueryLoggerDecorator<,>));
+                typeof(IQueryHandler<,>),
+                typeof(QueryLifetimeScopeDecorator<,>));
 
             container.RegisterDecoratorSingleton(
-                typeof (IQueryAsyncHandler<,>),
-                typeof (QueryAsyncLifetimeScopeDecorator<,>));
+                typeof(IQueryAsyncHandler<,>),
+                typeof(QueryAsyncLoggerDecorator<,>));
 
             container.RegisterDecoratorSingleton(
-                typeof (IQueryAsyncHandler<,>),
-                typeof (QueryAsyncLoggerDecorator<,>));
+                typeof(IQueryAsyncHandler<,>),
+                typeof(QueryAsyncLifetimeScopeDecorator<,>));
         }
     }
 }

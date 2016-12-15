@@ -38,15 +38,15 @@ namespace Abstractor.Cqrs.Infrastructure.CompositionRoot.Installers
 
             container.RegisterDecoratorSingleton(
                 typeof (ICommandHandler<>),
-                typeof (CommandLifetimeScopeDecorator<>));
-
-            container.RegisterDecoratorSingleton(
-                typeof (ICommandHandler<>),
                 typeof (CommandValidationDecorator<>));
 
             container.RegisterDecoratorSingleton(
                 typeof (ICommandHandler<>),
                 typeof (CommandLoggerDecorator<>));
+
+            container.RegisterDecoratorSingleton(
+                typeof(ICommandHandler<>),
+                typeof(CommandLifetimeScopeDecorator<>));
         }
     }
 }
