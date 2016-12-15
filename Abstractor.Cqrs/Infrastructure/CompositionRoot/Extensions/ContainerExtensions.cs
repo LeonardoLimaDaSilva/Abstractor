@@ -29,12 +29,13 @@ namespace Abstractor.Cqrs.Infrastructure.CompositionRoot.Extensions
             container.RegisterSingleton(() => crs);
             container.RegisterAbstractorInstallers(crs);
 
-            if (globalSettings == null) return;
+            if (globalSettings == null)
+                globalSettings = gs => { };
 
-            var gs = new GlobalSettings();
+            var gsInstance = new GlobalSettings();
 
-            globalSettings.Invoke(gs);
-            container.RegisterSingleton(() => gs);
+            globalSettings.Invoke(gsInstance);
+            container.RegisterSingleton(() => gsInstance);
         }
 
         /// <summary>
