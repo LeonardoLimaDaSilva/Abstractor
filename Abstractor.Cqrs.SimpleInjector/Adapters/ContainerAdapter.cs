@@ -47,7 +47,7 @@ namespace Abstractor.Cqrs.SimpleInjector.Adapters
         /// <returns>Current scope or null.</returns>
         public object GetCurrentLifetimeScope()
         {
-            return _container.GetCurrentLifetimeScope();
+            return Lifestyle.Scoped.GetCurrentScope(_container);
         }
 
         /// <summary>
@@ -147,6 +147,17 @@ namespace Abstractor.Cqrs.SimpleInjector.Adapters
         public void RegisterDecoratorSingleton(Type serviceType, Type decoratorType)
         {
             _container.RegisterDecorator(serviceType, decoratorType, Lifestyle.Singleton);
+        }
+
+        /// <summary>
+        ///     Ensures that the same instance of the supplied <see cref="decoratorType" /> is returned, wrapping the original
+        ///     <see cref="serviceType" />.
+        /// </summary>
+        /// <param name="serviceType">Original type.</param>
+        /// <param name="decoratorType">Type that wraps the original type.</param>
+        public void RegisterDecoratorScoped(Type serviceType, Type decoratorType)
+        {
+            _container.RegisterDecorator(serviceType, decoratorType, Lifestyle.Scoped);
         }
 
         /// <summary>

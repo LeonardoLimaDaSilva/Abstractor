@@ -26,12 +26,12 @@ namespace Abstractor.Cqrs.Infrastructure.CompositionRoot.Installers
                 typeof (ApplicationEventLoggerDecorator<>));
 
             container.RegisterDecoratorSingleton(
-                typeof(IApplicationEventHandler<>),
-                typeof(ApplicationEventLifetimeScopeDecorator<>));
-
-            container.RegisterDecoratorSingleton(
                 typeof (IDomainEventHandler<>),
                 typeof (DomainEventLoggerDecorator<>));
+
+            container.RegisterDecoratorSingleton(
+                typeof(IApplicationEventHandler<>),
+                typeof(ApplicationEventLifetimeScopeDecorator<>));
         }
     }
 }

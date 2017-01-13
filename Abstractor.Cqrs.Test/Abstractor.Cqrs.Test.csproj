@@ -93,6 +93,8 @@
     <Compile Include="Domain\GenericFileTests.cs" />
     <Compile Include="Domain\QueueMessageTests.cs" />
     <Compile Include="Domain\ValueObjectTests.cs" />
+    <Compile Include="Helpers\FakeLogger.cs" />
+    <Compile Include="Helpers\FakeLoggerExtension.cs" />
     <Compile Include="Operations\Decorators\ApplicationEventLifetimeScopeDecoratorTests.cs" />
     <Compile Include="Operations\Decorators\CommandLoggerDecoratorTests.cs" />
     <Compile Include="Operations\Decorators\ApplicationEventLoggerDecoratorTests.cs" />

@@ -14,7 +14,7 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
     {
         private readonly IAttributeFinder _attributeFinder;
         private readonly Func<IApplicationEventHandler<TEvent>> _handlerFactory;
-        private readonly ILogger _logger;
+        private readonly Func<ILogger> _logger;
         private readonly GlobalSettings _settings;
         private readonly ILoggerSerializer _loggerSerializer;
         private readonly IStopwatch _stopwatch;
@@ -24,7 +24,7 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
             IAttributeFinder attributeFinder,
             IStopwatch stopwatch,
             ILoggerSerializer loggerSerializer,
-            ILogger logger,
+            Func<ILogger> logger,
             GlobalSettings settings)
         {
             _handlerFactory = handlerFactory;
@@ -51,28 +51,30 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
 
             _stopwatch.Start();
 
+            var logger = _logger();
+
             try
             {
-                _logger.Log($"Executing application event \"{handler.GetType().Name}\" with the parameters:");
+                logger.Log($"Executing application event \"{handler.GetType().Name}\" with the parameters:");
 
                 try
                 {
                     var parameters = _loggerSerializer.Serialize(applicationEvent);
-                    _logger.Log(parameters);
+                    logger.Log(parameters);
                 }
                 catch (Exception ex)
                 {
-                    _logger.Log($"Could not serialize the parameters: {ex.Message}");
+                    logger.Log($"Could not serialize the parameters: {ex.Message}");
                 }
 
                 handler.Handle(applicationEvent);
             }
             catch (Exception ex)
             {
-                _logger.Log("Exception caught: " + ex.Message);
+                logger.Log("Exception caught: " + ex.Message);
 
                 if (ex.InnerException != null)
-                    _logger.Log("Inner exception caught: " + ex.InnerException.Message);
+                    logger.Log("Inner exception caught: " + ex.InnerException.Message);
 
                 throw;
             }
@@ -80,7 +82,7 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
             {
                 _stopwatch.Stop();
 
-                _logger.Log($"Application event \"{handler.GetType().Name}\" executed in {_stopwatch.GetElapsed()}.");
+                logger.Log($"Application event \"{handler.GetType().Name}\" executed in {_stopwatch.GetElapsed()}.");
             }
         }
     }

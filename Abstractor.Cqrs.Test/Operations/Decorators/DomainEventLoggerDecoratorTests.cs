@@ -41,7 +41,6 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
         [Theory, AutoMoqData]
         public void Handle_WithoutLogAttribute_ShouldNotLog(
             [Frozen] Mock<IAttributeFinder> attributeFinder,
-            [Frozen] Mock<ILogger> logger,
             [Frozen] Mock<IStopwatch> stopwatch,
             [Frozen] Mock<ILoggerSerializer> loggerSerializer,
             FakeDomainEvent domainEvent)
@@ -49,13 +48,14 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
             // Arrange
 
             var eventHandler = new FakeEventHandler();
+            var logger = new FakeLogger();
 
             var decorator = new DomainEventLoggerDecorator<FakeDomainEvent>(
                 () => eventHandler,
                 attributeFinder.Object,
                 stopwatch.Object,
                 loggerSerializer.Object,
-                logger.Object,
+                () => logger,
                 new GlobalSettings());
 
             loggerSerializer.Setup(s => s.Serialize(domainEvent)).Returns("Serialized parameters");
@@ -71,7 +71,7 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
             stopwatch.Verify(s => s.Start(), Times.Never);
             stopwatch.Verify(s => s.Stop(), Times.Never);
 
-            logger.Verify(l => l.Log(It.IsAny<string>()), Times.Never);
+            logger.ShouldNeverBeCalled();
 
             eventHandler.Executed.Should().Be.True();
         }
@@ -79,7 +79,6 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
         [Theory, AutoMoqData]
         public void Handle_WithoutLogAttributeAndGloballyEnabled_ShouldLog(
             [Frozen] Mock<IAttributeFinder> attributeFinder,
-            [Frozen] Mock<ILogger> logger,
             [Frozen] Mock<IStopwatch> stopwatch,
             [Frozen] Mock<ILoggerSerializer> loggerSerializer,
             FakeDomainEvent domainEvent)
@@ -87,13 +86,14 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
             // Arrange
 
             var eventHandler = new FakeEventHandler();
+            var logger = new FakeLogger();
 
             var decorator = new DomainEventLoggerDecorator<FakeDomainEvent>(
                 () => eventHandler,
                 attributeFinder.Object,
                 stopwatch.Object,
                 loggerSerializer.Object,
-                logger.Object,
+                () => logger,
                 new GlobalSettings
                 {
                     EnableLogging = true
@@ -112,7 +112,7 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
             stopwatch.Verify(s => s.Start(), Times.Once);
             stopwatch.Verify(s => s.Stop(), Times.Once);
 
-            logger.Verify(l => l.Log(It.IsAny<string>()), Times.AtLeastOnce);
+            logger.ShouldBeCalled();
 
             eventHandler.Executed.Should().Be.True();
         }
@@ -120,7 +120,6 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
         [Theory, AutoMoqData]
         public void Handle_Success_ShouldLogMessagesAndCallMethods(
             [Frozen] Mock<IAttributeFinder> attributeFinder,
-            [Frozen] Mock<ILogger> logger,
             [Frozen] Mock<IStopwatch> stopwatch,
             [Frozen] Mock<ILoggerSerializer> loggerSerializer,
             FakeDomainEvent domainEvent)
@@ -128,16 +127,17 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
             // Arrange
 
             var eventHandler = new FakeEventHandler();
+            var logger = new FakeLogger();
 
             var decorator = new DomainEventLoggerDecorator<FakeDomainEvent>(
                 () => eventHandler,
                 attributeFinder.Object,
                 stopwatch.Object,
                 loggerSerializer.Object,
-                logger.Object,
+                () => logger,
                 new GlobalSettings());
 
-            attributeFinder.Setup(f => f.Decorates(domainEvent.GetType(), typeof (LogAttribute))).Returns(true);
+            attributeFinder.Setup(f => f.Decorates(domainEvent.GetType(), typeof(LogAttribute))).Returns(true);
 
             loggerSerializer.Setup(s => s.Serialize(domainEvent)).Returns("Serialized parameters");
 
@@ -152,9 +152,10 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
             stopwatch.Verify(s => s.Start(), Times.Once);
             stopwatch.Verify(s => s.Stop(), Times.Once);
 
-            logger.Verify(l => l.Log("Executing domain event \"FakeDomainEvent\" with the parameters:"), Times.Once);
-            logger.Verify(l => l.Log("Serialized parameters"), Times.Once);
-            logger.Verify(l => l.Log("Domain event \"FakeDomainEvent\" executed in 00:00:00."), Times.Once);
+            logger.VerifyMessages(
+                "Executing domain event \"FakeDomainEvent\" with the parameters:",
+                "Serialized parameters",
+                "Domain event \"FakeDomainEvent\" executed in 00:00:00.");
 
             eventHandler.Executed.Should().Be.True();
         }
@@ -162,7 +163,6 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
         [Theory, AutoMoqData]
         public void Handle_ThrowsOnSerialize_ShouldLogException(
             [Frozen] Mock<IAttributeFinder> attributeFinder,
-            [Frozen] Mock<ILogger> logger,
             [Frozen] Mock<IStopwatch> stopwatch,
             [Frozen] Mock<ILoggerSerializer> loggerSerializer,
             FakeDomainEvent domainEvent)
@@ -170,16 +170,17 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
             // Arrange
 
             var eventHandler = new FakeEventHandler();
+            var logger = new FakeLogger();
 
             var decorator = new DomainEventLoggerDecorator<FakeDomainEvent>(
                 () => eventHandler,
                 attributeFinder.Object,
                 stopwatch.Object,
                 loggerSerializer.Object,
-                logger.Object,
+                () => logger,
                 new GlobalSettings());
 
-            attributeFinder.Setup(f => f.Decorates(domainEvent.GetType(), typeof (LogAttribute))).Returns(true);
+            attributeFinder.Setup(f => f.Decorates(domainEvent.GetType(), typeof(LogAttribute))).Returns(true);
 
             loggerSerializer.Setup(s => s.Serialize(domainEvent)).Returns("Serialized parameters");
 
@@ -197,11 +198,10 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
             stopwatch.Verify(s => s.Start(), Times.Once);
             stopwatch.Verify(s => s.Stop(), Times.Once);
 
-            logger.Verify(l => l.Log("Executing domain event \"FakeDomainEvent\" with the parameters:"), Times.Once);
-            logger.Verify(
-                l => l.Log("Could not serialize the parameters: Serialization exception."),
-                Times.Once);
-            logger.Verify(l => l.Log("Domain event \"FakeDomainEvent\" executed in 00:00:00."), Times.Once);
+            logger.VerifyMessages(
+                "Executing domain event \"FakeDomainEvent\" with the parameters:",
+                "Could not serialize the parameters: Serialization exception.",
+                "Domain event \"FakeDomainEvent\" executed in 00:00:00.");
 
             eventHandler.Executed.Should().Be.True();
         }
@@ -209,24 +209,24 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
         [Theory, AutoMoqData]
         public void Handle_EventHandlerThrowsException_ShouldLogTheExceptionAndRethrow(
             [Frozen] Mock<IAttributeFinder> attributeFinder,
-            [Frozen] Mock<ILogger> logger,
             [Frozen] Mock<IStopwatch> stopwatch,
             [Frozen] Mock<ILoggerSerializer> loggerSerializer,
             FakeDomainEvent domainEvent)
         {
             // Arrange
 
-            var eventHandler = new FakeEventHandler {ThrowsException = true};
+            var eventHandler = new FakeEventHandler { ThrowsException = true };
+            var logger = new FakeLogger();
 
             var decorator = new DomainEventLoggerDecorator<FakeDomainEvent>(
                 () => eventHandler,
                 attributeFinder.Object,
                 stopwatch.Object,
                 loggerSerializer.Object,
-                logger.Object,
+                () => logger,
                 new GlobalSettings());
 
-            attributeFinder.Setup(f => f.Decorates(domainEvent.GetType(), typeof (LogAttribute))).Returns(true);
+            attributeFinder.Setup(f => f.Decorates(domainEvent.GetType(), typeof(LogAttribute))).Returns(true);
 
             loggerSerializer.Setup(s => s.Serialize(domainEvent)).Returns("Serialized parameters");
 
@@ -241,10 +241,11 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
             stopwatch.Verify(s => s.Start(), Times.Once);
             stopwatch.Verify(s => s.Stop(), Times.Once);
 
-            logger.Verify(l => l.Log("Executing domain event \"FakeDomainEvent\" with the parameters:"), Times.Once);
-            logger.Verify(l => l.Log("Serialized parameters"), Times.Once);
-            logger.Verify(l => l.Log("Exception caught: FakeEventHandlerException."), Times.Once);
-            logger.Verify(l => l.Log("Domain event \"FakeDomainEvent\" executed in 00:00:00."), Times.Once);
+            logger.VerifyMessages(
+                "Executing domain event \"FakeDomainEvent\" with the parameters:",
+                "Serialized parameters",
+                "Exception caught: FakeEventHandlerException.",
+                "Domain event \"FakeDomainEvent\" executed in 00:00:00.");
 
             eventHandler.Executed.Should().Be.True();
         }
@@ -252,7 +253,6 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
         [Theory, AutoMoqData]
         public void Handle_EventHandlerThrowsExceptionWithInnerException_ShouldLogTheExceptionsAndRethrow(
             [Frozen] Mock<IAttributeFinder> attributeFinder,
-            [Frozen] Mock<ILogger> logger,
             [Frozen] Mock<IStopwatch> stopwatch,
             [Frozen] Mock<ILoggerSerializer> loggerSerializer,
             FakeDomainEvent domainEvent)
@@ -265,15 +265,17 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
                 HasInnerException = true
             };
 
+            var logger = new FakeLogger();
+
             var decorator = new DomainEventLoggerDecorator<FakeDomainEvent>(
                 () => eventHandler,
                 attributeFinder.Object,
                 stopwatch.Object,
                 loggerSerializer.Object,
-                logger.Object,
+                () => logger,
                 new GlobalSettings());
 
-            attributeFinder.Setup(f => f.Decorates(domainEvent.GetType(), typeof (LogAttribute))).Returns(true);
+            attributeFinder.Setup(f => f.Decorates(domainEvent.GetType(), typeof(LogAttribute))).Returns(true);
 
             loggerSerializer.Setup(s => s.Serialize(domainEvent)).Returns("Serialized parameters");
 
@@ -288,11 +290,12 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
             stopwatch.Verify(s => s.Start(), Times.Once);
             stopwatch.Verify(s => s.Stop(), Times.Once);
 
-            logger.Verify(l => l.Log("Executing domain event \"FakeDomainEvent\" with the parameters:"), Times.Once);
-            logger.Verify(l => l.Log("Serialized parameters"), Times.Once);
-            logger.Verify(l => l.Log("Exception caught: FakeEventHandlerException."), Times.Once);
-            logger.Verify(l => l.Log("Inner exception caught: FakeEventHandlerInnerException."), Times.Once);
-            logger.Verify(l => l.Log("Domain event \"FakeDomainEvent\" executed in 00:00:00."), Times.Once);
+            logger.VerifyMessages(
+                "Executing domain event \"FakeDomainEvent\" with the parameters:",
+                "Serialized parameters",
+                "Exception caught: FakeEventHandlerException.",
+                "Inner exception caught: FakeEventHandlerInnerException.",
+                "Domain event \"FakeDomainEvent\" executed in 00:00:00.");
 
             eventHandler.Executed.Should().Be.True();
         }

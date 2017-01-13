@@ -19,13 +19,13 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
         private readonly GlobalSettings _settings;
         private readonly IAttributeFinder _attributeFinder;
         private readonly Func<ICommandHandler<TCommand>> _handlerFactory;
-        private readonly ILogger _logger;
+        private readonly Func<ILogger> _logger;
         private readonly IUnitOfWork _unitOfWork;
 
         public CommandTransactionDecorator(
             GlobalSettings settings,
             IAttributeFinder attributeFinder,
-            ILogger logger,
+            Func<ILogger> logger,
             IUnitOfWork unitOfWork,
             Func<ICommandHandler<TCommand>> handlerFactory)
         {
@@ -48,7 +48,7 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
 
             var log = _attributeFinder.Decorates(command.GetType(), typeof(LogAttribute)) || _settings.EnableLogging;
 
-            if (log) _logger.Log("Starting transaction...");
+            if (log) _logger().Log("Starting transaction...");
 
             _unitOfWork.Clear();
 
@@ -56,7 +56,7 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
 
             _unitOfWork.Commit();
 
-            if (log) _logger.Log("Transaction committed.");
+            if (log) _logger().Log("Transaction committed.");
 
             return domainEvents;
         }

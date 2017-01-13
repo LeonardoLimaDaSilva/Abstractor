@@ -85,7 +85,6 @@ namespace Abstractor.Test.Command
 
             var command = new ExecuteOperation {AllowExecuteOperations = true};
 
-
             // Act
 
             CommandDispatcher.Dispatch(command);

@@ -101,6 +101,14 @@ namespace Abstractor.Cqrs.Interfaces.CompositionRoot
         void RegisterDecoratorSingleton(Type serviceType, Type decoratorType);
 
         /// <summary>
+        ///     Ensures that the same instance of the supplied <see cref="decoratorType" /> is returned, wrapping the original
+        ///     <see cref="serviceType" />.
+        /// </summary>
+        /// <param name="serviceType">Original type.</param>
+        /// <param name="decoratorType">Type that wraps the original type.</param>
+        void RegisterDecoratorScoped(Type serviceType, Type decoratorType);
+
+        /// <summary>
         ///     Provides functionality for the deferred resolving of unregistered types.
         /// </summary>
         /// <typeparam name="TService">Type of abstraction.</typeparam>

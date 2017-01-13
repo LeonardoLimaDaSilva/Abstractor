@@ -47,7 +47,6 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
         [Theory, AutoMoqData]
         public void Handle_WithoutLogAttribute_ShouldNotLog(
             [Frozen] Mock<IAttributeFinder> attributeFinder,
-            [Frozen] Mock<ILogger> logger,
             [Frozen] Mock<IStopwatch> stopwatch,
             [Frozen] Mock<ILoggerSerializer> loggerSerializer,
             FakeQuery query)
@@ -55,13 +54,14 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
             // Arrange
 
             var queryHandler = new FakeQueryAsyncHandler();
+            var logger = new FakeLogger();
 
             var decorator = new QueryAsyncLoggerDecorator<FakeQuery, FakeResult>(
                 () => queryHandler,
                 attributeFinder.Object,
                 stopwatch.Object,
                 loggerSerializer.Object,
-                logger.Object,
+                () => logger,
                 new GlobalSettings());
 
             loggerSerializer.Setup(s => s.Serialize(query)).Returns("Serialized parameters");
@@ -77,7 +77,7 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
             stopwatch.Verify(s => s.Start(), Times.Never);
             stopwatch.Verify(s => s.Stop(), Times.Never);
 
-            logger.Verify(l => l.Log(It.IsAny<string>()), Times.Never);
+            logger.ShouldNeverBeCalled();
 
             queryHandler.Executed.Should().Be.True();
         }
@@ -85,7 +85,6 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
         [Theory, AutoMoqData]
         public void Handle_WithoutLogAttributeAndGloballyEnabled_ShouldLog(
             [Frozen] Mock<IAttributeFinder> attributeFinder,
-            [Frozen] Mock<ILogger> logger,
             [Frozen] Mock<IStopwatch> stopwatch,
             [Frozen] Mock<ILoggerSerializer> loggerSerializer,
             FakeQuery query)
@@ -93,13 +92,14 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
             // Arrange
 
             var queryHandler = new FakeQueryAsyncHandler();
+            var logger = new FakeLogger();
 
             var decorator = new QueryAsyncLoggerDecorator<FakeQuery, FakeResult>(
                 () => queryHandler,
                 attributeFinder.Object,
                 stopwatch.Object,
                 loggerSerializer.Object,
-                logger.Object,
+                () => logger,
                 new GlobalSettings
                 {
                     EnableLogging = true
@@ -118,7 +118,7 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
             stopwatch.Verify(s => s.Start(), Times.Once);
             stopwatch.Verify(s => s.Stop(), Times.Once);
 
-            logger.Verify(l => l.Log(It.IsAny<string>()), Times.AtLeastOnce);
+            logger.ShouldBeCalled();
 
             queryHandler.Executed.Should().Be.True();
         }
@@ -126,7 +126,6 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
         [Theory, AutoMoqData]
         public void Handle_Success_ShouldLogMessagesAndCallMethods(
             [Frozen] Mock<IAttributeFinder> attributeFinder,
-            [Frozen] Mock<ILogger> logger,
             [Frozen] Mock<IStopwatch> stopwatch,
             [Frozen] Mock<ILoggerSerializer> loggerSerializer,
             FakeQuery query)
@@ -134,16 +133,17 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
             // Arrange
 
             var queryHandler = new FakeQueryAsyncHandler();
+            var logger = new FakeLogger();
 
             var decorator = new QueryAsyncLoggerDecorator<FakeQuery, FakeResult>(
                 () => queryHandler,
                 attributeFinder.Object,
                 stopwatch.Object,
                 loggerSerializer.Object,
-                logger.Object,
+                () => logger,
                 new GlobalSettings());
 
-            attributeFinder.Setup(f => f.Decorates(query.GetType(), typeof (LogAttribute))).Returns(true);
+            attributeFinder.Setup(f => f.Decorates(query.GetType(), typeof(LogAttribute))).Returns(true);
 
             loggerSerializer.Setup(s => s.Serialize(query)).Returns("Serialized parameters");
 
@@ -158,9 +158,10 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
             stopwatch.Verify(s => s.Start(), Times.Once);
             stopwatch.Verify(s => s.Stop(), Times.Once);
 
-            logger.Verify(l => l.Log("Executing query \"FakeQuery\" with the parameters:"), Times.Once);
-            logger.Verify(l => l.Log("Serialized parameters"), Times.Once);
-            logger.Verify(l => l.Log("Query \"FakeQuery\" executed in 00:00:00."), Times.Once);
+            logger.VerifyMessages(
+                "Executing query \"FakeQuery\" with the parameters:",
+                "Serialized parameters",
+                "Query \"FakeQuery\" executed in 00:00:00.");
 
             queryHandler.Executed.Should().Be.True();
         }
@@ -168,7 +169,6 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
         [Theory, AutoMoqData]
         public void Handle_ThrowsOnSerialize_ShouldLogException(
             [Frozen] Mock<IAttributeFinder> attributeFinder,
-            [Frozen] Mock<ILogger> logger,
             [Frozen] Mock<IStopwatch> stopwatch,
             [Frozen] Mock<ILoggerSerializer> loggerSerializer,
             FakeQuery query)
@@ -176,16 +176,17 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
             // Arrange
 
             var queryHandler = new FakeQueryAsyncHandler();
+            var logger = new FakeLogger();
 
             var decorator = new QueryAsyncLoggerDecorator<FakeQuery, FakeResult>(
                 () => queryHandler,
                 attributeFinder.Object,
                 stopwatch.Object,
                 loggerSerializer.Object,
-                logger.Object,
+                () => logger,
                 new GlobalSettings());
 
-            attributeFinder.Setup(f => f.Decorates(query.GetType(), typeof (LogAttribute))).Returns(true);
+            attributeFinder.Setup(f => f.Decorates(query.GetType(), typeof(LogAttribute))).Returns(true);
 
             loggerSerializer.Setup(s => s.Serialize(query)).Returns("Serialized parameters");
 
@@ -203,11 +204,10 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
             stopwatch.Verify(s => s.Start(), Times.Once);
             stopwatch.Verify(s => s.Stop(), Times.Once);
 
-            logger.Verify(l => l.Log("Executing query \"FakeQuery\" with the parameters:"), Times.Once);
-            logger.Verify(
-                l => l.Log("Could not serialize the parameters: Serialization exception."),
-                Times.Once);
-            logger.Verify(l => l.Log("Query \"FakeQuery\" executed in 00:00:00."), Times.Once);
+            logger.VerifyMessages(
+                "Executing query \"FakeQuery\" with the parameters:",
+                "Could not serialize the parameters: Serialization exception.",
+                "Query \"FakeQuery\" executed in 00:00:00.");
 
             queryHandler.Executed.Should().Be.True();
         }
@@ -215,24 +215,24 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
         [Theory, AutoMoqData]
         public void Handle_QueryHandlerThrowsException_ShouldLogTheExceptionAndRethrow(
             [Frozen] Mock<IAttributeFinder> attributeFinder,
-            [Frozen] Mock<ILogger> logger,
             [Frozen] Mock<IStopwatch> stopwatch,
             [Frozen] Mock<ILoggerSerializer> loggerSerializer,
             FakeQuery query)
         {
             // Arrange
 
-            var queryHandler = new FakeQueryAsyncHandler {ThrowsException = true};
+            var queryHandler = new FakeQueryAsyncHandler { ThrowsException = true };
+            var logger = new FakeLogger();
 
             var decorator = new QueryAsyncLoggerDecorator<FakeQuery, FakeResult>(
                 () => queryHandler,
                 attributeFinder.Object,
                 stopwatch.Object,
                 loggerSerializer.Object,
-                logger.Object,
+                () => logger,
                 new GlobalSettings());
 
-            attributeFinder.Setup(f => f.Decorates(query.GetType(), typeof (LogAttribute))).Returns(true);
+            attributeFinder.Setup(f => f.Decorates(query.GetType(), typeof(LogAttribute))).Returns(true);
 
             loggerSerializer.Setup(s => s.Serialize(query)).Returns("Serialized parameters");
 
@@ -247,10 +247,11 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
             stopwatch.Verify(s => s.Start(), Times.Once);
             stopwatch.Verify(s => s.Stop(), Times.Once);
 
-            logger.Verify(l => l.Log("Executing query \"FakeQuery\" with the parameters:"), Times.Once);
-            logger.Verify(l => l.Log("Serialized parameters"), Times.Once);
-            logger.Verify(l => l.Log("Exception caught: FakeQueryAsyncHandlerException."), Times.Once);
-            logger.Verify(l => l.Log("Query \"FakeQuery\" executed in 00:00:00."), Times.Once);
+            logger.VerifyMessages(
+                "Executing query \"FakeQuery\" with the parameters:",
+                "Serialized parameters",
+                "Exception caught: FakeQueryAsyncHandlerException.",
+                "Query \"FakeQuery\" executed in 00:00:00.");
 
             queryHandler.Executed.Should().Be.True();
 
@@ -260,7 +261,6 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
         [Theory, AutoMoqData]
         public void Handle_QueryHandlerThrowsExceptionWithInnerException_ShouldLogTheExceptionsAndRethrow(
             [Frozen] Mock<IAttributeFinder> attributeFinder,
-            [Frozen] Mock<ILogger> logger,
             [Frozen] Mock<IStopwatch> stopwatch,
             [Frozen] Mock<ILoggerSerializer> loggerSerializer,
             FakeQuery query)
@@ -273,15 +273,17 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
                 HasInnerException = true
             };
 
+            var logger = new FakeLogger();
+
             var decorator = new QueryAsyncLoggerDecorator<FakeQuery, FakeResult>(
                 () => queryHandler,
                 attributeFinder.Object,
                 stopwatch.Object,
                 loggerSerializer.Object,
-                logger.Object,
+                () => logger,
                 new GlobalSettings());
 
-            attributeFinder.Setup(f => f.Decorates(query.GetType(), typeof (LogAttribute))).Returns(true);
+            attributeFinder.Setup(f => f.Decorates(query.GetType(), typeof(LogAttribute))).Returns(true);
 
             loggerSerializer.Setup(s => s.Serialize(query)).Returns("Serialized parameters");
 
@@ -296,11 +298,12 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
             stopwatch.Verify(s => s.Start(), Times.Once);
             stopwatch.Verify(s => s.Stop(), Times.Once);
 
-            logger.Verify(l => l.Log("Executing query \"FakeQuery\" with the parameters:"), Times.Once);
-            logger.Verify(l => l.Log("Serialized parameters"), Times.Once);
-            logger.Verify(l => l.Log("Exception caught: FakeQueryAsyncHandlerException."), Times.Once);
-            logger.Verify(l => l.Log("Inner exception caught: FakeQueryAsyncHandlerInnerException."), Times.Once);
-            logger.Verify(l => l.Log("Query \"FakeQuery\" executed in 00:00:00."), Times.Once);
+            logger.VerifyMessages(
+                "Executing query \"FakeQuery\" with the parameters:",
+                "Serialized parameters",
+                "Exception caught: FakeQueryAsyncHandlerException.",
+                "Inner exception caught: FakeQueryAsyncHandlerInnerException.",
+                "Query \"FakeQuery\" executed in 00:00:00.");
 
             queryHandler.Executed.Should().Be.True();
 

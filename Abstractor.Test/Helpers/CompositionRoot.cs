@@ -53,15 +53,11 @@ namespace Abstractor.Test.Helpers
                         {
                             cs.ApplicationAssemblies = currentAssembly;
                             cs.ApplicationTypes = concreteTypes;
-                        },
-                        gs =>
-                        {
-                            gs.EnableTransactions = false;
-                            gs.EnableLogging = false;
                         });
 
                     containerAdapter.RegisterSingleton<IUnitOfWork, FakeUnitOfWork>();
                     containerAdapter.RegisterSingleton<IStopwatch, FakeStopwatch>();
+                    containerAdapter.RegisterScoped<ILogger, FakeLogger>();
 
                     _container.Verify();
                 }
