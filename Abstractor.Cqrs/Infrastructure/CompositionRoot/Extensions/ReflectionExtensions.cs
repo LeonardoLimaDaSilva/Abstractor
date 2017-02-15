@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Abstractor.Cqrs.Infrastructure.CrossCuttingConcerns;
 
 namespace Abstractor.Cqrs.Infrastructure.CompositionRoot.Extensions
 {
@@ -10,23 +11,6 @@ namespace Abstractor.Cqrs.Infrastructure.CompositionRoot.Extensions
     /// </summary>
     public static class ReflectionExtensions
     {
-        /// <summary>
-        ///     Ensures the return of types that can be loaded from an assembly.
-        /// </summary>
-        /// <param name="assembly">Assembly to be analized.</param>
-        /// <returns></returns>
-        internal static Type[] GetSafeTypes(this Assembly assembly)
-        {
-            try
-            {
-                return assembly.GetTypes();
-            }
-            catch (ReflectionTypeLoadException ex)
-            {
-                return ex.Types;
-            }
-        }
-
         /// <summary>
         ///     Discovers by convention and returns the implementation types inside the assemblies.
         /// </summary>
@@ -75,6 +59,39 @@ namespace Abstractor.Cqrs.Infrastructure.CompositionRoot.Extensions
                 .Where(predicate)
                 .Select(t => t.AsType())
                 .ToList();
+        }
+
+        /// <summary>
+        ///     Discovers the injectable implementation types inside the assemblies.
+        /// </summary>
+        /// <param name="assemblies"></param>
+        /// <returns></returns>
+        public static IEnumerable<Type> GetImplementations(this IEnumerable<Assembly> assemblies)
+        {
+            return assemblies
+                .SelectMany(a => a.DefinedTypes)
+                .Where(t => t.GetInterfaces().Any())
+                .AsQueryable()
+                .Where(t => t.CustomAttributes.Any(a => a.AttributeType == typeof(InjectableAttribute)))
+                .Select(t => t.AsType())
+                .ToList();
+        }
+
+        /// <summary>
+        ///     Ensures the return of types that can be loaded from an assembly.
+        /// </summary>
+        /// <param name="assembly">Assembly to be analized.</param>
+        /// <returns></returns>
+        internal static Type[] GetSafeTypes(this Assembly assembly)
+        {
+            try
+            {
+                return assembly.GetTypes();
+            }
+            catch (ReflectionTypeLoadException ex)
+            {
+                return ex.Types;
+            }
         }
     }
 }

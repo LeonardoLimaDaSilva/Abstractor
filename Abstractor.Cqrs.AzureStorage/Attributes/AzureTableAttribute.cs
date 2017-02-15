@@ -8,8 +8,15 @@ namespace Abstractor.Cqrs.AzureStorage.Attributes
     [AttributeUsage(AttributeTargets.Class, Inherited = false)]
     public class AzureTableAttribute : Attribute
     {
+        /// <summary>
+        ///     The name of Azure table.
+        /// </summary>
         public string Name { get; private set; }
 
+        /// <summary>
+        ///     Attribute constructor.
+        /// </summary>
+        /// <param name="name">The name of Azure table.</param>
         public AzureTableAttribute(string name)
         {
             Name = name;

@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using Abstractor.Cqrs.Infrastructure.CompositionRoot;
 using Abstractor.Cqrs.Infrastructure.CompositionRoot.Extensions;
 using Abstractor.Cqrs.Interfaces.CrossCuttingConcerns;
 using Abstractor.Cqrs.Interfaces.Persistence;
@@ -40,11 +39,15 @@ namespace Abstractor.Test.Helpers
 
                     var currentAssembly = new[] {typeof (CompositionRoot).Assembly};
 
-                    var concreteTypes = currentAssembly
-                        .GetImplementations(
-                            ImplementationConvention.NameEndsWith,
-                            new[] {"Repository"}
-                        ).ToList();
+                    // Example of discovery by convention
+                    //var concreteTypes = currentAssembly
+                    //    .GetImplementations(
+                    //        ImplementationConvention.NameEndsWith,
+                    //        new[] {"Repository"}
+                    //    ).ToList();
+
+                    // Example of discovery by injectable attribute
+                    var concreteTypes = currentAssembly.GetImplementations().ToList();
 
                     var containerAdapter = new ContainerAdapter(_container);
 

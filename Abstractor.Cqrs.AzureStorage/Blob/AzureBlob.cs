@@ -10,14 +10,27 @@ namespace Abstractor.Cqrs.AzureStorage.Blob
     /// </summary>
     public class AzureBlob : IDisposable
     {
+        /// <summary>
+        ///     The name of blob.
+        /// </summary>
         public string FileName { get; set; }
 
+        /// <summary>
+        ///     Stream representation of the blob.
+        /// </summary>
         public Stream Stream { get; set; }
 
+        /// <summary>
+        ///     Default constructor.
+        /// </summary>
         public AzureBlob()
         {
         }
 
+        /// <summary>
+        ///     Constructs based on a generic file.
+        /// </summary>
+        /// <param name="file">Representation of a file.</param>
         public AzureBlob(GenericFile file)
         {
             Guard.ArgumentIsNotNull(file, nameof(file));

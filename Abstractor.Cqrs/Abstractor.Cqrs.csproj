@@ -72,6 +72,7 @@
     <Compile Include="Infrastructure\CrossCuttingConcerns\EmptyLogger.cs" />
     <Compile Include="Infrastructure\CrossCuttingConcerns\EntityNotFoundException.cs" />
     <Compile Include="Infrastructure\CrossCuttingConcerns\Guard.cs" />
+    <Compile Include="Infrastructure\CrossCuttingConcerns\InjectableAttribute.cs" />
     <Compile Include="Infrastructure\CrossCuttingConcerns\JsonLoggerSerializer.cs" />
     <Compile Include="Infrastructure\CrossCuttingConcerns\SystemClock.cs" />
     <Compile Include="Infrastructure\Domain\AggregateRoot.cs" />

@@ -8,8 +8,15 @@ namespace Abstractor.Cqrs.AzureStorage.Attributes
     [AttributeUsage(AttributeTargets.Class, Inherited = false)]
     public class AzureQueueAttribute : Attribute
     {
+        /// <summary>
+        ///     The name of Azure queue.
+        /// </summary>
         public string Name { get; private set; }
 
+        /// <summary>
+        ///     Attribute constructor.
+        /// </summary>
+        /// <param name="name">The name of Azure queue.</param>
         public AzureQueueAttribute(string name)
         {
             Name = name;

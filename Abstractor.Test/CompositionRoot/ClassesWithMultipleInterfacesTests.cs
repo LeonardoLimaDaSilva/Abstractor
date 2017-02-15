@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Abstractor.Cqrs.Infrastructure.CrossCuttingConcerns;
 using Abstractor.Cqrs.Interfaces.Events;
 using Abstractor.Cqrs.Interfaces.Operations;
 using Abstractor.Test.Helpers;
@@ -9,6 +10,7 @@ namespace Abstractor.Test.CompositionRoot
 {
     public class ClassesWithMultipleInterfacesTests : BaseTest
     {
+        [Injectable]
         // Classes with multiple interfaces should be registered correctly
         public class FakeRepository : IFake1Repository, IFake2Repository
         {

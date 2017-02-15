@@ -14,6 +14,10 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Dispatchers
     {
         private readonly IContainer _container;
 
+        /// <summary>
+        /// CommandDispatcher constructor.
+        /// </summary>
+        /// <param name="container">Inversion of control container.</param>
         public CommandDispatcher(IContainer container)
         {
             _container = container;

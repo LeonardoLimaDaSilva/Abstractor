@@ -15,6 +15,10 @@ namespace Abstractor.Cqrs.AzureStorage.Blob
     {
         private readonly IAzureBlobRepository<TEntity> _repository;
 
+        /// <summary>
+        /// BaseBlobRepository constructor.
+        /// </summary>
+        /// <param name="repository">Repository of an Azure Blob.</param>
         protected BaseBlobRepository(IAzureBlobRepository<TEntity> repository)
         {
             _repository = repository;

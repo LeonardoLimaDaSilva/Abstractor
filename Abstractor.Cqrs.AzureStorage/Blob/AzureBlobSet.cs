@@ -16,6 +16,10 @@ namespace Abstractor.Cqrs.AzureStorage.Blob
     {
         private readonly CloudBlobContainer _container;
 
+        /// <summary>
+        ///     AzureBlobSet constructor.
+        /// </summary>
+        /// <param name="connectionString">Azure connection string.</param>
         public AzureBlobSet(string connectionString)
         {
             var blobClient = CloudStorageAccount.Parse(connectionString).CreateCloudBlobClient();

@@ -12,6 +12,10 @@ namespace Abstractor.Cqrs.AzureStorage.Blob
     {
         private readonly string _connectionString;
 
+        /// <summary>
+        ///     AzureBlobContext constructor.
+        /// </summary>
+        /// <param name="connectionName">Name of Azure connection.</param>
         public AzureBlobContext(string connectionName)
         {
             _connectionString = ConfigurationManager.ConnectionStrings[connectionName].ToString();
@@ -24,7 +28,7 @@ namespace Abstractor.Cqrs.AzureStorage.Blob
         /// <returns>Data set abstraction.</returns>
         protected override IBaseDataSet GetDataSet<TEntity>()
         {
-            var genericType = typeof (AzureBlobSet<>).MakeGenericType(typeof (TEntity));
+            var genericType = typeof(AzureBlobSet<>).MakeGenericType(typeof(TEntity));
             return (IBaseDataSet) Activator.CreateInstance(genericType, _connectionString);
         }
     }
