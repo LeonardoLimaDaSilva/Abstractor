@@ -8,7 +8,7 @@ using Abstractor.Cqrs.Interfaces.Operations;
 namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
 {
     /// <summary>
-    ///     Validates the command <see cref="TCommand" /> using the <see cref="IValidator" />.
+    ///     Validates the command TCommand using the <see cref="IValidator" />.
     /// </summary>
     /// <typeparam name="TCommand">Command to be handled.</typeparam>
     public sealed class CommandValidationDecorator<TCommand> : ICommandHandler<TCommand>
@@ -17,6 +17,11 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
         private readonly Func<ICommandHandler<TCommand>> _handlerFactory;
         private readonly IValidator _validator;
 
+        /// <summary>
+        ///     CommandValidationDecorator constructor.
+        /// </summary>
+        /// <param name="validator"></param>
+        /// <param name="handlerFactory"></param>
         public CommandValidationDecorator(
             IValidator validator,
             Func<ICommandHandler<TCommand>> handlerFactory)

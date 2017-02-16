@@ -12,6 +12,10 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Dispatchers
     {
         private readonly IContainer _container;
 
+        /// <summary>
+        ///     ApplicationEventDispatcher constructor.
+        /// </summary>
+        /// <param name="container">Inversion of control container.</param>
         public ApplicationEventDispatcher(IContainer container)
         {
             _container = container;
@@ -25,23 +29,21 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Dispatchers
         {
             Guard.ArgumentIsNotNull(applicationEvent, nameof(applicationEvent));
 
-            var handlerType = typeof (IApplicationEventHandler<>).MakeGenericType(applicationEvent.GetType());
+            var handlerType = typeof(IApplicationEventHandler<>).MakeGenericType(applicationEvent.GetType());
             dynamic handlers = _container.GetAllInstances(handlerType);
 
             foreach (var handler in handlers)
-            {
                 Task.Factory.StartNew(() =>
-                {
-                    try
                     {
-                        handler.Handle((dynamic) applicationEvent);
-                    }
-                    catch
-                    {
-                        // supression of event handler exceptions
-                    }
-                });
-            }
+                        try
+                        {
+                            handler.Handle((dynamic) applicationEvent);
+                        }
+                        catch
+                        {
+                            // supression of event handler exceptions
+                        }
+                    });
         }
     }
 }

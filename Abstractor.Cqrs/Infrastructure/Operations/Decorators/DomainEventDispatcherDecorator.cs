@@ -16,6 +16,11 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
         private readonly IDomainEventDispatcher _eventDispatcher;
         private readonly Func<ICommandHandler<TCommand>> _handlerFactory;
 
+        /// <summary>
+        ///     DomainEventDispatcherDecorator constructor.
+        /// </summary>
+        /// <param name="eventDispatcher"></param>
+        /// <param name="handlerFactory"></param>
         public DomainEventDispatcherDecorator(
             IDomainEventDispatcher eventDispatcher,
             Func<ICommandHandler<TCommand>> handlerFactory)

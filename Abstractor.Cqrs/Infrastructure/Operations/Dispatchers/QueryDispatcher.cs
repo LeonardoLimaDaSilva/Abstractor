@@ -15,6 +15,10 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Dispatchers
     {
         private readonly IContainer _container;
 
+        /// <summary>
+        ///     QueryDispatcher constructor.
+        /// </summary>
+        /// <param name="container">Inversion of control container.</param>
         public QueryDispatcher(IContainer container)
         {
             _container = container;
@@ -30,14 +34,14 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Dispatchers
         {
             Guard.ArgumentIsNotNull(query, nameof(query));
 
-            var handlerType = typeof (IQueryHandler<,>).MakeGenericType(query.GetType(), typeof (TResult));
+            var handlerType = typeof(IQueryHandler<,>).MakeGenericType(query.GetType(), typeof(TResult));
 
             try
             {
                 dynamic handler = _container.GetAllInstances(handlerType).SingleOrDefault();
                 if (handler == null) throw new QueryHandlersNotFoundException(query.GetType());
 
-                return handler.Handle((dynamic)query);
+                return handler.Handle((dynamic) query);
             }
             catch (InvalidOperationException)
             {
@@ -55,14 +59,14 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Dispatchers
         {
             Guard.ArgumentIsNotNull(query, nameof(query));
 
-            var handlerType = typeof (IQueryAsyncHandler<,>).MakeGenericType(query.GetType(), typeof (TResult));
+            var handlerType = typeof(IQueryAsyncHandler<,>).MakeGenericType(query.GetType(), typeof(TResult));
 
             try
             {
                 dynamic handler = _container.GetAllInstances(handlerType).SingleOrDefault();
                 if (handler == null) throw new QueryHandlersNotFoundException(query.GetType());
 
-                return await handler.HandleAsync((dynamic)query);
+                return await handler.HandleAsync((dynamic) query);
             }
             catch (InvalidOperationException)
             {

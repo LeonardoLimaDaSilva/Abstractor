@@ -19,6 +19,11 @@ namespace Abstractor.Cqrs.EntityFramework.Extensions
             Factory = x => new EntityFrameworkChangeTracker(x);
         }
 
+        /// <summary>
+        ///     Constructs a new instance of the change tracker.
+        /// </summary>
+        /// <param name="efContext">Entity Framework context.</param>
+        /// <returns></returns>
         public static IEntityFrameworkChangeTracker ChangeTracker(this IEntityFrameworkContext efContext)
         {
             return Factory(efContext);

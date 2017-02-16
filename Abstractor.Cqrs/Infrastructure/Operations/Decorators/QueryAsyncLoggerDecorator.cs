@@ -21,6 +21,15 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
         private readonly ILoggerSerializer _loggerSerializer;
         private readonly IStopwatch _stopwatch;
 
+        /// <summary>
+        /// QueryAsyncLoggerDecorator constructor.
+        /// </summary>
+        /// <param name="handlerFactory"></param>
+        /// <param name="attributeFinder"></param>
+        /// <param name="stopwatch"></param>
+        /// <param name="loggerSerializer"></param>
+        /// <param name="logger"></param>
+        /// <param name="settings"></param>
         public QueryAsyncLoggerDecorator(
             Func<IQueryAsyncHandler<TQuery, TResult>> handlerFactory,
             IAttributeFinder attributeFinder,

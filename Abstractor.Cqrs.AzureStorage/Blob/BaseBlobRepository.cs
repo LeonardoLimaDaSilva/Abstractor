@@ -63,7 +63,7 @@ namespace Abstractor.Cqrs.AzureStorage.Blob
         }
 
         /// <summary>
-        ///     Creates a new instance of <see cref="TEntity" /> passing the generic file as parameter.
+        ///     Creates a new instance of TEntity passing the generic file as parameter.
         /// </summary>
         /// <param name="file">Generic file.</param>
         /// <returns></returns>

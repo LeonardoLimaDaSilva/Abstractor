@@ -16,50 +16,25 @@ namespace Abstractor.Cqrs.AzureStorage.Queue
     {
         private readonly CloudQueue _queue;
 
+        /// <summary>
+        ///     AzureQueueSet constructor.
+        /// </summary>
+        /// <param name="connectionString">Azure connection string.</param>
         public AzureQueueSet(string connectionString) : base(false)
         {
             var queueClient = CloudStorageAccount.Parse(connectionString).CreateCloudQueueClient();
-            var queueName = typeof (TEntity).GetQueueName();
+            var queueName = typeof(TEntity).GetQueueName();
             _queue = queueClient.GetQueueReference(queueName);
             _queue.CreateIfNotExists();
         }
 
         /// <summary>
-        ///     Adds the message to the queue.
+        ///     Gets the total number of messages into the queue.
         /// </summary>
-        /// <param name="entity">Entity to be inserted.</param>
-        protected override void InsertEntity(TEntity entity)
+        /// <returns>Number of messages.</returns>
+        public int Count()
         {
-            _queue.AddMessage(ToCloudQueueMessage(entity));
-        }
-
-        /// <summary>
-        ///     Removes the message from the queue.
-        /// </summary>
-        /// <param name="entity">Entity to be removed.</param>
-        protected override void DeleteEntity(TEntity entity)
-        {
-            _queue.DeleteMessage(ToCloudQueueMessage(entity));
-        }
-
-        /// <summary>
-        ///     Updates an existing message into the queue. Caution, this method is not implemented yet.
-        /// </summary>
-        /// <param name="entity">Entity to be updated.</param>
-        protected override void UpdateEntity(TEntity entity)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
-        ///     Gets a message from the queue using the default request options.
-        /// </summary>
-        /// <param name="entity">Entity definition.</param>
-        /// <returns>Message queue.</returns>
-        protected override TEntity Get(TEntity entity)
-        {
-            var message = _queue.GetMessage();
-            return ToEntity(message);
+            return _queue.ApproximateMessageCount.GetValueOrDefault();
         }
 
         /// <summary>
@@ -75,26 +50,7 @@ namespace Abstractor.Cqrs.AzureStorage.Queue
         }
 
         /// <summary>
-        ///     Converts a <see cref="CloudQueueMessage" /> into an entity of <see cref="TEntity" /> type.
-        /// </summary>
-        /// <param name="message">Message to convert.</param>
-        /// <returns>Converted entity.</returns>
-        public static TEntity ToEntity(CloudQueueMessage message)
-        {
-            if (message == null) return null;
-
-            var json = message.AsString;
-            var entity = JsonConvert.DeserializeObject<TEntity>(json);
-            entity.Id = message.Id;
-            entity.PopReceipt = message.PopReceipt;
-            entity.DequeueCount = message.DequeueCount;
-            entity.InsertionTime = message.InsertionTime;
-            entity.ExpirationTime = message.ExpirationTime;
-            return entity;
-        }
-
-        /// <summary>
-        ///     Converts an entity of <see cref="TEntity" /> type into a <see cref="CloudQueueMessage" />.
+        ///     Converts an entity of TEntity type into a <see cref="CloudQueueMessage" />.
         /// </summary>
         /// <param name="entity">Entity to convert.</param>
         /// <returns>Converted message.</returns>
@@ -114,12 +70,60 @@ namespace Abstractor.Cqrs.AzureStorage.Queue
         }
 
         /// <summary>
-        ///     Gets the total number of messages into the queue.
+        ///     Converts a <see cref="CloudQueueMessage" /> into an entity of TEntity type.
         /// </summary>
-        /// <returns>Number of messages.</returns>
-        public int Count()
+        /// <param name="message">Message to convert.</param>
+        /// <returns>Converted entity.</returns>
+        public static TEntity ToEntity(CloudQueueMessage message)
         {
-            return _queue.ApproximateMessageCount.GetValueOrDefault();
+            if (message == null) return null;
+
+            var json = message.AsString;
+            var entity = JsonConvert.DeserializeObject<TEntity>(json);
+            entity.Id = message.Id;
+            entity.PopReceipt = message.PopReceipt;
+            entity.DequeueCount = message.DequeueCount;
+            entity.InsertionTime = message.InsertionTime;
+            entity.ExpirationTime = message.ExpirationTime;
+            return entity;
+        }
+
+        /// <summary>
+        ///     Removes the message from the queue.
+        /// </summary>
+        /// <param name="entity">Entity to be removed.</param>
+        protected override void DeleteEntity(TEntity entity)
+        {
+            _queue.DeleteMessage(ToCloudQueueMessage(entity));
+        }
+
+        /// <summary>
+        ///     Gets a message from the queue using the default request options.
+        /// </summary>
+        /// <param name="entity">Entity definition.</param>
+        /// <returns>Message queue.</returns>
+        protected override TEntity Get(TEntity entity)
+        {
+            var message = _queue.GetMessage();
+            return ToEntity(message);
+        }
+
+        /// <summary>
+        ///     Adds the message to the queue.
+        /// </summary>
+        /// <param name="entity">Entity to be inserted.</param>
+        protected override void InsertEntity(TEntity entity)
+        {
+            _queue.AddMessage(ToCloudQueueMessage(entity));
+        }
+
+        /// <summary>
+        ///     Updates an existing message into the queue. Caution, this method is not implemented yet.
+        /// </summary>
+        /// <param name="entity">Entity to be updated.</param>
+        protected override void UpdateEntity(TEntity entity)
+        {
+            throw new NotImplementedException();
         }
     }
 }

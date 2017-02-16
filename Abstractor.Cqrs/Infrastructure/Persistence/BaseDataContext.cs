@@ -15,6 +15,9 @@ namespace Abstractor.Cqrs.Infrastructure.Persistence
         /// </summary>
         private readonly IDictionary<string, IBaseDataSet> _internalContext;
 
+        /// <summary>
+        ///     BaseDataContext constructor.
+        /// </summary>
         protected BaseDataContext()
         {
             _internalContext = new Dictionary<string, IBaseDataSet>();
@@ -30,36 +33,12 @@ namespace Abstractor.Cqrs.Infrastructure.Persistence
         }
 
         /// <summary>
-        ///     Creates a new data set for the entity type.
+        ///     Clears the internal context.
         /// </summary>
-        /// <typeparam name="TEntity">Entity type.</typeparam>
-        /// <returns>Data set of a specific entity type.</returns>
-        public BaseDataSet<TEntity> Set<TEntity>()
+        public void Clear()
         {
-            if (_internalContext.ContainsKey(typeof (TEntity).Name))
-                return (BaseDataSet<TEntity>) _internalContext[typeof (TEntity).Name];
-
-            var set = GetDataSet<TEntity>();
-
-            _internalContext.Add(typeof (TEntity).Name, set);
-
-            return (BaseDataSet<TEntity>) set;
-        }
-
-        /// <summary>
-        ///     Hook to the actual get method of underlying data set.
-        /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
-        /// <returns></returns>
-        protected abstract IBaseDataSet GetDataSet<TEntity>();
-
-        /// <summary>
-        ///     Commits the changes of all the stored data sets operations.
-        /// </summary>
-        public void SaveChanges()
-        {
-            foreach (var context in _internalContext)
-                context.Value.Commit();
+            Dispose();
+            _internalContext.Clear();
         }
 
         /// <summary>
@@ -72,12 +51,36 @@ namespace Abstractor.Cqrs.Infrastructure.Persistence
         }
 
         /// <summary>
-        ///     Clears the internal context.
+        ///     Commits the changes of all the stored data sets operations.
         /// </summary>
-        public void Clear()
+        public void SaveChanges()
         {
-            Dispose();
-            _internalContext.Clear();
+            foreach (var context in _internalContext)
+                context.Value.Commit();
         }
+
+        /// <summary>
+        ///     Creates a new data set for the entity type.
+        /// </summary>
+        /// <typeparam name="TEntity">Entity type.</typeparam>
+        /// <returns>Data set of a specific entity type.</returns>
+        public BaseDataSet<TEntity> Set<TEntity>()
+        {
+            if (_internalContext.ContainsKey(typeof(TEntity).Name))
+                return (BaseDataSet<TEntity>) _internalContext[typeof(TEntity).Name];
+
+            var set = GetDataSet<TEntity>();
+
+            _internalContext.Add(typeof(TEntity).Name, set);
+
+            return (BaseDataSet<TEntity>) set;
+        }
+
+        /// <summary>
+        ///     Hook to the actual get method of underlying data set.
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <returns></returns>
+        protected abstract IBaseDataSet GetDataSet<TEntity>();
     }
 }

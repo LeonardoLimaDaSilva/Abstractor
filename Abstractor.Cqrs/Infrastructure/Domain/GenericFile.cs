@@ -9,10 +9,21 @@ namespace Abstractor.Cqrs.Infrastructure.Domain
     /// </summary>
     public class GenericFile : IDisposable
     {
+        /// <summary>
+        ///     Name of the file.
+        /// </summary>
         public string FileName { get; }
 
+        /// <summary>
+        ///     Stream representation of the file.
+        /// </summary>
         public Stream Stream { get; }
 
+        /// <summary>
+        ///     Constructs a generic file.
+        /// </summary>
+        /// <param name="fileName">Name of the file.</param>
+        /// <param name="stream">Stream representation of the file.</param>
         public GenericFile(string fileName, Stream stream)
         {
             Guard.ArgumentIsNotNull(fileName, nameof(fileName));
@@ -22,6 +33,9 @@ namespace Abstractor.Cqrs.Infrastructure.Domain
             Stream = stream;
         }
 
+        /// <summary>
+        ///     Releases the generic file stream resources.
+        /// </summary>
         public virtual void Dispose()
         {
             Stream.Dispose();

@@ -17,6 +17,11 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
         private readonly IContainer _container;
         private readonly Func<ICommandHandler<TCommand>> _handlerFactory;
 
+        /// <summary>
+        ///     CommandLifetimeScopeDecorator constructor.
+        /// </summary>
+        /// <param name="container"></param>
+        /// <param name="handlerFactory"></param>
         public CommandLifetimeScopeDecorator(
             IContainer container,
             Func<ICommandHandler<TCommand>> handlerFactory)
@@ -36,7 +41,9 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
                 return _handlerFactory().Handle(command)?.ToList();
 
             using (_container.BeginLifetimeScope())
+            {
                 return _handlerFactory().Handle(command)?.ToList();
+            }
         }
     }
 }

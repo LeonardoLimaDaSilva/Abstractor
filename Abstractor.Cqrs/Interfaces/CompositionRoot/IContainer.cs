@@ -36,24 +36,24 @@ namespace Abstractor.Cqrs.Interfaces.CompositionRoot
         IDisposable BeginLifetimeScope();
 
         /// <summary>
-        ///     Registers that an instance of type <see cref="TImplementation" /> will be returned when an instance of type
-        ///     <see cref="TService" /> is requested. Uses the container's configured scope lifetime.
+        ///     Registers that an instance of type TImplementation will be returned when an instance of type
+        ///     TService is requested. Uses the container's configured scope lifetime.
         /// </summary>
         /// <typeparam name="TService">Type of abstraction.</typeparam>
         /// <typeparam name="TImplementation">Type of implementation.</typeparam>
         void RegisterScoped<TService, TImplementation>();
 
         /// <summary>
-        ///     Registers that an instance of type <see cref="serviceType" /> will be returned when an instance of type
-        ///     <see cref="implementationType" /> is requested. Uses the container's configured scope lifetime.
+        ///     Registers that an instance of type serviceType will be returned when an instance of type
+        ///     implementationType is requested. Uses the container's configured scope lifetime.
         /// </summary>
         /// <param name="serviceType">Type of abstraction.</param>
         /// <param name="implementationType">Type of implementation.</param>
         void RegisterScoped(Type serviceType, Type implementationType);
 
         /// <summary>
-        ///     Registers that a new instance of type <see cref="serviceType" /> will be returned each time that an instance of
-        ///     type <see cref="implementationType" /> is requested.
+        ///     Registers that a new instance of type serviceType will be returned each time that an instance of
+        ///     type implementationType is requested.
         /// </summary>
         /// <param name="serviceType">Type of the abstraction.</param>
         /// <param name="implementationType">Type of the implementation.</param>
@@ -61,7 +61,7 @@ namespace Abstractor.Cqrs.Interfaces.CompositionRoot
 
         /// <summary>
         ///     Registers all concrete types contained in the assemblies that implements an open generic abstraction, and returns a
-        ///     new instance each time an instance of <see cref="openGenericServiceType" /> is requested.
+        ///     new instance each time an instance of openGenericServiceType is requested.
         /// </summary>
         /// <param name="openGenericServiceType">Type of the abstraction.</param>
         /// <param name="assemblies">Assemblies that contains the concrete type</param>
@@ -75,8 +75,8 @@ namespace Abstractor.Cqrs.Interfaces.CompositionRoot
         void RegisterCollection(Type openGenericServiceType, IEnumerable<Assembly> assemblies);
 
         /// <summary>
-        ///     Registers that an instance of type <see cref="TImplementation" /> will return the same instance of type
-        ///     <see cref="TService" /> when requested.
+        ///     Registers that an instance of type TImplementation will return the same instance of type
+        ///     TService when requested.
         /// </summary>
         /// <typeparam name="TService">Type of abstraction.</typeparam>
         /// <typeparam name="TImplementation">Type of the implementation.</typeparam>
@@ -85,24 +85,24 @@ namespace Abstractor.Cqrs.Interfaces.CompositionRoot
             where TImplementation : class, TService;
 
         /// <summary>
-        ///     Ensures that the a new instance of the supplied <see cref="decoratorType" /> is returned, wrapping the original
-        ///     <see cref="serviceType" />.
+        ///     Ensures that the a new instance of the supplied decoratorType is returned, wrapping the original
+        ///     serviceType.
         /// </summary>
         /// <param name="serviceType">Original type.</param>
         /// <param name="decoratorType">Type that wraps the original type.</param>
         void RegisterDecoratorTransient(Type serviceType, Type decoratorType);
 
         /// <summary>
-        ///     Ensures that the same instance of the supplied <see cref="decoratorType" /> is returned, wrapping the original
-        ///     <see cref="serviceType" />.
+        ///     Ensures that the same instance of the supplied decoratorType is returned, wrapping the original
+        ///     serviceType.
         /// </summary>
         /// <param name="serviceType">Original type.</param>
         /// <param name="decoratorType">Type that wraps the original type.</param>
         void RegisterDecoratorSingleton(Type serviceType, Type decoratorType);
 
         /// <summary>
-        ///     Ensures that the same instance of the supplied <see cref="decoratorType" /> is returned, wrapping the original
-        ///     <see cref="serviceType" />.
+        ///     Ensures that the same instance of the supplied decoratorType is returned, wrapping the original
+        ///     serviceType.
         /// </summary>
         /// <param name="serviceType">Original type.</param>
         /// <param name="decoratorType">Type that wraps the original type.</param>
@@ -132,7 +132,7 @@ namespace Abstractor.Cqrs.Interfaces.CompositionRoot
         void AllowResolvingFuncFactories();
 
         /// <summary>
-        ///     Registers the specified delegate that allows returning singleton instances of <see cref="TService" />.
+        ///     Registers the specified delegate that allows returning singleton instances of TService.
         /// </summary>
         /// <typeparam name="TService">Type to be registered.</typeparam>
         /// <param name="instanceCreator"><see cref="Func{T}" /> delegate.</param>

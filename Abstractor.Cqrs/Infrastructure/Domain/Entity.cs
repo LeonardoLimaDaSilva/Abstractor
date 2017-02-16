@@ -13,6 +13,10 @@ namespace Abstractor.Cqrs.Infrastructure.Domain
         /// </summary>
         public TId Id { get; }
 
+        /// <summary>
+        ///     Constructs the entity with an identifier.
+        /// </summary>
+        /// <param name="id">Entity identifier.</param>
         protected Entity(TId id)
         {
             Id = id;
@@ -42,15 +46,6 @@ namespace Abstractor.Cqrs.Infrastructure.Domain
         }
 
         /// <summary>
-        ///     Returns the instance hash code based on id.
-        /// </summary>
-        /// <returns>Instance hash code.</returns>
-        public override int GetHashCode()
-        {
-            return IsTransient(this) ? 0 : Id.GetHashCode();
-        }
-
-        /// <summary>
         ///     Determines whether this entity is equal to another.
         /// </summary>
         /// <param name="other">Entity to be compared to.</param>
@@ -58,6 +53,15 @@ namespace Abstractor.Cqrs.Infrastructure.Domain
         public override bool Equals(object other)
         {
             return Equals(other as Entity<TId>);
+        }
+
+        /// <summary>
+        ///     Returns the instance hash code based on id.
+        /// </summary>
+        /// <returns>Instance hash code.</returns>
+        public override int GetHashCode()
+        {
+            return IsTransient(this) ? 0 : Id.GetHashCode();
         }
 
         /// <summary>

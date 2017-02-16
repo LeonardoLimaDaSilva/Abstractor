@@ -16,8 +16,17 @@ namespace Abstractor.Cqrs.AzureStorage.Queue
         where TAzureEntity : AzureQueueMessage
     {
         private readonly TimeSpan _visibilityTimeout;
+
+        /// <summary>
+        ///     Repository accessible for inherited classes.
+        /// </summary>
         protected readonly IAzureQueueRepository<TAzureEntity> AzureQueueRepository;
 
+        /// <summary>
+        ///     BaseQueueRepository constructor.
+        /// </summary>
+        /// <param name="azureQueueRepository">The queue's repository.</param>
+        /// <param name="visibilityTimeout">Specifies the new visibility timeout value, in seconds, relative to server time.</param>
         protected BaseQueueRepository(
             IAzureQueueRepository<TAzureEntity> azureQueueRepository,
             TimeSpan visibilityTimeout)
@@ -35,6 +44,15 @@ namespace Abstractor.Cqrs.AzureStorage.Queue
             Guard.ArgumentIsNotNull(message, nameof(message));
 
             AzureQueueRepository.Add(ToAzureEntity(message));
+        }
+
+        /// <summary>
+        ///     Gets the total number of messages into the queue.
+        /// </summary>
+        /// <returns>Number of messages.</returns>
+        public int Count()
+        {
+            return AzureQueueRepository.Count();
         }
 
         /// <summary>
@@ -62,13 +80,11 @@ namespace Abstractor.Cqrs.AzureStorage.Queue
         }
 
         /// <summary>
-        ///     Gets the total number of messages into the queue.
+        ///     Hook to the actual mapping method.
         /// </summary>
-        /// <returns>Number of messages.</returns>
-        public int Count()
-        {
-            return AzureQueueRepository.Count();
-        }
+        /// <param name="message">Entity message to be converted</param>
+        /// <returns>Converted Azure message.</returns>
+        public abstract TAzureEntity ToAzureEntity(TEntity message);
 
         /// <summary>
         ///     Hook to the actual mapping method.
@@ -76,12 +92,5 @@ namespace Abstractor.Cqrs.AzureStorage.Queue
         /// <param name="message">Azure message to be converted.</param>
         /// <returns>Converted entity message.</returns>
         public abstract TEntity ToEntity(TAzureEntity message);
-
-        /// <summary>
-        ///     Hook to the actual mapping method.
-        /// </summary>
-        /// <param name="message">Entity message to be converted</param>
-        /// <returns>Converted Azure message.</returns>
-        public abstract TAzureEntity ToAzureEntity(TEntity message);
     }
 }

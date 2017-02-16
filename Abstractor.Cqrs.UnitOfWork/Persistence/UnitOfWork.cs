@@ -13,12 +13,20 @@ namespace Abstractor.Cqrs.UnitOfWork.Persistence
     /// </summary>
     public class UnitOfWork : IUnitOfWork
     {
-        private readonly ILogger _logger;
         private readonly IAzureBlobContext _blobContext;
-        private readonly IAzureTableContext _tableContext;
-        private readonly IAzureQueueContext _queueContext;
         private readonly IEntityFrameworkContext _entityContext;
+        private readonly ILogger _logger;
+        private readonly IAzureQueueContext _queueContext;
+        private readonly IAzureTableContext _tableContext;
 
+        /// <summary>
+        ///     UnitOfWork constructor.
+        /// </summary>
+        /// <param name="logger"></param>
+        /// <param name="blobContext"></param>
+        /// <param name="tableContext"></param>
+        /// <param name="queueContext"></param>
+        /// <param name="entityContext"></param>
         public UnitOfWork(
             ILogger logger,
             IAzureBlobContext blobContext,
@@ -31,6 +39,24 @@ namespace Abstractor.Cqrs.UnitOfWork.Persistence
             _tableContext = tableContext;
             _queueContext = queueContext;
             _entityContext = entityContext;
+        }
+
+        /// <summary>
+        ///     Clears the internal tracking of all contexts.
+        /// </summary>
+        public void Clear()
+        {
+            _logger.Log("Clearing Entity Framework context...");
+            _entityContext.ChangeTracker().Clear();
+
+            _logger.Log("Clearing Azure Queue context...");
+            _queueContext.Clear();
+
+            _logger.Log("Clearing Azure Table context...");
+            _tableContext.Clear();
+
+            _logger.Log("Clearing Azure Blob context...");
+            _blobContext.Clear();
         }
 
         /// <summary>
@@ -60,24 +86,6 @@ namespace Abstractor.Cqrs.UnitOfWork.Persistence
 
                 throw;
             }
-        }
-
-        /// <summary>
-        ///     Clears the internal tracking of all contexts.
-        /// </summary>
-        public void Clear()
-        {
-            _logger.Log("Clearing Entity Framework context...");
-            _entityContext.ChangeTracker().Clear();
-
-            _logger.Log("Clearing Azure Queue context...");
-            _queueContext.Clear();
-
-            _logger.Log("Clearing Azure Table context...");
-            _tableContext.Clear();
-
-            _logger.Log("Clearing Azure Blob context...");
-            _blobContext.Clear();
         }
 
         /// <summary>

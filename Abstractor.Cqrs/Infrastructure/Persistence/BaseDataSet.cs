@@ -13,6 +13,9 @@ namespace Abstractor.Cqrs.Infrastructure.Persistence
     {
         private readonly bool _doRollback;
 
+        /// <summary>
+        ///     Stores all the operations performed into the current instance.
+        /// </summary>
         protected IList<BaseDataSetOperation> Operations { get; }
 
         /// <param name="doRollback">Optional parameter that informs whether the data set can rollback the operations.</param>
@@ -55,44 +58,70 @@ namespace Abstractor.Cqrs.Infrastructure.Persistence
         }
 
         /// <summary>
-        ///     Executes all pending operations.
+        ///     Adds a delete operation.
         /// </summary>
-        /// <param name="done">State to filter the operations.</param>
-        private void Execute(bool done)
+        /// <param name="entity">Entity to be deleted.</param>
+        public void Delete(TEntity entity)
         {
-            foreach (var operation in Operations.Where(p => p.Done == done).ToList())
+            Operations.Add(new BaseDataSetOperation
             {
-                switch (operation.Type)
-                {
-                    case BaseDataSetOperationType.Insert:
-                        DoInsert(operation);
-                        break;
-                    case BaseDataSetOperationType.Delete:
-                        DoDelete(operation);
-                        break;
-                    case BaseDataSetOperationType.Update:
-                        DoUpdate(operation);
-                        break;
-                }
-            }
+                CurrentEntity = entity,
+                Type = BaseDataSetOperationType.Delete,
+                Done = false
+            });
         }
 
         /// <summary>
-        ///     Stores the previous state and calls the update hook.
+        ///     Adds an insert operation.
         /// </summary>
-        /// <param name="operation">Operation to be performed.</param>
-        private void DoUpdate(BaseDataSetOperation operation)
+        /// <param name="entity">Entity to be inserted.</param>
+        public void Insert(TEntity entity)
         {
-            if (operation.PreviousEntity == null)
-                operation.PreviousEntity = Get((TEntity) operation.CurrentEntity);
-
-            UpdateEntity((TEntity) operation.CurrentEntity);
-
-            operation.Done = !operation.Done;
-            var updated = operation.PreviousEntity;
-            operation.PreviousEntity = operation.CurrentEntity;
-            operation.CurrentEntity = updated;
+            Operations.Add(new BaseDataSetOperation
+            {
+                CurrentEntity = entity,
+                Type = BaseDataSetOperationType.Insert,
+                Done = false
+            });
         }
+
+        /// <summary>
+        ///     Adds an update operation.
+        /// </summary>
+        /// <param name="entity">Entity to be updated.</param>
+        public void Update(TEntity entity)
+        {
+            Operations.Add(new BaseDataSetOperation
+            {
+                CurrentEntity = entity,
+                Type = BaseDataSetOperationType.Update,
+                Done = false
+            });
+        }
+
+        /// <summary>
+        ///     Hook to the actual delete method of underlying persistence mechanism.
+        /// </summary>
+        /// <param name="entity">Entity to be deleted.</param>
+        protected abstract void DeleteEntity(TEntity entity);
+
+        /// <summary>
+        ///     Hook to the actual get method of underlying persistence mechanism.
+        /// </summary>
+        /// <param name="entity">Entity definition.</param>
+        protected abstract TEntity Get(TEntity entity);
+
+        /// <summary>
+        ///     Hook to the actual insert method of underlying persistence mechanism.
+        /// </summary>
+        /// <param name="entity">Entity to be inserted.</param>
+        protected abstract void InsertEntity(TEntity entity);
+
+        /// <summary>
+        ///     Hook to the actual update method of underlying persistence mechanism.
+        /// </summary>
+        /// <param name="entity">Entity to be updated.</param>
+        protected abstract void UpdateEntity(TEntity entity);
 
         /// <summary>
         ///     Stores the previous state, calls the delete hook and sets the insert operation.
@@ -125,69 +154,43 @@ namespace Abstractor.Cqrs.Infrastructure.Persistence
         }
 
         /// <summary>
-        ///     Hook to the actual insert method of underlying persistence mechanism.
+        ///     Stores the previous state and calls the update hook.
         /// </summary>
-        /// <param name="entity">Entity to be inserted.</param>
-        protected abstract void InsertEntity(TEntity entity);
-
-        /// <summary>
-        ///     Hook to the actual delete method of underlying persistence mechanism.
-        /// </summary>
-        /// <param name="entity">Entity to be deleted.</param>
-        protected abstract void DeleteEntity(TEntity entity);
-
-        /// <summary>
-        ///     Hook to the actual update method of underlying persistence mechanism.
-        /// </summary>
-        /// <param name="entity">Entity to be updated.</param>
-        protected abstract void UpdateEntity(TEntity entity);
-
-        /// <summary>
-        ///     Hook to the actual get method of underlying persistence mechanism.
-        /// </summary>
-        /// <param name="entity">Entity definition.</param>
-        protected abstract TEntity Get(TEntity entity);
-
-        /// <summary>
-        ///     Adds an insert operation.
-        /// </summary>
-        /// <param name="entity">Entity to be inserted.</param>
-        public void Insert(TEntity entity)
+        /// <param name="operation">Operation to be performed.</param>
+        private void DoUpdate(BaseDataSetOperation operation)
         {
-            Operations.Add(new BaseDataSetOperation
-            {
-                CurrentEntity = entity,
-                Type = BaseDataSetOperationType.Insert,
-                Done = false
-            });
+            if (operation.PreviousEntity == null)
+                operation.PreviousEntity = Get((TEntity) operation.CurrentEntity);
+
+            UpdateEntity((TEntity) operation.CurrentEntity);
+
+            operation.Done = !operation.Done;
+            var updated = operation.PreviousEntity;
+            operation.PreviousEntity = operation.CurrentEntity;
+            operation.CurrentEntity = updated;
         }
 
         /// <summary>
-        ///     Adds an update operation.
+        ///     Executes all pending operations.
         /// </summary>
-        /// <param name="entity">Entity to be updated.</param>
-        public void Update(TEntity entity)
+        /// <param name="done">State to filter the operations.</param>
+        private void Execute(bool done)
         {
-            Operations.Add(new BaseDataSetOperation
-            {
-                CurrentEntity = entity,
-                Type = BaseDataSetOperationType.Update,
-                Done = false
-            });
-        }
-
-        /// <summary>
-        ///     Adds a delete operation.
-        /// </summary>
-        /// <param name="entity">Entity to be deleted.</param>
-        public void Delete(TEntity entity)
-        {
-            Operations.Add(new BaseDataSetOperation
-            {
-                CurrentEntity = entity,
-                Type = BaseDataSetOperationType.Delete,
-                Done = false
-            });
+            foreach (var operation in Operations.Where(p => p.Done == done).ToList())
+                switch (operation.Type)
+                {
+                    case BaseDataSetOperationType.Insert:
+                        DoInsert(operation);
+                        break;
+                    case BaseDataSetOperationType.Delete:
+                        DoDelete(operation);
+                        break;
+                    case BaseDataSetOperationType.Update:
+                        DoUpdate(operation);
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
         }
     }
 }

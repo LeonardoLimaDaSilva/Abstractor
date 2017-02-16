@@ -22,7 +22,7 @@ namespace Abstractor.Cqrs.AzureStorage.Blob
         }
 
         /// <summary>
-        ///     Gets an instance of an AzureBlobSet of given <see cref="TEntity" /> type.
+        ///     Gets an instance of an AzureBlobSet of given TEntity type.
         /// </summary>
         /// <typeparam name="TEntity">Entity type.</typeparam>
         /// <returns>Data set abstraction.</returns>

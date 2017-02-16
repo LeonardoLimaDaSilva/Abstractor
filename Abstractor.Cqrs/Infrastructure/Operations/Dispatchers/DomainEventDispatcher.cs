@@ -11,6 +11,10 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Dispatchers
     {
         private readonly IContainer _container;
 
+        /// <summary>
+        ///     DomainEventDispatcher constructor.
+        /// </summary>
+        /// <param name="container">Inversion of control container.</param>
         public DomainEventDispatcher(IContainer container)
         {
             _container = container;
@@ -24,7 +28,7 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Dispatchers
         {
             Guard.ArgumentIsNotNull(domainEvent, nameof(domainEvent));
 
-            var handlerType = typeof (IDomainEventHandler<>).MakeGenericType(domainEvent.GetType());
+            var handlerType = typeof(IDomainEventHandler<>).MakeGenericType(domainEvent.GetType());
             dynamic handlers = _container.GetAllInstances(handlerType);
 
             foreach (var handler in handlers)

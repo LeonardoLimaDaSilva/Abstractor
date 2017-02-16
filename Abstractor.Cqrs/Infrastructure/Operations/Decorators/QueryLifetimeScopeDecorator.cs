@@ -15,6 +15,11 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
         private readonly IContainer _container;
         private readonly Func<IQueryHandler<TQuery, TResult>> _handlerFactory;
 
+        /// <summary>
+        ///     QueryLifetimeScopeDecorator constructor.
+        /// </summary>
+        /// <param name="container"></param>
+        /// <param name="handlerFactory"></param>
         public QueryLifetimeScopeDecorator(
             IContainer container,
             Func<IQueryHandler<TQuery, TResult>> handlerFactory)
@@ -34,7 +39,9 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
                 return _handlerFactory().Handle(query);
 
             using (_container.BeginLifetimeScope())
+            {
                 return _handlerFactory().Handle(query);
+            }
         }
     }
 }

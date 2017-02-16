@@ -18,10 +18,19 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
         private readonly IAttributeFinder _attributeFinder;
         private readonly Func<ICommandHandler<TCommand>> _handlerFactory;
         private readonly Func<ILogger> _logger;
-        private readonly GlobalSettings _settings;
         private readonly ILoggerSerializer _loggerSerializer;
+        private readonly GlobalSettings _settings;
         private readonly IStopwatch _stopwatch;
 
+        /// <summary>
+        ///     CommandLoggerDecorator constructor.
+        /// </summary>
+        /// <param name="handlerFactory"></param>
+        /// <param name="attributeFinder"></param>
+        /// <param name="stopwatch"></param>
+        /// <param name="loggerSerializer"></param>
+        /// <param name="logger"></param>
+        /// <param name="settings"></param>
         public CommandLoggerDecorator(
             Func<ICommandHandler<TCommand>> handlerFactory,
             IAttributeFinder attributeFinder,
@@ -45,7 +54,7 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
         /// <returns>List of domain events raised by the command, if any.</returns>
         public IEnumerable<IDomainEvent> Handle(TCommand command)
         {
-            if (!_attributeFinder.Decorates(command.GetType(), typeof (LogAttribute)) && !_settings.EnableLogging)
+            if (!_attributeFinder.Decorates(command.GetType(), typeof(LogAttribute)) && !_settings.EnableLogging)
                 return _handlerFactory().Handle(command)?.ToList();
 
             _stopwatch.Start();

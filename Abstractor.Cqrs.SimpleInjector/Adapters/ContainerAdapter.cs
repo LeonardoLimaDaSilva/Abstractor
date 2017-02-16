@@ -15,6 +15,10 @@ namespace Abstractor.Cqrs.SimpleInjector.Adapters
     {
         private readonly Container _container;
 
+        /// <summary>
+        ///     ContainerAdapter constructor.
+        /// </summary>
+        /// <param name="container">Simple Injector container.</param>
         public ContainerAdapter(Container container)
         {
             _container = container;
@@ -22,13 +26,33 @@ namespace Abstractor.Cqrs.SimpleInjector.Adapters
         }
 
         /// <summary>
-        ///     Gets and instance of the given type.
+        ///     Provides functionality for resolving delegates of type <see cref="Func{TResult}" />.
         /// </summary>
-        /// <param name="type">Type of instance.</param>
-        /// <returns>Instance of given type.</returns>
-        public object GetInstance(Type type)
+        public void AllowResolvingFuncFactories()
         {
-            return _container.GetInstance(type);
+            _container.ResolveUnregisteredType += (s, e) =>
+            {
+                var type = e.UnregisteredServiceType;
+
+                if (!type.IsGenericType || (type.GetGenericTypeDefinition() != typeof(Func<>))) return;
+
+                var serviceType = type.GetGenericArguments().First();
+                var registration = _container.GetRegistration(serviceType, true);
+                var funcType = typeof(Func<>).MakeGenericType(serviceType);
+
+                // Constructs the Func<> delegate and registers into the container
+                var factoryDelegate = Expression.Lambda(funcType, registration.BuildExpression()).Compile();
+                e.Register(Expression.Constant(factoryDelegate));
+            };
+        }
+
+        /// <summary>
+        ///     Begins a new scope for the given container on the current thread.
+        /// </summary>
+        /// <returns>New scope.</returns>
+        public IDisposable BeginLifetimeScope()
+        {
+            return _container.BeginLifetimeScope();
         }
 
         /// <summary>
@@ -51,56 +75,23 @@ namespace Abstractor.Cqrs.SimpleInjector.Adapters
         }
 
         /// <summary>
-        ///     Begins a new scope for the given container on the current thread.
+        ///     Gets and instance of the given type.
         /// </summary>
-        /// <returns>New scope.</returns>
-        public IDisposable BeginLifetimeScope()
+        /// <param name="type">Type of instance.</param>
+        /// <returns>Instance of given type.</returns>
+        public object GetInstance(Type type)
         {
-            return _container.BeginLifetimeScope();
+            return _container.GetInstance(type);
         }
 
         /// <summary>
-        ///     Registers that an instance of type <see cref="TImplementation" /> will be returned when an instance of type
-        ///     <see cref="TService" /> is requested. Uses the container's configured scope lifetime.
+        ///     Verify whether the exception is an activation exception.
         /// </summary>
-        /// <typeparam name="TService">Type of abstraction.</typeparam>
-        /// <typeparam name="TImplementation">Type of the implementation.</typeparam>
-        public void RegisterScoped<TService, TImplementation>()
+        /// <param name="exception">Exception to be verified.</param>
+        /// <returns></returns>
+        public bool IsActivationException(Exception exception)
         {
-            _container.Register(typeof(TService), typeof(TImplementation), Lifestyle.Scoped);
-        }
-
-        /// <summary>
-        ///     Registers that an instance of type <see cref="serviceType" /> will be returned when an instance of type
-        ///     <see cref="implementationType" /> is requested. Uses the container's configured scope lifetime.
-        /// </summary>
-        /// <param name="serviceType">Type of the abstraction.</param>
-        /// <param name="implementationType">Type of the implementation.</param>
-        public void RegisterScoped(Type serviceType, Type implementationType)
-        {
-            _container.Register(serviceType, implementationType, Lifestyle.Scoped);
-        }
-
-        /// <summary>
-        ///     Registers that a new instance of type <see cref="serviceType" /> will be returned each time that an instance of
-        ///     type <see cref="implementationType" /> is requested.
-        /// </summary>
-        /// <param name="serviceType">Type of the abstraction.</param>
-        /// <param name="implementationType">Type of the implementation.</param>
-        public void RegisterTransient(Type serviceType, Type implementationType)
-        {
-            _container.Register(serviceType, implementationType, Lifestyle.Transient);
-        }
-
-        /// <summary>
-        ///     Registers all concrete types contained in the assemblies that implements an open generic abstraction, and returns a
-        ///     new instance each time an instance of <see cref="openGenericServiceType" /> is requested.
-        /// </summary>
-        /// <param name="openGenericServiceType">Type of the abstraction.</param>
-        /// <param name="assemblies">Assemblies that contains the concrete type</param>
-        public void RegisterTransient(Type openGenericServiceType, IEnumerable<Assembly> assemblies)
-        {
-            _container.Register(openGenericServiceType, assemblies, Lifestyle.Transient);
+            return exception is ActivationException;
         }
 
         /// <summary>
@@ -115,32 +106,17 @@ namespace Abstractor.Cqrs.SimpleInjector.Adapters
         }
 
         /// <summary>
-        ///     Registers that an instance of type <see cref="TImplementation" /> will return the same instance of type
-        ///     <see cref="TService" /> when requested.
-        /// </summary>
-        /// <typeparam name="TService">Type of abstraction.</typeparam>
-        /// <typeparam name="TImplementation">Type of the implementation.</typeparam>
-        public void RegisterSingleton<TService, TImplementation>()
-            where TService : class
-            where TImplementation : class, TService
-        {
-            _container.Register(typeof(TService), typeof(TImplementation), Lifestyle.Singleton);
-        }
-
-        /// <summary>
-        ///     Ensures that the a new instance of the supplied <see cref="decoratorType" /> is returned, wrapping the original
-        ///     <see cref="serviceType" />.
+        ///     Ensures that the same instance of the supplied decoratorType is returned, wrapping the original serviceType.
         /// </summary>
         /// <param name="serviceType">Original type.</param>
         /// <param name="decoratorType">Type that wraps the original type.</param>
-        public void RegisterDecoratorTransient(Type serviceType, Type decoratorType)
+        public void RegisterDecoratorScoped(Type serviceType, Type decoratorType)
         {
-            _container.RegisterDecorator(serviceType, decoratorType, Lifestyle.Transient);
+            _container.RegisterDecorator(serviceType, decoratorType, Lifestyle.Scoped);
         }
 
         /// <summary>
-        ///     Ensures that the same instance of the supplied <see cref="decoratorType" /> is returned, wrapping the original
-        ///     <see cref="serviceType" />.
+        ///     Ensures that the same instance of the supplied decoratorType is returned, wrapping the original serviceType.
         /// </summary>
         /// <param name="serviceType">Original type.</param>
         /// <param name="decoratorType">Type that wraps the original type.</param>
@@ -150,14 +126,32 @@ namespace Abstractor.Cqrs.SimpleInjector.Adapters
         }
 
         /// <summary>
-        ///     Ensures that the same instance of the supplied <see cref="decoratorType" /> is returned, wrapping the original
-        ///     <see cref="serviceType" />.
+        ///     Ensures that the a new instance of the supplied decoratorType is returned, wrapping the original serviceType.
         /// </summary>
         /// <param name="serviceType">Original type.</param>
         /// <param name="decoratorType">Type that wraps the original type.</param>
-        public void RegisterDecoratorScoped(Type serviceType, Type decoratorType)
+        public void RegisterDecoratorTransient(Type serviceType, Type decoratorType)
         {
-            _container.RegisterDecorator(serviceType, decoratorType, Lifestyle.Scoped);
+            _container.RegisterDecorator(serviceType, decoratorType, Lifestyle.Transient);
+        }
+
+        /// <summary>
+        ///     Provides functionality for the deferred resolving of unregistered types.
+        /// </summary>
+        /// <typeparam name="TService">Type of abstraction.</typeparam>
+        /// <typeparam name="TImplementation">Type of the implementation.</typeparam>
+        public void RegisterLazyScoped<TService, TImplementation>() where TService : class
+            where TImplementation : class, TService
+        {
+            var registration = new Lazy<Registration>(
+                () => Lifestyle.Scoped
+                               .CreateRegistration<TService, TImplementation>(_container));
+
+            _container.ResolveUnregisteredType += (sender, e) =>
+            {
+                if (e.UnregisteredServiceType == typeof(TService))
+                    e.Register(registration.Value);
+            };
         }
 
         /// <summary>
@@ -171,7 +165,7 @@ namespace Abstractor.Cqrs.SimpleInjector.Adapters
         {
             var registration = new Lazy<Registration>(
                 () => Lifestyle.Singleton
-                    .CreateRegistration<TService, TImplementation>(_container));
+                               .CreateRegistration<TService, TImplementation>(_container));
 
             _container.ResolveUnregisteredType += (sender, e) =>
             {
@@ -181,47 +175,42 @@ namespace Abstractor.Cqrs.SimpleInjector.Adapters
         }
 
         /// <summary>
-        ///     Provides functionality for the deferred resolving of unregistered types.
+        ///     Registers that an instance of type TImplementation will be returned when an instance of type
+        ///     TService is requested. Uses the container's configured scope lifetime.
         /// </summary>
         /// <typeparam name="TService">Type of abstraction.</typeparam>
         /// <typeparam name="TImplementation">Type of the implementation.</typeparam>
-        public void RegisterLazyScoped<TService, TImplementation>() where TService : class
+        public void RegisterScoped<TService, TImplementation>()
+        {
+            _container.Register(typeof(TService), typeof(TImplementation), Lifestyle.Scoped);
+        }
+
+        /// <summary>
+        ///     Registers that an instance of type serviceType will be returned when an instance of type
+        ///     implementationType is requested. Uses the container's configured scope lifetime.
+        /// </summary>
+        /// <param name="serviceType">Type of the abstraction.</param>
+        /// <param name="implementationType">Type of the implementation.</param>
+        public void RegisterScoped(Type serviceType, Type implementationType)
+        {
+            _container.Register(serviceType, implementationType, Lifestyle.Scoped);
+        }
+
+        /// <summary>
+        ///     Registers that an instance of type TImplementation will return the same instance of type
+        ///     TService" when requested.
+        /// </summary>
+        /// <typeparam name="TService">Type of abstraction.</typeparam>
+        /// <typeparam name="TImplementation">Type of the implementation.</typeparam>
+        public void RegisterSingleton<TService, TImplementation>()
+            where TService : class
             where TImplementation : class, TService
         {
-            var registration = new Lazy<Registration>(
-                () => Lifestyle.Scoped
-                    .CreateRegistration<TService, TImplementation>(_container));
-
-            _container.ResolveUnregisteredType += (sender, e) =>
-            {
-                if (e.UnregisteredServiceType == typeof(TService))
-                    e.Register(registration.Value);
-            };
+            _container.Register(typeof(TService), typeof(TImplementation), Lifestyle.Singleton);
         }
 
         /// <summary>
-        ///     Provides functionality for resolving delegates of type <see cref="Func{T}" />.
-        /// </summary>
-        public void AllowResolvingFuncFactories()
-        {
-            _container.ResolveUnregisteredType += (s, e) =>
-            {
-                var type = e.UnregisteredServiceType;
-
-                if (!type.IsGenericType || type.GetGenericTypeDefinition() != typeof(Func<>)) return;
-
-                var serviceType = type.GetGenericArguments().First();
-                var registration = _container.GetRegistration(serviceType, true);
-                var funcType = typeof(Func<>).MakeGenericType(serviceType);
-
-                // Constructs the Func<> delegate and registers into the container
-                var factoryDelegate = Expression.Lambda(funcType, registration.BuildExpression()).Compile();
-                e.Register(Expression.Constant(factoryDelegate));
-            };
-        }
-
-        /// <summary>
-        ///     Registers the specified delegate that allows returning singleton instances of <see cref="TService" />.
+        ///     Registers the specified delegate that allows returning singleton instances of TService.
         /// </summary>
         /// <typeparam name="TService">Type to be registered.</typeparam>
         /// <param name="instanceCreator"><see cref="Func{T}" /> delegate.</param>
@@ -232,13 +221,25 @@ namespace Abstractor.Cqrs.SimpleInjector.Adapters
         }
 
         /// <summary>
-        ///     Verify whether the exception is an activation exception.
+        ///     Registers that a new instance of type serviceType will be returned each time that an instance of
+        ///     type implementationType is requested.
         /// </summary>
-        /// <param name="exception">Exception to be verified.</param>
-        /// <returns></returns>
-        public bool IsActivationException(Exception exception)
+        /// <param name="serviceType">Type of the abstraction.</param>
+        /// <param name="implementationType">Type of the implementation.</param>
+        public void RegisterTransient(Type serviceType, Type implementationType)
         {
-            return exception is ActivationException;
+            _container.Register(serviceType, implementationType, Lifestyle.Transient);
+        }
+
+        /// <summary>
+        ///     Registers all concrete types contained in the assemblies that implements an open generic abstraction, and returns a
+        ///     new instance each time an instance of openGenericServiceType is requested.
+        /// </summary>
+        /// <param name="openGenericServiceType">Type of the abstraction.</param>
+        /// <param name="assemblies">Assemblies that contains the concrete type</param>
+        public void RegisterTransient(Type openGenericServiceType, IEnumerable<Assembly> assemblies)
+        {
+            _container.Register(openGenericServiceType, assemblies, Lifestyle.Transient);
         }
     }
 }

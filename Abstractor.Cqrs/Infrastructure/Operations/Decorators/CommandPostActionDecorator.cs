@@ -16,6 +16,11 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
         private readonly ICommandPostAction _commandPostAction;
         private readonly Func<ICommandHandler<TCommand>> _handlerFactory;
 
+        /// <summary>
+        ///     CommandPostActionDecorator constructor.
+        /// </summary>
+        /// <param name="handler"></param>
+        /// <param name="commandPostAction"></param>
         public CommandPostActionDecorator(
             Func<ICommandHandler<TCommand>> handler,
             ICommandPostAction commandPostAction)

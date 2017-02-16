@@ -15,10 +15,19 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
         private readonly IAttributeFinder _attributeFinder;
         private readonly Func<IDomainEventHandler<TEvent>> _handlerFactory;
         private readonly Func<ILogger> _logger;
-        private readonly GlobalSettings _settings;
         private readonly ILoggerSerializer _loggerSerializer;
+        private readonly GlobalSettings _settings;
         private readonly IStopwatch _stopwatch;
 
+        /// <summary>
+        ///     DomainEventLoggerDecorator constructor.
+        /// </summary>
+        /// <param name="handlerFactory"></param>
+        /// <param name="attributeFinder"></param>
+        /// <param name="stopwatch"></param>
+        /// <param name="loggerSerializer"></param>
+        /// <param name="logger"></param>
+        /// <param name="settings"></param>
         public DomainEventLoggerDecorator(
             Func<IDomainEventHandler<TEvent>> handlerFactory,
             IAttributeFinder attributeFinder,
@@ -43,7 +52,7 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
         {
             var handler = _handlerFactory();
 
-            if (!_attributeFinder.Decorates(domainEvent.GetType(), typeof (LogAttribute)) && !_settings.EnableLogging)
+            if (!_attributeFinder.Decorates(domainEvent.GetType(), typeof(LogAttribute)) && !_settings.EnableLogging)
             {
                 handler.Handle(domainEvent);
                 return;

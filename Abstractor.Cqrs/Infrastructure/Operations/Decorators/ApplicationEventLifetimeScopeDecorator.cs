@@ -14,6 +14,11 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
         private readonly IContainer _container;
         private readonly Func<IApplicationEventHandler<TEvent>> _handlerFactory;
 
+        /// <summary>
+        ///     ApplicationEventLifetimeScopeDecorator constructor.
+        /// </summary>
+        /// <param name="container"></param>
+        /// <param name="handlerFactory"></param>
         public ApplicationEventLifetimeScopeDecorator(
             IContainer container,
             Func<IApplicationEventHandler<TEvent>> handlerFactory)
@@ -30,12 +35,14 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
         {
             if (_container.GetCurrentLifetimeScope() != null)
             {
-                _handlerFactory().Handle((dynamic)applicationEvent);
+                _handlerFactory().Handle((dynamic) applicationEvent);
                 return;
             }
 
             using (_container.BeginLifetimeScope())
-                _handlerFactory().Handle((dynamic)applicationEvent);
+            {
+                _handlerFactory().Handle((dynamic) applicationEvent);
+            }
         }
     }
 }

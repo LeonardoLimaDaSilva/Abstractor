@@ -9,10 +9,15 @@ namespace Abstractor.Cqrs.Infrastructure.CrossCuttingConcerns
     /// </summary>
     public class CommandException : Exception, ICommand, IApplicationEvent
     {
+        /// <summary>
+        /// </summary>
         public CommandException()
         {
         }
 
+        /// <summary>
+        /// </summary>
+        /// <param name="message">Exception message.</param>
         public CommandException(string message)
             : base(message)
         {

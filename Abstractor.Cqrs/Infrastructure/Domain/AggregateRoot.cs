@@ -17,6 +17,10 @@ namespace Abstractor.Cqrs.Infrastructure.Domain
         /// </summary>
         public IReadOnlyCollection<IDomainEvent> EmittedEvents => new ReadOnlyCollection<IDomainEvent>(_domainEvents);
 
+        /// <summary>
+        ///     Constructs the aggregate with an identifier.
+        /// </summary>
+        /// <param name="id">Aggregate identifier.</param>
         protected AggregateRoot(TId id)
             : base(id)
         {

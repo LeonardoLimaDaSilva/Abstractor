@@ -7,10 +7,15 @@ namespace Abstractor.Cqrs.Infrastructure.CrossCuttingConcerns
     /// </summary>
     public class EntityNotFoundException : Exception
     {
+        /// <summary>
+        /// </summary>
         public EntityNotFoundException()
         {
         }
 
+        /// <summary>
+        /// </summary>
+        /// <param name="message">Exception message.</param>
         public EntityNotFoundException(string message)
             : base(message)
         {

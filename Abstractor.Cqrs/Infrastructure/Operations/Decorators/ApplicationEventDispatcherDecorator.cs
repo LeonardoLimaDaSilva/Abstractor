@@ -18,6 +18,11 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
         private readonly IApplicationEventDispatcher _eventDispatcher;
         private readonly Func<ICommandHandler<TCommand>> _handlerFactory;
 
+        /// <summary>
+        ///     ApplicationEventDispatcherDecorator constructor.
+        /// </summary>
+        /// <param name="eventDispatcher"></param>
+        /// <param name="handlerFactory"></param>
         public ApplicationEventDispatcherDecorator(
             IApplicationEventDispatcher eventDispatcher,
             Func<ICommandHandler<TCommand>> handlerFactory)

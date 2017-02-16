@@ -16,12 +16,20 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
     public sealed class CommandTransactionDecorator<TCommand> : ICommandHandler<TCommand>
         where TCommand : ICommand
     {
-        private readonly GlobalSettings _settings;
         private readonly IAttributeFinder _attributeFinder;
         private readonly Func<ICommandHandler<TCommand>> _handlerFactory;
         private readonly Func<ILogger> _logger;
+        private readonly GlobalSettings _settings;
         private readonly IUnitOfWork _unitOfWork;
 
+        /// <summary>
+        ///     CommandTransactionDecorator constructor.
+        /// </summary>
+        /// <param name="settings"></param>
+        /// <param name="attributeFinder"></param>
+        /// <param name="logger"></param>
+        /// <param name="unitOfWork"></param>
+        /// <param name="handlerFactory"></param>
         public CommandTransactionDecorator(
             GlobalSettings settings,
             IAttributeFinder attributeFinder,
@@ -43,7 +51,8 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
         /// <returns>List of domain events raised by the command, if any.</returns>
         public IEnumerable<IDomainEvent> Handle(TCommand command)
         {
-            if (!_attributeFinder.Decorates(command.GetType(), typeof(TransactionalAttribute)) && !_settings.EnableTransactions)
+            if (!_attributeFinder.Decorates(command.GetType(), typeof(TransactionalAttribute)) &&
+                !_settings.EnableTransactions)
                 return _handlerFactory().Handle(command)?.ToList();
 
             var log = _attributeFinder.Decorates(command.GetType(), typeof(LogAttribute)) || _settings.EnableLogging;

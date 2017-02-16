@@ -2,7 +2,7 @@
 {
     // ReSharper disable UnusedTypeParameter
     /// <summary>
-    ///     Marks a class as a query with the return of type <see cref="TResult" />.
+    ///     Marks a class as a query with the return of type TResult.
     /// </summary>
     /// <typeparam name="TResult">Tipo de retorno da consulta.</typeparam>
     public interface IQuery<out TResult>
