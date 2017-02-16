@@ -20,46 +20,22 @@ namespace Abstractor.Cqrs.Test.Domain
             }
         }
 
-        [Theory]
-        [InlineData(1, "xxx", 1, "xyz")]
-        [InlineData(1, "xxx", 2, "xxx")]
-        [InlineData(1, "xxx", 2, "xyz")]
-        public void Equals_AnyValueIsDifferent_ShouldBeFalse(int p1Vo1, string p2Vo1, int p1Vo2, string p2Vo2)
+        [Fact]
+        public void DifferenceOperator_AllValuesAreEqual_ShouldBeFalse()
         {
             var vo1 = new ValueObject1
             {
-                Property1 = p1Vo1,
-                Property2 = p2Vo1
+                Property1 = 1,
+                Property2 = "xxx"
             };
 
             var vo2 = new ValueObject1
             {
-                Property1 = p1Vo2,
-                Property2 = p2Vo2
+                Property1 = 1,
+                Property2 = "xxx"
             };
 
-            vo1.Equals(vo2).Should().Be.False();
-        }
-
-        [Theory]
-        [InlineData(1, "xxx", 1, "xyz")]
-        [InlineData(1, "xxx", 2, "xxx")]
-        [InlineData(1, "xxx", 2, "xyz")]
-        public void EqualsOperator_AnyValueIsDifferent_ShouldBeFalse(int p1Vo1, string p2Vo1, int p1Vo2, string p2Vo2)
-        {
-            var vo1 = new ValueObject1
-            {
-                Property1 = p1Vo1,
-                Property2 = p2Vo1
-            };
-
-            var vo2 = new ValueObject1
-            {
-                Property1 = p1Vo2,
-                Property2 = p2Vo2
-            };
-
-            (vo1 == vo2).Should().Be.False();
+            (vo1 != vo2).Should().Be.False();
         }
 
         [Theory]
@@ -88,24 +64,6 @@ namespace Abstractor.Cqrs.Test.Domain
         }
 
         [Fact]
-        public void DifferenceOperator_AllValuesAreEqual_ShouldBeFalse()
-        {
-            var vo1 = new ValueObject1
-            {
-                Property1 = 1,
-                Property2 = "xxx"
-            };
-
-            var vo2 = new ValueObject1
-            {
-                Property1 = 1,
-                Property2 = "xxx"
-            };
-
-            (vo1 != vo2).Should().Be.False();
-        }
-
-        [Fact]
         public void Equals_AllValuesAreEqual_ShouldBeTrue()
         {
             var vo1 = new ValueObject1
@@ -121,6 +79,27 @@ namespace Abstractor.Cqrs.Test.Domain
             };
 
             vo1.Equals(vo2).Should().Be.True();
+        }
+
+        [Theory]
+        [InlineData(1, "xxx", 1, "xyz")]
+        [InlineData(1, "xxx", 2, "xxx")]
+        [InlineData(1, "xxx", 2, "xyz")]
+        public void Equals_AnyValueIsDifferent_ShouldBeFalse(int p1Vo1, string p2Vo1, int p1Vo2, string p2Vo2)
+        {
+            var vo1 = new ValueObject1
+            {
+                Property1 = p1Vo1,
+                Property2 = p2Vo1
+            };
+
+            var vo2 = new ValueObject1
+            {
+                Property1 = p1Vo2,
+                Property2 = p2Vo2
+            };
+
+            vo1.Equals(vo2).Should().Be.False();
         }
 
         [Fact]
@@ -139,6 +118,27 @@ namespace Abstractor.Cqrs.Test.Domain
             };
 
             (vo1 == vo2).Should().Be.True();
+        }
+
+        [Theory]
+        [InlineData(1, "xxx", 1, "xyz")]
+        [InlineData(1, "xxx", 2, "xxx")]
+        [InlineData(1, "xxx", 2, "xyz")]
+        public void EqualsOperator_AnyValueIsDifferent_ShouldBeFalse(int p1Vo1, string p2Vo1, int p1Vo2, string p2Vo2)
+        {
+            var vo1 = new ValueObject1
+            {
+                Property1 = p1Vo1,
+                Property2 = p2Vo1
+            };
+
+            var vo2 = new ValueObject1
+            {
+                Property1 = p1Vo2,
+                Property2 = p2Vo2
+            };
+
+            (vo1 == vo2).Should().Be.False();
         }
 
         [Fact]

@@ -46,11 +46,11 @@ namespace Abstractor.Test.Query
         }
 
         [Fact]
-        public void QueryDispatcher_InterfaceBefore_ShouldHandle()
+        public void QueryDispatcher_InterfaceAfter_ShouldHandle()
         {
             // Arrange
 
-            var query = new Fake1Query();
+            var query = new Fake2Query();
 
             // Act and assert
 
@@ -60,11 +60,11 @@ namespace Abstractor.Test.Query
         }
 
         [Fact]
-        public void QueryDispatcher_InterfaceAfter_ShouldHandle()
+        public void QueryDispatcher_InterfaceBefore_ShouldHandle()
         {
             // Arrange
-            
-            var query = new Fake2Query();
+
+            var query = new Fake1Query();
 
             // Act and assert
 

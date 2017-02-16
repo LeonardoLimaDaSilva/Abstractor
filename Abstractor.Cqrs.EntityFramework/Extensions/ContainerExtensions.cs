@@ -14,7 +14,7 @@ namespace Abstractor.Cqrs.EntityFramework.Extensions
         /// <summary>
         ///     Registers the Entity Framework integration packages.
         /// </summary>
-        /// <typeparam name="TContext">Application context that implements <see cref="IEntityFrameworkContext"/>.</typeparam>
+        /// <typeparam name="TContext">Application context that implements <see cref="IEntityFrameworkContext" />.</typeparam>
         /// <param name="container">Inversion of control container.</param>
         public static void RegisterEntityFramework<TContext>(this IContainer container)
             where TContext : IEntityFrameworkContext
@@ -23,7 +23,7 @@ namespace Abstractor.Cqrs.EntityFramework.Extensions
 
             container.RegisterScoped<IEntityFrameworkContext, TContext>();
             container.RegisterLazyScoped<IUnitOfWork, EntityFrameworkUnitOfWork>();
-            container.RegisterScoped(typeof (IEntityFrameworkRepository<>), typeof (EntityFrameworkRepository<>));
+            container.RegisterScoped(typeof(IEntityFrameworkRepository<>), typeof(EntityFrameworkRepository<>));
         }
     }
 }

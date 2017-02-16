@@ -6,13 +6,13 @@
     public sealed class GlobalSettings
     {
         /// <summary>
-        ///     Enable the transactional behavior globally.
-        /// </summary>
-        public bool EnableTransactions { get; set; }
-
-        /// <summary>
         ///     Enable the logging behavior globally.
         /// </summary>
         public bool EnableLogging { get; set; }
+
+        /// <summary>
+        ///     Enable the transactional behavior globally.
+        /// </summary>
+        public bool EnableTransactions { get; set; }
     }
 }

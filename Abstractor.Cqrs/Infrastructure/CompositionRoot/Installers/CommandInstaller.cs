@@ -17,32 +17,32 @@ namespace Abstractor.Cqrs.Infrastructure.CompositionRoot.Installers
             Guard.ArgumentIsNotNull(settings.ApplicationAssemblies, nameof(settings.ApplicationAssemblies));
 
             container.RegisterSingleton<ICommandDispatcher, CommandDispatcher>();
-            container.RegisterTransient(typeof (ICommandHandler<>), settings.ApplicationAssemblies);
+            container.RegisterTransient(typeof(ICommandHandler<>), settings.ApplicationAssemblies);
             container.RegisterScoped<ICommandPostAction, CommandPostAction>();
 
             container.RegisterDecoratorTransient(
-                typeof (ICommandHandler<>),
-                typeof (DomainEventDispatcherDecorator<>));
+                typeof(ICommandHandler<>),
+                typeof(DomainEventDispatcherDecorator<>));
 
             container.RegisterDecoratorTransient(
-                typeof (ICommandHandler<>),
-                typeof (CommandTransactionDecorator<>));
+                typeof(ICommandHandler<>),
+                typeof(CommandTransactionDecorator<>));
 
             container.RegisterDecoratorTransient(
-                typeof (ICommandHandler<>),
-                typeof (CommandPostActionDecorator<>));
+                typeof(ICommandHandler<>),
+                typeof(CommandPostActionDecorator<>));
 
             container.RegisterDecoratorSingleton(
-                typeof (ICommandHandler<>),
-                typeof (ApplicationEventDispatcherDecorator<>));
+                typeof(ICommandHandler<>),
+                typeof(ApplicationEventDispatcherDecorator<>));
 
             container.RegisterDecoratorSingleton(
-                typeof (ICommandHandler<>),
-                typeof (CommandValidationDecorator<>));
+                typeof(ICommandHandler<>),
+                typeof(CommandValidationDecorator<>));
 
             container.RegisterDecoratorSingleton(
-                typeof (ICommandHandler<>),
-                typeof (CommandLoggerDecorator<>));
+                typeof(ICommandHandler<>),
+                typeof(CommandLoggerDecorator<>));
 
             container.RegisterDecoratorSingleton(
                 typeof(ICommandHandler<>),

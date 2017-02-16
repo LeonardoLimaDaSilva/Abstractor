@@ -13,11 +13,11 @@ namespace Abstractor.Test.Command
     {
         public class FakeCommand : ICommand
         {
+            public bool ExceptionHandlerExecuted { get; set; }
+
             public bool HandlerExecuted { get; set; }
 
             public bool ThrowCommandException { get; set; }
-
-            public bool ExceptionHandlerExecuted { get; set; }
         }
 
         public class FakeCommandHandler : ICommandHandler<FakeCommand>
@@ -57,6 +57,18 @@ namespace Abstractor.Test.Command
         }
 
         [Fact]
+        public void Dispatch_FakeCommandWithNoHandler_ShouldThrowException()
+        {
+            // Arrange
+
+            var command = new FakeCommandWithNoHandler();
+
+            // Act and assert
+
+            Assert.Throws<CommandHandlerNotFoundException>(() => CommandDispatcher.Dispatch(command));
+        }
+
+        [Fact]
         public void Dispatch_ShouldExecuteHandler()
         {
             // Arrange
@@ -66,36 +78,6 @@ namespace Abstractor.Test.Command
             // Act
 
             CommandDispatcher.Dispatch(command);
-
-            // Assert
-
-            command.HandlerExecuted.Should().Be.True();
-        }
-
-        [Fact]
-        public void DispatchAsync_DoNotAwait_ShouldEnsureThatCommandWasDispatchedAsyncly()
-        {
-            // Arrange
-
-            var command = new FakeCommand();
-
-            // Act
-
-            CommandDispatcher.DispatchAsync(command);
-
-            // Assert
-
-            command.HandlerExecuted.Should().Be.False();
-        }
-
-        [Fact]
-        public async void DispatchAsync_Await_ShouldExecuteHandler()
-        {
-            // Arrange
-
-            var command = new FakeCommand();
-
-            await CommandDispatcher.DispatchAsync(command);
 
             // Assert
 
@@ -121,11 +103,41 @@ namespace Abstractor.Test.Command
         }
 
         [Fact]
+        public async void DispatchAsync_Await_ShouldExecuteHandler()
+        {
+            // Arrange
+
+            var command = new FakeCommand();
+
+            await CommandDispatcher.DispatchAsync(command);
+
+            // Assert
+
+            command.HandlerExecuted.Should().Be.True();
+        }
+
+        [Fact]
+        public void DispatchAsync_DoNotAwait_ShouldEnsureThatCommandWasDispatchedAsyncly()
+        {
+            // Arrange
+
+            var command = new FakeCommand();
+
+            // Act
+
+            CommandDispatcher.DispatchAsync(command);
+
+            // Assert
+
+            command.HandlerExecuted.Should().Be.False();
+        }
+
+        [Fact]
         public async void DispatchAsync_ThrowsCommandException_ShouldExecuteExceptionHandlerAndRethrow()
         {
             // Arrange
 
-            var command = new FakeCommand { ThrowCommandException = true };
+            var command = new FakeCommand {ThrowCommandException = true};
 
             // Act
 
@@ -136,18 +148,6 @@ namespace Abstractor.Test.Command
             command.HandlerExecuted.Should().Be.True();
 
             command.ExceptionHandlerExecuted.Should().Be.True();
-        }
-
-        [Fact]
-        public void Dispatch_FakeCommandWithNoHandler_ShouldThrowException()
-        {
-            // Arrange
-
-            var command = new FakeCommandWithNoHandler();
-
-            // Act and assert
-
-            Assert.Throws<CommandHandlerNotFoundException>(() => CommandDispatcher.Dispatch(command));
         }
     }
 }

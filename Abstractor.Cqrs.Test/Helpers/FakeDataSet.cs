@@ -7,11 +7,11 @@ namespace Abstractor.Cqrs.Test.Helpers
     {
         private TEntity _entity;
 
-        public IList<BaseDataSetOperation> InternalOperations => Operations;
+        public int Deletes { get; private set; }
 
         public int Inserts { get; private set; }
 
-        public int Deletes { get; private set; }
+        public IList<BaseDataSetOperation> InternalOperations => Operations;
 
         public int Updates { get; private set; }
 
@@ -25,24 +25,24 @@ namespace Abstractor.Cqrs.Test.Helpers
             _entity = entity;
         }
 
-        protected override void InsertEntity(TEntity entity)
-        {
-            Inserts++;
-        }
-
         protected override void DeleteEntity(TEntity entity)
         {
             Deletes++;
         }
 
-        protected override void UpdateEntity(TEntity entity)
-        {
-            Updates++;
-        }
-
         protected override TEntity Get(TEntity entity)
         {
             return _entity;
+        }
+
+        protected override void InsertEntity(TEntity entity)
+        {
+            Inserts++;
+        }
+
+        protected override void UpdateEntity(TEntity entity)
+        {
+            Updates++;
         }
     }
 }

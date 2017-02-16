@@ -17,7 +17,7 @@ namespace Abstractor.Test.Command
             private readonly ExecuteOperation _command;
 
             public FakeAggregate(ExecuteOperation command)
-                :base(Guid.Empty)
+                : base(Guid.Empty)
             {
                 _command = command;
             }
@@ -35,9 +35,9 @@ namespace Abstractor.Test.Command
         [Transactional]
         public class ExecuteOperation : ICommand
         {
-            public int OperationExecutedHandledCount { get; set; }
-
             public bool AllowExecuteOperations { get; set; }
+
+            public int OperationExecutedHandledCount { get; set; }
         }
 
         public class OperationExecuted : IDomainEvent

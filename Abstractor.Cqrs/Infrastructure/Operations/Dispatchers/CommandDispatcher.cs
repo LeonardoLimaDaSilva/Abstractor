@@ -15,7 +15,7 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Dispatchers
         private readonly IContainer _container;
 
         /// <summary>
-        /// CommandDispatcher constructor.
+        ///     CommandDispatcher constructor.
         /// </summary>
         /// <param name="container">Inversion of control container.</param>
         public CommandDispatcher(IContainer container)
@@ -56,11 +56,11 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Dispatchers
             {
                 try
                 {
-                    GetCommandHandler(command.GetType()).Handle((dynamic)command); 
+                    GetCommandHandler(command.GetType()).Handle((dynamic) command);
                 }
                 catch (CommandException ex)
                 {
-                    GetCommandHandler(ex.GetType()).Handle((dynamic)ex);
+                    GetCommandHandler(ex.GetType()).Handle((dynamic) ex);
                     throw;
                 }
             });
@@ -68,7 +68,7 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Dispatchers
 
         private dynamic GetCommandHandler(Type commandType)
         {
-            var handlerType = typeof (ICommandHandler<>).MakeGenericType(commandType);
+            var handlerType = typeof(ICommandHandler<>).MakeGenericType(commandType);
 
             try
             {

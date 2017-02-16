@@ -28,7 +28,6 @@ namespace Abstractor.Test.Helpers
 
             // ReSharper disable once InvertIf
             if (_container == null)
-            {
                 lock (Lock)
                 {
                     if (_container != null) return _container;
@@ -37,7 +36,7 @@ namespace Abstractor.Test.Helpers
 
                     _container.Options.DefaultScopedLifestyle = new LifetimeScopeLifestyle();
 
-                    var currentAssembly = new[] {typeof (CompositionRoot).Assembly};
+                    var currentAssembly = new[] {typeof(CompositionRoot).Assembly};
 
                     // Example of discovery by convention
                     //var concreteTypes = currentAssembly
@@ -64,7 +63,6 @@ namespace Abstractor.Test.Helpers
 
                     _container.Verify();
                 }
-            }
 
             return _container;
         }

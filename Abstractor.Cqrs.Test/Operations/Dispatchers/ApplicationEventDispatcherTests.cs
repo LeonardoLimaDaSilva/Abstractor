@@ -18,79 +18,8 @@ namespace Abstractor.Cqrs.Test.Operations.Dispatchers
         {
         }
 
-        [Theory, AutoMoqData]
-        public void Dispatch_NullEvent_ThrowsArgumentNullException(ApplicationEventDispatcher dispatcher)
-        {
-            Assert.Throws<ArgumentNullException>(() => dispatcher.Dispatch(null));
-        }
-
-        [Theory, AutoMoqData]
-        public void Dispatch_SyncContext_BuildGenericType_ExecutesAllHandlersPassingTheEvent(
-            [Frozen] Mock<IContainer> container,
-            Mock<IApplicationEventHandler<FakeApplicationEvent>> eventHandler1,
-            Mock<IApplicationEventHandler<FakeApplicationEvent>> eventHandler2,
-            FakeApplicationEvent applicationEvent,
-            ApplicationEventDispatcher dispatcher)
-        {
-            // Arrange
-
-            var scheduler = new SynchronousTaskScheduler();
-
-            var genericTypeName = typeof (IApplicationEventHandler<FakeApplicationEvent>).FullName;
-
-            var eventHandlers = new List<IApplicationEventHandler<FakeApplicationEvent>>
-            {
-                eventHandler1.Object,
-                eventHandler2.Object
-            };
-
-            container.Setup(c => c.GetAllInstances(It.Is<Type>(t => t.FullName == genericTypeName)))
-                     .Returns(eventHandlers);
-
-            Task.Factory.StartNew(() =>
-            {
-                // Act
-
-                dispatcher.Dispatch(applicationEvent);
-            },
-                CancellationToken.None,
-                TaskCreationOptions.None,
-                scheduler);
-
-            // Assert
-
-            eventHandler1.Verify(t => t.Handle(applicationEvent), Times.Once);
-
-            eventHandler2.Verify(t => t.Handle(applicationEvent), Times.Once);
-        }
-
-        [Theory, AutoMoqData]
-        public void Dispatch_SyncContext_NoHandlersRegistered_DoNothing(
-            [Frozen] Mock<IContainer> container,
-            FakeApplicationEvent applicationEvent,
-            ApplicationEventDispatcher dispatcher)
-        {
-            // Arrange
-
-            var scheduler = new SynchronousTaskScheduler();
-
-            var genericTypeName = typeof (IApplicationEventHandler<FakeApplicationEvent>).FullName;
-
-            container.Setup(c => c.GetAllInstances(It.Is<Type>(t => t.FullName == genericTypeName)))
-                     .Returns(new List<IApplicationEventHandler<FakeApplicationEvent>>());
-
-            Task.Factory.StartNew(() =>
-            {
-                // Act
-
-                dispatcher.Dispatch(applicationEvent);
-            },
-                CancellationToken.None,
-                TaskCreationOptions.None,
-                scheduler);
-        }
-
-        [Theory, AutoMoqData]
+        [Theory]
+        [AutoMoqData]
         public void Dispatch_EventHandler1ThrowsException_ExceptionShouldBeSupressentAndEventHandler2BeExecuted(
             [Frozen] Mock<IContainer> container,
             Mock<IApplicationEventHandler<FakeApplicationEvent>> eventHandler1,
@@ -102,7 +31,7 @@ namespace Abstractor.Cqrs.Test.Operations.Dispatchers
 
             var scheduler = new SynchronousTaskScheduler();
 
-            var genericTypeName = typeof (IApplicationEventHandler<FakeApplicationEvent>).FullName;
+            var genericTypeName = typeof(IApplicationEventHandler<FakeApplicationEvent>).FullName;
 
             var eventHandlers = new List<IApplicationEventHandler<FakeApplicationEvent>>
             {
@@ -116,20 +45,95 @@ namespace Abstractor.Cqrs.Test.Operations.Dispatchers
             eventHandler1.Setup(h => h.Handle(It.IsAny<FakeApplicationEvent>())).Throws<Exception>();
 
             Task.Factory.StartNew(() =>
-            {
-                // Act
+                    {
+                        // Act
 
-                dispatcher.Dispatch(applicationEvent);
-            },
-                CancellationToken.None,
-                TaskCreationOptions.None,
-                scheduler);
+                        dispatcher.Dispatch(applicationEvent);
+                    },
+                    CancellationToken.None,
+                    TaskCreationOptions.None,
+                    scheduler);
 
             // Assert
 
             eventHandler1.Verify(t => t.Handle(applicationEvent), Times.Once);
 
             eventHandler2.Verify(t => t.Handle(applicationEvent), Times.Once);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public void Dispatch_NullEvent_ThrowsArgumentNullException(ApplicationEventDispatcher dispatcher)
+        {
+            Assert.Throws<ArgumentNullException>(() => dispatcher.Dispatch(null));
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public void Dispatch_SyncContext_BuildGenericType_ExecutesAllHandlersPassingTheEvent(
+            [Frozen] Mock<IContainer> container,
+            Mock<IApplicationEventHandler<FakeApplicationEvent>> eventHandler1,
+            Mock<IApplicationEventHandler<FakeApplicationEvent>> eventHandler2,
+            FakeApplicationEvent applicationEvent,
+            ApplicationEventDispatcher dispatcher)
+        {
+            // Arrange
+
+            var scheduler = new SynchronousTaskScheduler();
+
+            var genericTypeName = typeof(IApplicationEventHandler<FakeApplicationEvent>).FullName;
+
+            var eventHandlers = new List<IApplicationEventHandler<FakeApplicationEvent>>
+            {
+                eventHandler1.Object,
+                eventHandler2.Object
+            };
+
+            container.Setup(c => c.GetAllInstances(It.Is<Type>(t => t.FullName == genericTypeName)))
+                     .Returns(eventHandlers);
+
+            Task.Factory.StartNew(() =>
+                    {
+                        // Act
+
+                        dispatcher.Dispatch(applicationEvent);
+                    },
+                    CancellationToken.None,
+                    TaskCreationOptions.None,
+                    scheduler);
+
+            // Assert
+
+            eventHandler1.Verify(t => t.Handle(applicationEvent), Times.Once);
+
+            eventHandler2.Verify(t => t.Handle(applicationEvent), Times.Once);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public void Dispatch_SyncContext_NoHandlersRegistered_DoNothing(
+            [Frozen] Mock<IContainer> container,
+            FakeApplicationEvent applicationEvent,
+            ApplicationEventDispatcher dispatcher)
+        {
+            // Arrange
+
+            var scheduler = new SynchronousTaskScheduler();
+
+            var genericTypeName = typeof(IApplicationEventHandler<FakeApplicationEvent>).FullName;
+
+            container.Setup(c => c.GetAllInstances(It.Is<Type>(t => t.FullName == genericTypeName)))
+                     .Returns(new List<IApplicationEventHandler<FakeApplicationEvent>>());
+
+            Task.Factory.StartNew(() =>
+                    {
+                        // Act
+
+                        dispatcher.Dispatch(applicationEvent);
+                    },
+                    CancellationToken.None,
+                    TaskCreationOptions.None,
+                    scheduler);
         }
     }
 }

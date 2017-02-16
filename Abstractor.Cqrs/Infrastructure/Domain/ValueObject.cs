@@ -10,12 +10,6 @@ namespace Abstractor.Cqrs.Infrastructure.Domain
     public abstract class ValueObject<T> where T : ValueObject<T>
     {
         /// <summary>
-        ///     Attributes that will be compared to determine equality.
-        /// </summary>
-        /// <returns></returns>
-        protected abstract IEnumerable<object> GetAttributesToIncludeInEqualityCheck();
-
-        /// <summary>
         ///     Determines whether the object has the same value as the other.
         /// </summary>
         /// <param name="other">Object to be compared to the current instance.</param>
@@ -32,8 +26,21 @@ namespace Abstractor.Cqrs.Infrastructure.Domain
         /// <returns>True if the objects have the same value.</returns>
         public bool Equals(T other)
         {
-            return other != null && GetAttributesToIncludeInEqualityCheck()
-                .SequenceEqual(other.GetAttributesToIncludeInEqualityCheck());
+            return (other != null) && GetAttributesToIncludeInEqualityCheck()
+                       .SequenceEqual(other.GetAttributesToIncludeInEqualityCheck());
+        }
+
+        /// <summary>
+        ///     Returns the hash code of this instance.
+        /// </summary>
+        /// <returns>Instance hash code.</returns>
+        public override int GetHashCode()
+        {
+            // algorithm that uses the multiplication of prime numbers to minimize the occurrence of conflicts 
+            // between the hashcodes of the object properties
+
+            return GetAttributesToIncludeInEqualityCheck()
+                .Aggregate(17, (current, o) => current * 31 + (o?.GetHashCode() ?? 0));
         }
 
         /// <summary>
@@ -59,16 +66,9 @@ namespace Abstractor.Cqrs.Infrastructure.Domain
         }
 
         /// <summary>
-        ///     Returns the hash code of this instance.
+        ///     Attributes that will be compared to determine equality.
         /// </summary>
-        /// <returns>Instance hash code.</returns>
-        public override int GetHashCode()
-        {
-            // algorithm that uses the multiplication of prime numbers to minimize the occurrence of conflicts 
-            // between the hashcodes of the object properties
-
-            return GetAttributesToIncludeInEqualityCheck()
-                .Aggregate(17, (current, o) => current * 31 + (o?.GetHashCode() ?? 0));
-        }
+        /// <returns></returns>
+        protected abstract IEnumerable<object> GetAttributesToIncludeInEqualityCheck();
     }
 }

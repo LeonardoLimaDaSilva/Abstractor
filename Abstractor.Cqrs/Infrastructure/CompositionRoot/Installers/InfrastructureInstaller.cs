@@ -44,14 +44,12 @@ namespace Abstractor.Cqrs.Infrastructure.CompositionRoot.Installers
         private static IEnumerable<Type> ExcludeEventHandlersInterfaces(Type type)
         {
             return type.GetInterfaces().Where(i =>
-                (i.IsGenericType && (
-                    i.GetGenericTypeDefinition() != typeof(ICommandHandler<>) &&
-                    i.GetGenericTypeDefinition() != typeof(IQueryHandler<,>) &&
-                    i.GetGenericTypeDefinition() != typeof(IQueryAsyncHandler<,>) &&
-                    i.GetGenericTypeDefinition() != typeof (IDomainEventHandler<>) &&
-                    i.GetGenericTypeDefinition() != typeof (IApplicationEventHandler<>)
-                    ))
-                || !i.IsGenericType);
+                           (i.IsGenericType && (i.GetGenericTypeDefinition() != typeof(ICommandHandler<>)) &&
+                            (i.GetGenericTypeDefinition() != typeof(IQueryHandler<,>)) &&
+                            (i.GetGenericTypeDefinition() != typeof(IQueryAsyncHandler<,>)) &&
+                            (i.GetGenericTypeDefinition() != typeof(IDomainEventHandler<>)) &&
+                            (i.GetGenericTypeDefinition() != typeof(IApplicationEventHandler<>)))
+                           || !i.IsGenericType);
         }
     }
 }

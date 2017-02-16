@@ -13,20 +13,6 @@ namespace Abstractor.Cqrs.AzureStorage.Extensions
     public static class ContainerExtensions
     {
         /// <summary>
-        ///     Registers the Azure Table Storage integration packages.
-        /// </summary>
-        /// <typeparam name="TContext">Application context that implements <see cref="IAzureTableContext" />.</typeparam>
-        /// <param name="container">Inversion of control container.</param>
-        public static void RegisterAzureTable<TContext>(this IContainer container)
-            where TContext : IAzureTableContext
-        {
-            Guard.ArgumentIsNotNull(container, nameof(container));
-
-            container.RegisterScoped<IAzureTableContext, TContext>();
-            container.RegisterScoped(typeof (IAzureTableRepository<>), typeof (AzureTableRepository<>));
-        }
-
-        /// <summary>
         ///     Registers the Azure Blob Storage integration packages.
         /// </summary>
         /// <typeparam name="TContext">Application context that implements <see cref="IAzureBlobContext" />.</typeparam>
@@ -37,7 +23,7 @@ namespace Abstractor.Cqrs.AzureStorage.Extensions
             Guard.ArgumentIsNotNull(container, nameof(container));
 
             container.RegisterScoped<IAzureBlobContext, TContext>();
-            container.RegisterScoped(typeof (IAzureBlobRepository<>), typeof (AzureBlobRepository<>));
+            container.RegisterScoped(typeof(IAzureBlobRepository<>), typeof(AzureBlobRepository<>));
         }
 
         /// <summary>
@@ -51,7 +37,21 @@ namespace Abstractor.Cqrs.AzureStorage.Extensions
             Guard.ArgumentIsNotNull(container, nameof(container));
 
             container.RegisterScoped<IAzureQueueContext, TContext>();
-            container.RegisterScoped(typeof (IAzureQueueRepository<>), typeof (AzureQueueRepository<>));
+            container.RegisterScoped(typeof(IAzureQueueRepository<>), typeof(AzureQueueRepository<>));
+        }
+
+        /// <summary>
+        ///     Registers the Azure Table Storage integration packages.
+        /// </summary>
+        /// <typeparam name="TContext">Application context that implements <see cref="IAzureTableContext" />.</typeparam>
+        /// <param name="container">Inversion of control container.</param>
+        public static void RegisterAzureTable<TContext>(this IContainer container)
+            where TContext : IAzureTableContext
+        {
+            Guard.ArgumentIsNotNull(container, nameof(container));
+
+            container.RegisterScoped<IAzureTableContext, TContext>();
+            container.RegisterScoped(typeof(IAzureTableRepository<>), typeof(AzureTableRepository<>));
         }
     }
 }

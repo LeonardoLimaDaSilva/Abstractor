@@ -16,21 +16,12 @@ namespace Abstractor.Cqrs.AzureStorage.Blob
         private readonly IAzureBlobRepository<TEntity> _repository;
 
         /// <summary>
-        /// BaseBlobRepository constructor.
+        ///     BaseBlobRepository constructor.
         /// </summary>
         /// <param name="repository">Repository of an Azure Blob.</param>
         protected BaseBlobRepository(IAzureBlobRepository<TEntity> repository)
         {
             _repository = repository;
-        }
-
-        /// <summary>
-        ///     Converts a generic file into an Azure Blob and saves into the container.
-        /// </summary>
-        /// <param name="file">File to be saved.</param>
-        public void Save(GenericFile file)
-        {
-            _repository.Save(CreateInstance(file));
         }
 
         /// <summary>
@@ -53,6 +44,15 @@ namespace Abstractor.Cqrs.AzureStorage.Blob
         }
 
         /// <summary>
+        ///     Converts a generic file into an Azure Blob and saves into the container.
+        /// </summary>
+        /// <param name="file">File to be saved.</param>
+        public void Save(GenericFile file)
+        {
+            _repository.Save(CreateInstance(file));
+        }
+
+        /// <summary>
         ///     Gets an Uri that contains the virtual path of the specified file.
         /// </summary>
         /// <param name="fileName">Name that identifies the file.</param>
@@ -69,7 +69,7 @@ namespace Abstractor.Cqrs.AzureStorage.Blob
         /// <returns></returns>
         private static TEntity CreateInstance(GenericFile file)
         {
-            return (TEntity) Activator.CreateInstance(typeof (TEntity), file);
+            return (TEntity) Activator.CreateInstance(typeof(TEntity), file);
         }
     }
 }

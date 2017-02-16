@@ -14,7 +14,7 @@ namespace Abstractor.Cqrs.AzureStorage.Blob
 
         public AzureBlobRepository(IAzureBlobContext context)
         {
-            _context = (AzureBlobContext)context;
+            _context = (AzureBlobContext) context;
         }
 
         /// <summary>
@@ -26,30 +26,6 @@ namespace Abstractor.Cqrs.AzureStorage.Blob
         {
             var set = (AzureBlobSet<TEntity>) _context.Set<TEntity>();
             return set.Exists(fileName);
-        }
-
-        /// <summary>
-        ///     Inserts or updates a given Azure Blob into the container.
-        /// </summary>
-        /// <param name="entity">Entity to be saved.</param>
-        public void Save(TEntity entity)
-        {
-            var set = _context.Set<TEntity>();
-
-            if (!Exists(entity.FileName))
-                set.Insert(entity);
-            else
-                set.Update(entity);
-        }
-
-        /// <summary>
-        ///     Removes the Azure Blob from it's container.
-        /// </summary>
-        /// <param name="entity">Entity to be removed.</param>
-        public void Delete(TEntity entity)
-        {
-            var set = _context.Set<TEntity>();
-            set.Delete(entity);
         }
 
         /// <summary>
@@ -72,6 +48,30 @@ namespace Abstractor.Cqrs.AzureStorage.Blob
         {
             var set = (AzureBlobSet<TEntity>) _context.Set<TEntity>();
             return set.GetVirtualPath(fileName);
+        }
+
+        /// <summary>
+        ///     Removes the Azure Blob from it's container.
+        /// </summary>
+        /// <param name="entity">Entity to be removed.</param>
+        public void Delete(TEntity entity)
+        {
+            var set = _context.Set<TEntity>();
+            set.Delete(entity);
+        }
+
+        /// <summary>
+        ///     Inserts or updates a given Azure Blob into the container.
+        /// </summary>
+        /// <param name="entity">Entity to be saved.</param>
+        public void Save(TEntity entity)
+        {
+            var set = _context.Set<TEntity>();
+
+            if (!Exists(entity.FileName))
+                set.Insert(entity);
+            else
+                set.Update(entity);
         }
     }
 }

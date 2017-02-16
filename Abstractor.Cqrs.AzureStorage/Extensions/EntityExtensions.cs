@@ -10,19 +10,6 @@ namespace Abstractor.Cqrs.AzureStorage.Extensions
     internal static class EntityExtensions
     {
         /// <summary>
-        ///     Gets the table name using the <see cref="AzureTableAttribute" /> decorated in the entity class.
-        /// </summary>
-        /// <param name="type">Entity type.</param>
-        /// <returns>Table name.</returns>
-        public static string GetTableName(this Type type)
-        {
-            var attributes = (AzureTableAttribute[]) type.GetCustomAttributes(typeof (AzureTableAttribute), false);
-            return attributes.Length > 0
-                ? attributes.First().Name
-                : type.Name;
-        }
-
-        /// <summary>
         ///     Gets the container name using the <see cref="AzureContainerAttribute" /> decorated in the entity class.
         /// </summary>
         /// <param name="type">Entity type.</param>
@@ -30,7 +17,7 @@ namespace Abstractor.Cqrs.AzureStorage.Extensions
         public static string GetContainerName(this Type type)
         {
             var attributes =
-                (AzureContainerAttribute[]) type.GetCustomAttributes(typeof (AzureContainerAttribute), false);
+                (AzureContainerAttribute[]) type.GetCustomAttributes(typeof(AzureContainerAttribute), false);
             return attributes.Length > 0
                 ? attributes.First().Name.ToLowerInvariant()
                 : type.Name.ToLowerInvariant();
@@ -43,10 +30,23 @@ namespace Abstractor.Cqrs.AzureStorage.Extensions
         /// <returns>Table name.</returns>
         public static string GetQueueName(this Type type)
         {
-            var attributes = (AzureQueueAttribute[]) type.GetCustomAttributes(typeof (AzureQueueAttribute), false);
+            var attributes = (AzureQueueAttribute[]) type.GetCustomAttributes(typeof(AzureQueueAttribute), false);
             return attributes.Length > 0
                 ? attributes.First().Name.ToLowerInvariant()
                 : type.Name.ToLowerInvariant();
+        }
+
+        /// <summary>
+        ///     Gets the table name using the <see cref="AzureTableAttribute" /> decorated in the entity class.
+        /// </summary>
+        /// <param name="type">Entity type.</param>
+        /// <returns>Table name.</returns>
+        public static string GetTableName(this Type type)
+        {
+            var attributes = (AzureTableAttribute[]) type.GetCustomAttributes(typeof(AzureTableAttribute), false);
+            return attributes.Length > 0
+                ? attributes.First().Name
+                : type.Name;
         }
     }
 }

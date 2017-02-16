@@ -16,13 +16,8 @@ namespace Abstractor.Cqrs.Test.Operations.Dispatchers
         {
         }
 
-        [Theory, AutoMoqData]
-        public void Dispatch_NullEvent_ThrowsArgumentNullException(DomainEventDispatcher dispatcher)
-        {
-            Assert.Throws<ArgumentNullException>(() => dispatcher.Dispatch(null));
-        }
-
-        [Theory, AutoMoqData]
+        [Theory]
+        [AutoMoqData]
         public void Dispatch_BuildGenericType_ExecutesAllHandlersPassingTheEvent(
             [Frozen] Mock<IContainer> container,
             Mock<IDomainEventHandler<FakeDomainEvent>> eventHandler1,
@@ -32,7 +27,7 @@ namespace Abstractor.Cqrs.Test.Operations.Dispatchers
         {
             // Arrange
 
-            var genericTypeName = typeof (IDomainEventHandler<FakeDomainEvent>).FullName;
+            var genericTypeName = typeof(IDomainEventHandler<FakeDomainEvent>).FullName;
 
             var eventHandlers = new List<IDomainEventHandler<FakeDomainEvent>>
             {
@@ -54,25 +49,8 @@ namespace Abstractor.Cqrs.Test.Operations.Dispatchers
             eventHandler2.Verify(t => t.Handle(domainEvent), Times.Once);
         }
 
-        [Theory, AutoMoqData]
-        public void Dispatch_NoHandlersRegistered_DoNothing(
-            [Frozen] Mock<IContainer> container,
-            FakeDomainEvent domainEvent,
-            DomainEventDispatcher dispatcher)
-        {
-            // Arrange
-
-            var genericTypeName = typeof (IDomainEventHandler<FakeDomainEvent>).FullName;
-
-            container.Setup(c => c.GetAllInstances(It.Is<Type>(t => t.FullName == genericTypeName)))
-                     .Returns(new List<IDomainEventHandler<FakeDomainEvent>>());
-
-            // Act
-
-            dispatcher.Dispatch(domainEvent);
-        }
-
-        [Theory, AutoMoqData]
+        [Theory]
+        [AutoMoqData]
         public void Dispatch_EventHandler1ThrowsException_ExecutionStopsAndRethrow(
             [Frozen] Mock<IContainer> container,
             Mock<IDomainEventHandler<FakeDomainEvent>> eventHandler1,
@@ -82,7 +60,7 @@ namespace Abstractor.Cqrs.Test.Operations.Dispatchers
         {
             // Arrange
 
-            var genericTypeName = typeof (IDomainEventHandler<FakeDomainEvent>).FullName;
+            var genericTypeName = typeof(IDomainEventHandler<FakeDomainEvent>).FullName;
 
             var eventHandlers = new List<IDomainEventHandler<FakeDomainEvent>>
             {
@@ -104,6 +82,32 @@ namespace Abstractor.Cqrs.Test.Operations.Dispatchers
             eventHandler1.Verify(t => t.Handle(domainEvent), Times.Once);
 
             eventHandler2.Verify(t => t.Handle(domainEvent), Times.Never);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public void Dispatch_NoHandlersRegistered_DoNothing(
+            [Frozen] Mock<IContainer> container,
+            FakeDomainEvent domainEvent,
+            DomainEventDispatcher dispatcher)
+        {
+            // Arrange
+
+            var genericTypeName = typeof(IDomainEventHandler<FakeDomainEvent>).FullName;
+
+            container.Setup(c => c.GetAllInstances(It.Is<Type>(t => t.FullName == genericTypeName)))
+                     .Returns(new List<IDomainEventHandler<FakeDomainEvent>>());
+
+            // Act
+
+            dispatcher.Dispatch(domainEvent);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public void Dispatch_NullEvent_ThrowsArgumentNullException(DomainEventDispatcher dispatcher)
+        {
+            Assert.Throws<ArgumentNullException>(() => dispatcher.Dispatch(null));
         }
     }
 }

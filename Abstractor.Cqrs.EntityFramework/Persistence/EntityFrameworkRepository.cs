@@ -22,6 +22,18 @@ namespace Abstractor.Cqrs.EntityFramework.Persistence
         }
 
         /// <summary>
+        ///     Returns a single instance of the aggregate by its primary key.
+        /// </summary>
+        /// <param name="primaryKey">List of values used to identify an aggregate.</param>
+        /// <returns>Single instance of the aggregate.</returns>
+        public TAggregate Get(params object[] primaryKey)
+        {
+            Guard.ArgumentIsNotNull(primaryKey, nameof(primaryKey));
+
+            return _context.Set<TAggregate>().Find(primaryKey);
+        }
+
+        /// <summary>
         ///     Adds a new aggregate that is being tracked but not exists in database.
         /// </summary>
         /// <param name="aggregate">Aggregate to be added.</param>
@@ -62,18 +74,6 @@ namespace Abstractor.Cqrs.EntityFramework.Persistence
         public IQueryable<TAggregate> Query()
         {
             return _context.Set<TAggregate>();
-        }
-
-        /// <summary>
-        ///     Returns a single instance of the aggregate by its primary key.
-        /// </summary>
-        /// <param name="primaryKey">List of values used to identify an aggregate.</param>
-        /// <returns>Single instance of the aggregate.</returns>
-        public TAggregate Get(params object[] primaryKey)
-        {
-            Guard.ArgumentIsNotNull(primaryKey, nameof(primaryKey));
-
-            return _context.Set<TAggregate>().Find(primaryKey);
         }
     }
 }

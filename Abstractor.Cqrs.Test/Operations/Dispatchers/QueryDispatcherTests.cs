@@ -18,13 +18,8 @@ namespace Abstractor.Cqrs.Test.Operations.Dispatchers
         {
         }
 
-        [Theory, AutoMoqData]
-        public void Dispatch_NullQuery_ThrowsArgumentNullException(QueryDispatcher dispatcher)
-        {
-            Assert.Throws<ArgumentNullException>(() => dispatcher.Dispatch((IQuery<object>) null));
-        }
-
-        [Theory, AutoMoqData]
+        [Theory]
+        [AutoMoqData]
         public void Dispatch_BuildGenericQueryHandlerAndGetFromContainer_ShouldHandleQuery(
             [Frozen] Mock<IContainer> container,
             [Frozen] Mock<IQueryHandler<FakeQuery, object>> queryHandler,
@@ -33,7 +28,7 @@ namespace Abstractor.Cqrs.Test.Operations.Dispatchers
         {
             // Arrange
 
-            var genericTypeName = typeof (IQueryHandler<FakeQuery, object>).FullName;
+            var genericTypeName = typeof(IQueryHandler<FakeQuery, object>).FullName;
 
             var queryHandlers = new List<IQueryHandler<FakeQuery, object>>
             {
@@ -54,19 +49,8 @@ namespace Abstractor.Cqrs.Test.Operations.Dispatchers
             queryHandler.Verify(t => t.Handle(query), Times.Once);
         }
 
-        [Theory, AutoMoqData]
-        public void Dispatch_NoInstances_ThrowsNoQueryHandlersException(
-            [Frozen] Mock<IContainer> container,
-            [Frozen] Mock<IQueryHandler<FakeQuery, object>> queryHandler,
-            FakeQuery query,
-            QueryDispatcher dispatcher)
-        {
-            // Act and assert
-
-            Assert.Throws<QueryHandlersNotFoundException>(() => dispatcher.Dispatch(query));
-        }
-
-        [Theory, AutoMoqData]
+        [Theory]
+        [AutoMoqData]
         public void Dispatch_MultipleInstances_ThrowsMultipleQueryHandlersException(
             [Frozen] Mock<IContainer> container,
             [Frozen] Mock<IQueryHandler<FakeQuery, object>> queryHandler,
@@ -91,13 +75,28 @@ namespace Abstractor.Cqrs.Test.Operations.Dispatchers
             Assert.Throws<MultipleQueryHandlersException>(() => dispatcher.Dispatch(query));
         }
 
-        [Theory, AutoMoqData]
-        public async void DispatchAsync_NullQuery_ThrowsArgumentNullException(QueryDispatcher dispatcher)
+        [Theory]
+        [AutoMoqData]
+        public void Dispatch_NoInstances_ThrowsNoQueryHandlersException(
+            [Frozen] Mock<IContainer> container,
+            [Frozen] Mock<IQueryHandler<FakeQuery, object>> queryHandler,
+            FakeQuery query,
+            QueryDispatcher dispatcher)
         {
-            await Assert.ThrowsAsync<ArgumentNullException>(() => dispatcher.DispatchAsync((IQuery<object>) null));
+            // Act and assert
+
+            Assert.Throws<QueryHandlersNotFoundException>(() => dispatcher.Dispatch(query));
         }
 
-        [Theory, AutoMoqData]
+        [Theory]
+        [AutoMoqData]
+        public void Dispatch_NullQuery_ThrowsArgumentNullException(QueryDispatcher dispatcher)
+        {
+            Assert.Throws<ArgumentNullException>(() => dispatcher.Dispatch((IQuery<object>) null));
+        }
+
+        [Theory]
+        [AutoMoqData]
         public async void DispatchAsync_BuildGenericQueryHandlerAndGetFromContainer_ShouldHandleQueryOnANewThread(
             [Frozen] Mock<IContainer> container,
             [Frozen] Mock<IQueryAsyncHandler<FakeQuery, object>> queryHandler,
@@ -106,7 +105,7 @@ namespace Abstractor.Cqrs.Test.Operations.Dispatchers
         {
             // Arrange
 
-            var genericTypeName = typeof (IQueryAsyncHandler<FakeQuery, object>).FullName;
+            var genericTypeName = typeof(IQueryAsyncHandler<FakeQuery, object>).FullName;
 
             var queryHandlers = new List<IQueryAsyncHandler<FakeQuery, object>>
             {
@@ -125,19 +124,8 @@ namespace Abstractor.Cqrs.Test.Operations.Dispatchers
             queryHandler.Verify(t => t.HandleAsync(query), Times.Once);
         }
 
-        [Theory, AutoMoqData]
-        public async void DispatchAsync_NoInstances_ThrowsNoQueryHandlersException(
-            [Frozen] Mock<IContainer> container,
-            [Frozen] Mock<IQueryHandler<FakeQuery, object>> queryHandler,
-            FakeQuery query,
-            QueryDispatcher dispatcher)
-        {
-            // Act and assert
-
-            await Assert.ThrowsAsync<QueryHandlersNotFoundException>(() => dispatcher.DispatchAsync(query));
-        }
-
-        [Theory, AutoMoqData]
+        [Theory]
+        [AutoMoqData]
         public async void DispatchAsync_MultipleInstances_ThrowsMultipleQueryHandlersException(
             [Frozen] Mock<IContainer> container,
             [Frozen] Mock<IQueryAsyncHandler<FakeQuery, object>> queryHandler,
@@ -160,6 +148,26 @@ namespace Abstractor.Cqrs.Test.Operations.Dispatchers
             // Act and assert
 
             await Assert.ThrowsAsync<MultipleQueryHandlersException>(() => dispatcher.DispatchAsync(query));
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async void DispatchAsync_NoInstances_ThrowsNoQueryHandlersException(
+            [Frozen] Mock<IContainer> container,
+            [Frozen] Mock<IQueryHandler<FakeQuery, object>> queryHandler,
+            FakeQuery query,
+            QueryDispatcher dispatcher)
+        {
+            // Act and assert
+
+            await Assert.ThrowsAsync<QueryHandlersNotFoundException>(() => dispatcher.DispatchAsync(query));
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async void DispatchAsync_NullQuery_ThrowsArgumentNullException(QueryDispatcher dispatcher)
+        {
+            await Assert.ThrowsAsync<ArgumentNullException>(() => dispatcher.DispatchAsync((IQuery<object>) null));
         }
     }
 }

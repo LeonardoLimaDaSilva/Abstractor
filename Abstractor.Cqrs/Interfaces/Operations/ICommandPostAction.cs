@@ -8,14 +8,14 @@ namespace Abstractor.Cqrs.Interfaces.Operations
     public interface ICommandPostAction
     {
         /// <summary>
-        ///     Action event to be executed after a command.
-        /// </summary>
-        event Action Execute;
-
-        /// <summary>
         ///     Executes the action event registered in <see cref="ICommandPostAction.Execute" />.
         /// </summary>
         void Act();
+
+        /// <summary>
+        ///     Action event to be executed after a command.
+        /// </summary>
+        event Action Execute;
 
         /// <summary>
         ///     Resets the <see cref="ICommandPostAction.Execute" /> with an empty action.

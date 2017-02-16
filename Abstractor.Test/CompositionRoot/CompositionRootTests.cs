@@ -30,15 +30,15 @@ namespace Abstractor.Test.CompositionRoot
         [ExcludeFromCodeCoverage]
         public class FakeBlobContext : IAzureBlobContext
         {
-            public void SaveChanges()
-            {
-            }
-
             public void Clear()
             {
             }
-            
+
             public void Rollback()
+            {
+            }
+
+            public void SaveChanges()
             {
             }
         }
@@ -46,15 +46,15 @@ namespace Abstractor.Test.CompositionRoot
         [ExcludeFromCodeCoverage]
         public class FakeQueueContext : IAzureQueueContext
         {
-            public void SaveChanges()
-            {
-            }
-
             public void Clear()
             {
             }
 
             public void Rollback()
+            {
+            }
+
+            public void SaveChanges()
             {
             }
         }
@@ -62,15 +62,15 @@ namespace Abstractor.Test.CompositionRoot
         [ExcludeFromCodeCoverage]
         public class FakeTableContext : IAzureTableContext
         {
-            public void SaveChanges()
-            {
-            }
-
             public void Clear()
             {
             }
 
             public void Rollback()
+            {
+            }
+
+            public void SaveChanges()
             {
             }
         }
@@ -128,6 +128,25 @@ namespace Abstractor.Test.CompositionRoot
         }
 
         [Fact]
+        public void RegisterAzureAlone_GetIUnitOfWorkInstance_ThrowsActivationException()
+        {
+            using (var container = new Container())
+            {
+                var adapter = BuildNewAdapter(container);
+
+                adapter.RegisterAzureBlob<FakeBlobContext>();
+                adapter.RegisterAzureQueue<FakeQueueContext>();
+                adapter.RegisterAzureTable<FakeTableContext>();
+
+                using (container.BeginLifetimeScope())
+                {
+                    // ReSharper disable once AccessToDisposedClosure
+                    Assert.Throws<ActivationException>(() => container.GetInstance<IUnitOfWork>());
+                }
+            }
+        }
+
+        [Fact]
         public void RegisterEntityFrameworkAlone_IUnitOfWorkShouldBeEntityFrameworkUnitOfWork()
         {
             using (var container = new Container())
@@ -140,8 +159,8 @@ namespace Abstractor.Test.CompositionRoot
                 {
                     var uow = container.GetInstance<IUnitOfWork>();
                     uow.GetType()
-                        .FullName.Should()
-                        .Be("Abstractor.Cqrs.EntityFramework.Persistence.EntityFrameworkUnitOfWork");
+                       .FullName.Should()
+                       .Be("Abstractor.Cqrs.EntityFramework.Persistence.EntityFrameworkUnitOfWork");
 
                     uow.Commit();
                     uow.Clear();
@@ -174,44 +193,26 @@ namespace Abstractor.Test.CompositionRoot
         }
 
         [Fact]
-        public void RegisterUnitOfWorkAzureAndEntityFramework_IUnitOfWorkShouldBeUnitOfWork()
+        public void RegisterEntityFrameworkWithDependencyInjection_ShouldResolveWithoutErrors()
         {
             using (var container = new Container())
             {
                 var adapter = BuildNewAdapter(container);
 
-                adapter.RegisterUnitOfWork();
-                adapter.RegisterAzureBlob<FakeBlobContext>();
-                adapter.RegisterAzureQueue<FakeQueueContext>();
-                adapter.RegisterAzureTable<FakeTableContext>();
-                adapter.RegisterEntityFramework<FakeEfContext>();
+                adapter.RegisterEntityFramework<FakeEfContextWithDependencyInjection>();
 
                 using (container.BeginLifetimeScope())
                 {
+                    var logger = (FakeLogger) container.GetInstance<ILogger>();
                     var uow = container.GetInstance<IUnitOfWork>();
-                    uow.GetType().FullName.Should().Be("Abstractor.Cqrs.UnitOfWork.Persistence.UnitOfWork");
+                    uow.GetType()
+                       .FullName.Should()
+                       .Be("Abstractor.Cqrs.EntityFramework.Persistence.EntityFrameworkUnitOfWork");
 
                     uow.Commit();
                     uow.Clear();
-                }
-            }
-        }
 
-        [Fact]
-        public void RegisterAzureAlone_GetIUnitOfWorkInstance_ThrowsActivationException()
-        {
-            using (var container = new Container())
-            {
-                var adapter = BuildNewAdapter(container);
-
-                adapter.RegisterAzureBlob<FakeBlobContext>();
-                adapter.RegisterAzureQueue<FakeQueueContext>();
-                adapter.RegisterAzureTable<FakeTableContext>();
-
-                using (container.BeginLifetimeScope())
-                {
-                    // ReSharper disable once AccessToDisposedClosure
-                    Assert.Throws<ActivationException>(() => container.GetInstance<IUnitOfWork>());
+                    logger.Message.Should().Be("Changes saved.");
                 }
             }
         }
@@ -252,26 +253,25 @@ namespace Abstractor.Test.CompositionRoot
         }
 
         [Fact]
-        public void RegisterEntityFrameworkWithDependencyInjection_ShouldResolveWithoutErrors()
+        public void RegisterUnitOfWorkAzureAndEntityFramework_IUnitOfWorkShouldBeUnitOfWork()
         {
             using (var container = new Container())
             {
                 var adapter = BuildNewAdapter(container);
 
-                adapter.RegisterEntityFramework<FakeEfContextWithDependencyInjection>();
+                adapter.RegisterUnitOfWork();
+                adapter.RegisterAzureBlob<FakeBlobContext>();
+                adapter.RegisterAzureQueue<FakeQueueContext>();
+                adapter.RegisterAzureTable<FakeTableContext>();
+                adapter.RegisterEntityFramework<FakeEfContext>();
 
                 using (container.BeginLifetimeScope())
                 {
-                    var logger = (FakeLogger)container.GetInstance<ILogger>();
                     var uow = container.GetInstance<IUnitOfWork>();
-                    uow.GetType()
-                        .FullName.Should()
-                        .Be("Abstractor.Cqrs.EntityFramework.Persistence.EntityFrameworkUnitOfWork");
+                    uow.GetType().FullName.Should().Be("Abstractor.Cqrs.UnitOfWork.Persistence.UnitOfWork");
 
                     uow.Commit();
                     uow.Clear();
-
-                    logger.Message.Should().Be("Changes saved.");
                 }
             }
         }

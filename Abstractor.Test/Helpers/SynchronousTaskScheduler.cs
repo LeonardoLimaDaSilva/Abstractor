@@ -7,6 +7,11 @@ namespace Abstractor.Test.Helpers
     [ExcludeFromCodeCoverage]
     public class SynchronousTaskScheduler : TaskScheduler
     {
+        protected override IEnumerable<Task> GetScheduledTasks()
+        {
+            yield break;
+        }
+
         protected override void QueueTask(Task task)
         {
             TryExecuteTask(task);
@@ -15,11 +20,6 @@ namespace Abstractor.Test.Helpers
         protected override bool TryExecuteTaskInline(Task task, bool wasPreviouslyQueued)
         {
             return TryExecuteTask(task);
-        }
-
-        protected override IEnumerable<Task> GetScheduledTasks()
-        {
-            yield break;
         }
     }
 }

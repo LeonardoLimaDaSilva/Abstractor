@@ -27,9 +27,9 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
         {
             public bool Executed { get; private set; }
 
-            public bool ThrowsException { get; set; }
-
             public bool HasInnerException { get; set; }
+
+            public bool ThrowsException { get; set; }
 
             public Task<FakeResult> HandleAsync(FakeQuery query)
             {
@@ -44,175 +44,8 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
             }
         }
 
-        [Theory, AutoMoqData]
-        public void Handle_WithoutLogAttribute_ShouldNotLog(
-            [Frozen] Mock<IAttributeFinder> attributeFinder,
-            [Frozen] Mock<IStopwatch> stopwatch,
-            [Frozen] Mock<ILoggerSerializer> loggerSerializer,
-            FakeQuery query)
-        {
-            // Arrange
-
-            var queryHandler = new FakeQueryAsyncHandler();
-            var logger = new FakeLogger();
-
-            var decorator = new QueryAsyncLoggerDecorator<FakeQuery, FakeResult>(
-                () => queryHandler,
-                attributeFinder.Object,
-                stopwatch.Object,
-                loggerSerializer.Object,
-                () => logger,
-                new GlobalSettings());
-
-            loggerSerializer.Setup(s => s.Serialize(query)).Returns("Serialized parameters");
-
-            stopwatch.Setup(s => s.GetElapsed()).Returns(TimeSpan.Zero);
-
-            // Act
-
-            decorator.HandleAsync(query);
-
-            // Assert
-
-            stopwatch.Verify(s => s.Start(), Times.Never);
-            stopwatch.Verify(s => s.Stop(), Times.Never);
-
-            logger.ShouldNeverBeCalled();
-
-            queryHandler.Executed.Should().Be.True();
-        }
-
-        [Theory, AutoMoqData]
-        public void Handle_WithoutLogAttributeAndGloballyEnabled_ShouldLog(
-            [Frozen] Mock<IAttributeFinder> attributeFinder,
-            [Frozen] Mock<IStopwatch> stopwatch,
-            [Frozen] Mock<ILoggerSerializer> loggerSerializer,
-            FakeQuery query)
-        {
-            // Arrange
-
-            var queryHandler = new FakeQueryAsyncHandler();
-            var logger = new FakeLogger();
-
-            var decorator = new QueryAsyncLoggerDecorator<FakeQuery, FakeResult>(
-                () => queryHandler,
-                attributeFinder.Object,
-                stopwatch.Object,
-                loggerSerializer.Object,
-                () => logger,
-                new GlobalSettings
-                {
-                    EnableLogging = true
-                });
-
-            loggerSerializer.Setup(s => s.Serialize(query)).Returns("Serialized parameters");
-
-            stopwatch.Setup(s => s.GetElapsed()).Returns(TimeSpan.Zero);
-
-            // Act
-
-            decorator.HandleAsync(query);
-
-            // Assert
-
-            stopwatch.Verify(s => s.Start(), Times.Once);
-            stopwatch.Verify(s => s.Stop(), Times.Once);
-
-            logger.ShouldBeCalled();
-
-            queryHandler.Executed.Should().Be.True();
-        }
-
-        [Theory, AutoMoqData]
-        public void Handle_Success_ShouldLogMessagesAndCallMethods(
-            [Frozen] Mock<IAttributeFinder> attributeFinder,
-            [Frozen] Mock<IStopwatch> stopwatch,
-            [Frozen] Mock<ILoggerSerializer> loggerSerializer,
-            FakeQuery query)
-        {
-            // Arrange
-
-            var queryHandler = new FakeQueryAsyncHandler();
-            var logger = new FakeLogger();
-
-            var decorator = new QueryAsyncLoggerDecorator<FakeQuery, FakeResult>(
-                () => queryHandler,
-                attributeFinder.Object,
-                stopwatch.Object,
-                loggerSerializer.Object,
-                () => logger,
-                new GlobalSettings());
-
-            attributeFinder.Setup(f => f.Decorates(query.GetType(), typeof(LogAttribute))).Returns(true);
-
-            loggerSerializer.Setup(s => s.Serialize(query)).Returns("Serialized parameters");
-
-            stopwatch.Setup(s => s.GetElapsed()).Returns(TimeSpan.Zero);
-
-            // Act
-
-            decorator.HandleAsync(query);
-
-            // Assert
-
-            stopwatch.Verify(s => s.Start(), Times.Once);
-            stopwatch.Verify(s => s.Stop(), Times.Once);
-
-            logger.VerifyMessages(
-                "Executing query \"FakeQuery\" with the parameters:",
-                "Serialized parameters",
-                "Query \"FakeQuery\" executed in 00:00:00.");
-
-            queryHandler.Executed.Should().Be.True();
-        }
-
-        [Theory, AutoMoqData]
-        public void Handle_ThrowsOnSerialize_ShouldLogException(
-            [Frozen] Mock<IAttributeFinder> attributeFinder,
-            [Frozen] Mock<IStopwatch> stopwatch,
-            [Frozen] Mock<ILoggerSerializer> loggerSerializer,
-            FakeQuery query)
-        {
-            // Arrange
-
-            var queryHandler = new FakeQueryAsyncHandler();
-            var logger = new FakeLogger();
-
-            var decorator = new QueryAsyncLoggerDecorator<FakeQuery, FakeResult>(
-                () => queryHandler,
-                attributeFinder.Object,
-                stopwatch.Object,
-                loggerSerializer.Object,
-                () => logger,
-                new GlobalSettings());
-
-            attributeFinder.Setup(f => f.Decorates(query.GetType(), typeof(LogAttribute))).Returns(true);
-
-            loggerSerializer.Setup(s => s.Serialize(query)).Returns("Serialized parameters");
-
-            stopwatch.Setup(s => s.GetElapsed()).Returns(TimeSpan.Zero);
-
-            loggerSerializer.Setup(s => s.Serialize(It.IsAny<object>()))
-                            .Throws(new Exception("Serialization exception."));
-
-            // Act
-
-            decorator.HandleAsync(query);
-
-            // Assert
-
-            stopwatch.Verify(s => s.Start(), Times.Once);
-            stopwatch.Verify(s => s.Stop(), Times.Once);
-
-            logger.VerifyMessages(
-                "Executing query \"FakeQuery\" with the parameters:",
-                "Could not serialize the parameters: Serialization exception.",
-                "Query \"FakeQuery\" executed in 00:00:00.");
-
-            queryHandler.Executed.Should().Be.True();
-        }
-
-        [Theory, AutoMoqData]
+        [Theory]
+        [AutoMoqData]
         public void Handle_QueryHandlerThrowsException_ShouldLogTheExceptionAndRethrow(
             [Frozen] Mock<IAttributeFinder> attributeFinder,
             [Frozen] Mock<IStopwatch> stopwatch,
@@ -221,7 +54,7 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
         {
             // Arrange
 
-            var queryHandler = new FakeQueryAsyncHandler { ThrowsException = true };
+            var queryHandler = new FakeQueryAsyncHandler {ThrowsException = true};
             var logger = new FakeLogger();
 
             var decorator = new QueryAsyncLoggerDecorator<FakeQuery, FakeResult>(
@@ -258,7 +91,8 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
             exception.Message.Should().Be("FakeQueryAsyncHandlerException.");
         }
 
-        [Theory, AutoMoqData]
+        [Theory]
+        [AutoMoqData]
         public void Handle_QueryHandlerThrowsExceptionWithInnerException_ShouldLogTheExceptionsAndRethrow(
             [Frozen] Mock<IAttributeFinder> attributeFinder,
             [Frozen] Mock<IStopwatch> stopwatch,
@@ -309,6 +143,178 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
 
             exception.Message.Should().Be("FakeQueryAsyncHandlerException.");
             exception.InnerException?.Message.Should().Be("FakeQueryAsyncHandlerInnerException.");
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public void Handle_Success_ShouldLogMessagesAndCallMethods(
+            [Frozen] Mock<IAttributeFinder> attributeFinder,
+            [Frozen] Mock<IStopwatch> stopwatch,
+            [Frozen] Mock<ILoggerSerializer> loggerSerializer,
+            FakeQuery query)
+        {
+            // Arrange
+
+            var queryHandler = new FakeQueryAsyncHandler();
+            var logger = new FakeLogger();
+
+            var decorator = new QueryAsyncLoggerDecorator<FakeQuery, FakeResult>(
+                () => queryHandler,
+                attributeFinder.Object,
+                stopwatch.Object,
+                loggerSerializer.Object,
+                () => logger,
+                new GlobalSettings());
+
+            attributeFinder.Setup(f => f.Decorates(query.GetType(), typeof(LogAttribute))).Returns(true);
+
+            loggerSerializer.Setup(s => s.Serialize(query)).Returns("Serialized parameters");
+
+            stopwatch.Setup(s => s.GetElapsed()).Returns(TimeSpan.Zero);
+
+            // Act
+
+            decorator.HandleAsync(query);
+
+            // Assert
+
+            stopwatch.Verify(s => s.Start(), Times.Once);
+            stopwatch.Verify(s => s.Stop(), Times.Once);
+
+            logger.VerifyMessages(
+                "Executing query \"FakeQuery\" with the parameters:",
+                "Serialized parameters",
+                "Query \"FakeQuery\" executed in 00:00:00.");
+
+            queryHandler.Executed.Should().Be.True();
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public void Handle_ThrowsOnSerialize_ShouldLogException(
+            [Frozen] Mock<IAttributeFinder> attributeFinder,
+            [Frozen] Mock<IStopwatch> stopwatch,
+            [Frozen] Mock<ILoggerSerializer> loggerSerializer,
+            FakeQuery query)
+        {
+            // Arrange
+
+            var queryHandler = new FakeQueryAsyncHandler();
+            var logger = new FakeLogger();
+
+            var decorator = new QueryAsyncLoggerDecorator<FakeQuery, FakeResult>(
+                () => queryHandler,
+                attributeFinder.Object,
+                stopwatch.Object,
+                loggerSerializer.Object,
+                () => logger,
+                new GlobalSettings());
+
+            attributeFinder.Setup(f => f.Decorates(query.GetType(), typeof(LogAttribute))).Returns(true);
+
+            loggerSerializer.Setup(s => s.Serialize(query)).Returns("Serialized parameters");
+
+            stopwatch.Setup(s => s.GetElapsed()).Returns(TimeSpan.Zero);
+
+            loggerSerializer.Setup(s => s.Serialize(It.IsAny<object>()))
+                            .Throws(new Exception("Serialization exception."));
+
+            // Act
+
+            decorator.HandleAsync(query);
+
+            // Assert
+
+            stopwatch.Verify(s => s.Start(), Times.Once);
+            stopwatch.Verify(s => s.Stop(), Times.Once);
+
+            logger.VerifyMessages(
+                "Executing query \"FakeQuery\" with the parameters:",
+                "Could not serialize the parameters: Serialization exception.",
+                "Query \"FakeQuery\" executed in 00:00:00.");
+
+            queryHandler.Executed.Should().Be.True();
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public void Handle_WithoutLogAttribute_ShouldNotLog(
+            [Frozen] Mock<IAttributeFinder> attributeFinder,
+            [Frozen] Mock<IStopwatch> stopwatch,
+            [Frozen] Mock<ILoggerSerializer> loggerSerializer,
+            FakeQuery query)
+        {
+            // Arrange
+
+            var queryHandler = new FakeQueryAsyncHandler();
+            var logger = new FakeLogger();
+
+            var decorator = new QueryAsyncLoggerDecorator<FakeQuery, FakeResult>(
+                () => queryHandler,
+                attributeFinder.Object,
+                stopwatch.Object,
+                loggerSerializer.Object,
+                () => logger,
+                new GlobalSettings());
+
+            loggerSerializer.Setup(s => s.Serialize(query)).Returns("Serialized parameters");
+
+            stopwatch.Setup(s => s.GetElapsed()).Returns(TimeSpan.Zero);
+
+            // Act
+
+            decorator.HandleAsync(query);
+
+            // Assert
+
+            stopwatch.Verify(s => s.Start(), Times.Never);
+            stopwatch.Verify(s => s.Stop(), Times.Never);
+
+            logger.ShouldNeverBeCalled();
+
+            queryHandler.Executed.Should().Be.True();
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public void Handle_WithoutLogAttributeAndGloballyEnabled_ShouldLog(
+            [Frozen] Mock<IAttributeFinder> attributeFinder,
+            [Frozen] Mock<IStopwatch> stopwatch,
+            [Frozen] Mock<ILoggerSerializer> loggerSerializer,
+            FakeQuery query)
+        {
+            // Arrange
+
+            var queryHandler = new FakeQueryAsyncHandler();
+            var logger = new FakeLogger();
+
+            var decorator = new QueryAsyncLoggerDecorator<FakeQuery, FakeResult>(
+                () => queryHandler,
+                attributeFinder.Object,
+                stopwatch.Object,
+                loggerSerializer.Object,
+                () => logger,
+                new GlobalSettings
+                {
+                    EnableLogging = true
+                });
+
+            loggerSerializer.Setup(s => s.Serialize(query)).Returns("Serialized parameters");
+
+            stopwatch.Setup(s => s.GetElapsed()).Returns(TimeSpan.Zero);
+
+            // Act
+
+            decorator.HandleAsync(query);
+
+            // Assert
+
+            stopwatch.Verify(s => s.Start(), Times.Once);
+            stopwatch.Verify(s => s.Stop(), Times.Once);
+
+            logger.ShouldBeCalled();
+
+            queryHandler.Executed.Should().Be.True();
         }
     }
 }

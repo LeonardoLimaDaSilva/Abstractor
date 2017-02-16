@@ -114,6 +114,31 @@ namespace Abstractor.Test.Command
         }
 
         [Fact]
+        public void SyncContext_CommandSucceeded_EventHandlerShouldBeExecuted()
+        {
+            // Arrange
+
+            var scheduler = new SynchronousTaskScheduler();
+
+            var command = new FakeCommand();
+
+            Task.Factory.StartNew(
+                    () =>
+                    {
+                        // Act
+
+                        CommandDispatcher.Dispatch(command);
+                    },
+                    CancellationToken.None,
+                    TaskCreationOptions.None,
+                    scheduler);
+
+            // Assert
+
+            command.EventHandlerExecuted.Should().Be.True();
+        }
+
+        [Fact]
         public void
             SyncContext_CommandThrowsSpecificException_EventHandlerShouldNotBeExecuted_ShouldHandleExceptionAndRethrow()
         {
@@ -129,45 +154,20 @@ namespace Abstractor.Test.Command
             // Act
 
             Task.Factory.StartNew(() =>
-            {
-                // Act
+                    {
+                        // Act
 
-                Assert.Throws<SpecificException>(() => CommandDispatcher.Dispatch(command));
-            },
-                CancellationToken.None,
-                TaskCreationOptions.None,
-                scheduler);
+                        Assert.Throws<SpecificException>(() => CommandDispatcher.Dispatch(command));
+                    },
+                    CancellationToken.None,
+                    TaskCreationOptions.None,
+                    scheduler);
 
             // Assert
 
             command.EventHandlerExecuted.Should().Be.False();
 
             command.SpecificExceptionHandlerExecuted.Should().Be.True();
-        }
-
-        [Fact]
-        public void SyncContext_CommandSucceeded_EventHandlerShouldBeExecuted()
-        {
-            // Arrange
-
-            var scheduler = new SynchronousTaskScheduler();
-
-            var command = new FakeCommand();
-
-            Task.Factory.StartNew(
-                () =>
-                {
-                    // Act
-
-                    CommandDispatcher.Dispatch(command);
-                },
-                CancellationToken.None,
-                TaskCreationOptions.None,
-                scheduler);
-
-            // Assert
-
-            command.EventHandlerExecuted.Should().Be.True();
         }
     }
 }

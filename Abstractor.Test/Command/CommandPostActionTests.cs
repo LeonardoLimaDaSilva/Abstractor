@@ -12,9 +12,9 @@ namespace Abstractor.Test.Command
     {
         public class PostActionCommand : ICommand
         {
-            public bool ThrowException { get; set; }
-
             public bool ActionExecuted { get; set; }
+
+            public bool ThrowException { get; set; }
         }
 
         public class PostActionCommandHandler : ICommandHandler<PostActionCommand>

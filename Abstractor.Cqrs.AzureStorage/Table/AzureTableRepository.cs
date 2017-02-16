@@ -15,7 +15,7 @@ namespace Abstractor.Cqrs.AzureStorage.Table
 
         public AzureTableRepository(IAzureTableContext context)
         {
-            _context = (AzureTableContext)context;
+            _context = (AzureTableContext) context;
         }
 
         /// <summary>
@@ -31,27 +31,15 @@ namespace Abstractor.Cqrs.AzureStorage.Table
         }
 
         /// <summary>
-        ///     Inserts or updates a given Azure Table record.
+        ///     Gets a single record from the table, matching the given keys.
         /// </summary>
-        /// <param name="entity">Table entity.</param>
-        public void Save(TEntity entity)
+        /// <param name="rowKey"></param>
+        /// <param name="partitionKey"></param>
+        /// <returns></returns>
+        public TEntity Get(string rowKey, string partitionKey = null)
         {
-            var set = _context.Set<TEntity>();
-
-            if (Exists(entity.RowKey, entity.PartitionKey))
-                set.Update(entity);
-            else
-                set.Insert(entity);
-        }
-
-        /// <summary>
-        ///     Removes the Azure Table record.
-        /// </summary>
-        /// <param name="entity">Table entity.</param>
-        public void Delete(TEntity entity)
-        {
-            var set = _context.Set<TEntity>();
-            set.Delete(entity);
+            var set = (AzureTableSet<TEntity>) _context.Set<TEntity>();
+            return set.Get(rowKey, partitionKey);
         }
 
         /// <summary>
@@ -66,15 +54,27 @@ namespace Abstractor.Cqrs.AzureStorage.Table
         }
 
         /// <summary>
-        ///     Gets a single record from the table, matching the given keys.
+        ///     Removes the Azure Table record.
         /// </summary>
-        /// <param name="rowKey"></param>
-        /// <param name="partitionKey"></param>
-        /// <returns></returns>
-        public TEntity Get(string rowKey, string partitionKey = null)
+        /// <param name="entity">Table entity.</param>
+        public void Delete(TEntity entity)
         {
-            var set = (AzureTableSet<TEntity>) _context.Set<TEntity>();
-            return set.Get(rowKey, partitionKey);
+            var set = _context.Set<TEntity>();
+            set.Delete(entity);
+        }
+
+        /// <summary>
+        ///     Inserts or updates a given Azure Table record.
+        /// </summary>
+        /// <param name="entity">Table entity.</param>
+        public void Save(TEntity entity)
+        {
+            var set = _context.Set<TEntity>();
+
+            if (Exists(entity.RowKey, entity.PartitionKey))
+                set.Update(entity);
+            else
+                set.Insert(entity);
         }
     }
 }

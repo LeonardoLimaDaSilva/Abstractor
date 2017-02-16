@@ -11,16 +11,16 @@ namespace Abstractor.Cqrs.AzureStorage.Interfaces
         where TEntity : AzureQueueMessage
     {
         /// <summary>
+        ///     Gets the total number of messages into the queue.
+        /// </summary>
+        /// <returns>Number of messages.</returns>
+        int Count();
+
+        /// <summary>
         ///     Gets the next message from the queue.
         /// </summary>
         /// <param name="visibilityTimeout">Specifies the new visibility timeout of message.</param>
         /// <returns>Message.</returns>
         TEntity GetNext(TimeSpan? visibilityTimeout = null);
-
-        /// <summary>
-        ///     Gets the total number of messages into the queue.
-        /// </summary>
-        /// <returns>Number of messages.</returns>
-        int Count();
     }
 }

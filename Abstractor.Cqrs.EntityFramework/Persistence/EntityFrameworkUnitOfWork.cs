@@ -25,6 +25,14 @@ namespace Abstractor.Cqrs.EntityFramework.Persistence
         }
 
         /// <summary>
+        ///     Detaches all entries from the DbContext change tracker.
+        /// </summary>
+        public void Clear()
+        {
+            _context.ChangeTracker().Clear();
+        }
+
+        /// <summary>
         ///     Commit the changes tracked by DbContext.
         /// </summary>
         public void Commit()
@@ -47,14 +55,6 @@ namespace Abstractor.Cqrs.EntityFramework.Persistence
 
                 throw;
             }
-        }
-
-        /// <summary>
-        ///     Detaches all entries from the DbContext change tracker.
-        /// </summary>
-        public void Clear()
-        {
-            _context.ChangeTracker().Clear();
         }
     }
 }

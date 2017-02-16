@@ -12,6 +12,15 @@ namespace Abstractor.Cqrs.Infrastructure.CrossCuttingConcerns
         private Stopwatch _stopwatch;
 
         /// <summary>
+        ///     Gets the elapsed interval.
+        /// </summary>
+        /// <returns>Elapsed interval.</returns>
+        public TimeSpan GetElapsed()
+        {
+            return _stopwatch.Elapsed;
+        }
+
+        /// <summary>
         ///     Starts measuring elapsed time for an interval.
         /// </summary>
         public void Start()
@@ -26,15 +35,6 @@ namespace Abstractor.Cqrs.Infrastructure.CrossCuttingConcerns
         public void Stop()
         {
             _stopwatch.Stop();
-        }
-
-        /// <summary>
-        ///     Gets the elapsed interval.
-        /// </summary>
-        /// <returns>Elapsed interval.</returns>
-        public TimeSpan GetElapsed()
-        {
-            return _stopwatch.Elapsed;
         }
     }
 }

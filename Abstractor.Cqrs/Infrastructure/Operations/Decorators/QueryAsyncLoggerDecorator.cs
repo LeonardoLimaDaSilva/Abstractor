@@ -17,12 +17,12 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
         private readonly IAttributeFinder _attributeFinder;
         private readonly Func<IQueryAsyncHandler<TQuery, TResult>> _handlerFactory;
         private readonly Func<ILogger> _logger;
-        private readonly GlobalSettings _settings;
         private readonly ILoggerSerializer _loggerSerializer;
+        private readonly GlobalSettings _settings;
         private readonly IStopwatch _stopwatch;
 
         /// <summary>
-        /// QueryAsyncLoggerDecorator constructor.
+        ///     QueryAsyncLoggerDecorator constructor.
         /// </summary>
         /// <param name="handlerFactory"></param>
         /// <param name="attributeFinder"></param>
@@ -55,7 +55,7 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
         {
             var handler = _handlerFactory();
 
-            if (!_attributeFinder.Decorates(query.GetType(), typeof (LogAttribute)) && !_settings.EnableLogging)
+            if (!_attributeFinder.Decorates(query.GetType(), typeof(LogAttribute)) && !_settings.EnableLogging)
                 return handler.HandleAsync(query);
 
             _stopwatch.Start();

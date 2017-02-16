@@ -17,13 +17,8 @@ namespace Abstractor.Cqrs.Test.Operations.Dispatchers
         {
         }
 
-        [Theory, AutoMoqData]
-        public void Dispatch_NullCommand_ThrowsArgumentNullException(CommandDispatcher dispatcher)
-        {
-            Assert.Throws<ArgumentNullException>(() => dispatcher.Dispatch(null));
-        }
-
-        [Theory, AutoMoqData]
+        [Theory]
+        [AutoMoqData]
         public void Dispatch_BuildGenericCommandHandlerAndGetFromContainer_ShouldHandleCommand(
             [Frozen] Mock<IContainer> container,
             [Frozen] Mock<ICommandHandler<FakeCommand>> commandHandler,
@@ -32,7 +27,7 @@ namespace Abstractor.Cqrs.Test.Operations.Dispatchers
         {
             // Arrange
 
-            var genericTypeName = typeof (ICommandHandler<FakeCommand>).FullName;
+            var genericTypeName = typeof(ICommandHandler<FakeCommand>).FullName;
 
             container.Setup(c => c.GetInstance(It.Is<Type>(t => t.FullName == genericTypeName)))
                      .Returns(commandHandler.Object);
@@ -46,36 +41,29 @@ namespace Abstractor.Cqrs.Test.Operations.Dispatchers
             commandHandler.Verify(t => t.Handle(command), Times.Once);
         }
 
-        [Theory, AutoMoqData]
-        public async void DispatchAsync_NullCommand_ThrowsArgumentNullException(CommandDispatcher dispatcher)
-        {
-            await Assert.ThrowsAsync<ArgumentNullException>(() => dispatcher.DispatchAsync(null));
-        }
-
-        [Theory, AutoMoqData]
-        public async void DispatchAsync_BuildGenericCommandHandlerAndGetFromContainer_ShouldHandleCommandOnANewThread(
+        [Theory]
+        [AutoMoqData]
+        public void Dispatch_CommandThrowsActivationException_ShouldThrowCommandHandlerNotFoundException(
             [Frozen] Mock<IContainer> container,
-            [Frozen] Mock<ICommandHandler<FakeCommand>> commandHandler,
+            [Frozen] Mock<ICommandHandler<ICommand>> commandHandler,
             FakeCommand command,
             CommandDispatcher dispatcher)
         {
             // Arrange
 
-            var genericTypeName = typeof (ICommandHandler<FakeCommand>).FullName;
+            commandHandler.Setup(h => h.Handle(It.IsAny<FakeCommand>())).Throws<Exception>();
 
-            container.Setup(c => c.GetInstance(It.Is<Type>(t => t.FullName == genericTypeName)))
-                     .Returns(commandHandler.Object);
+            container.Setup(c => c.GetInstance(It.IsAny<Type>())).Throws<Exception>();
 
-            // Act
+            container.Setup(c => c.IsActivationException(It.IsAny<Exception>())).Returns(true);
 
-            await dispatcher.DispatchAsync(command);
+            // Act and assert
 
-            // Assert
-
-            commandHandler.Verify(t => t.Handle(command), Times.Once);
+            Assert.Throws<CommandHandlerNotFoundException>(() => dispatcher.Dispatch(command));
         }
 
-        [Theory, AutoMoqData]
+        [Theory]
+        [AutoMoqData]
         public void Dispatch_CommandThrowsCommandException_ShouldHandleExceptionAndRethrow(
             [Frozen] Mock<IContainer> container,
             [Frozen] Mock<ICommandHandler<ICommand>> commandHandler,
@@ -109,7 +97,86 @@ namespace Abstractor.Cqrs.Test.Operations.Dispatchers
             commandHandler.Verify(h => h.Handle(commandException), Times.Once);
         }
 
-        [Theory, AutoMoqData]
+        [Theory]
+        [AutoMoqData]
+        public void Dispatch_CommandThrowsGenericException_ShouldJustRethrow(
+            [Frozen] Mock<IContainer> container,
+            [Frozen] Mock<ICommandHandler<ICommand>> commandHandler,
+            FakeCommand command,
+            CommandDispatcher dispatcher)
+        {
+            // Arrange
+
+            commandHandler.Setup(h => h.Handle(It.IsAny<FakeCommand>())).Throws<Exception>();
+
+            var genericTypeName = typeof(ICommandHandler<FakeCommand>).FullName;
+
+            container.Setup(c => c.GetInstance(It.Is<Type>(t => t.FullName == genericTypeName)))
+                     .Returns(commandHandler.Object);
+
+            // Act
+
+            Assert.Throws<Exception>(() => dispatcher.Dispatch(command));
+
+            // Assert
+
+            commandHandler.Verify(t => t.Handle(It.IsAny<ICommand>()), Times.Once);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public void Dispatch_NullCommand_ThrowsArgumentNullException(CommandDispatcher dispatcher)
+        {
+            Assert.Throws<ArgumentNullException>(() => dispatcher.Dispatch(null));
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async void DispatchAsync_BuildGenericCommandHandlerAndGetFromContainer_ShouldHandleCommandOnANewThread(
+            [Frozen] Mock<IContainer> container,
+            [Frozen] Mock<ICommandHandler<FakeCommand>> commandHandler,
+            FakeCommand command,
+            CommandDispatcher dispatcher)
+        {
+            // Arrange
+
+            var genericTypeName = typeof(ICommandHandler<FakeCommand>).FullName;
+
+            container.Setup(c => c.GetInstance(It.Is<Type>(t => t.FullName == genericTypeName)))
+                     .Returns(commandHandler.Object);
+
+            // Act
+
+            await dispatcher.DispatchAsync(command);
+
+            // Assert
+
+            commandHandler.Verify(t => t.Handle(command), Times.Once);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async void DispatchAsync_CommandThrowsActivationException_ShouldThrowCommandHandlerNotFoundException(
+            [Frozen] Mock<IContainer> container,
+            [Frozen] Mock<ICommandHandler<ICommand>> commandHandler,
+            FakeCommand command,
+            CommandDispatcher dispatcher)
+        {
+            // Arrange
+
+            commandHandler.Setup(h => h.Handle(It.IsAny<FakeCommand>())).Throws<Exception>();
+
+            container.Setup(c => c.GetInstance(It.IsAny<Type>())).Throws<Exception>();
+
+            container.Setup(c => c.IsActivationException(It.IsAny<Exception>())).Returns(true);
+
+            // Act and assert
+
+            await Assert.ThrowsAsync<CommandHandlerNotFoundException>(() => dispatcher.DispatchAsync(command));
+        }
+
+        [Theory]
+        [AutoMoqData]
         public async void DispatchAsync_CommandThrowsCommandException_ShouldHandleExceptionAndRethrow(
             [Frozen] Mock<IContainer> container,
             [Frozen] Mock<ICommandHandler<ICommand>> commandHandler,
@@ -143,32 +210,8 @@ namespace Abstractor.Cqrs.Test.Operations.Dispatchers
             commandHandler.Verify(h => h.Handle(commandException), Times.Once);
         }
 
-        [Theory, AutoMoqData]
-        public void Dispatch_CommandThrowsGenericException_ShouldJustRethrow(
-            [Frozen] Mock<IContainer> container,
-            [Frozen] Mock<ICommandHandler<ICommand>> commandHandler,
-            FakeCommand command,
-            CommandDispatcher dispatcher)
-        {
-            // Arrange
-
-            commandHandler.Setup(h => h.Handle(It.IsAny<FakeCommand>())).Throws<Exception>();
-
-            var genericTypeName = typeof(ICommandHandler<FakeCommand>).FullName;
-
-            container.Setup(c => c.GetInstance(It.Is<Type>(t => t.FullName == genericTypeName)))
-                     .Returns(commandHandler.Object);
-
-            // Act
-
-            Assert.Throws<Exception>(() => dispatcher.Dispatch(command));
-
-            // Assert
-
-            commandHandler.Verify(t => t.Handle(It.IsAny<ICommand>()), Times.Once);
-        }
-
-        [Theory, AutoMoqData]
+        [Theory]
+        [AutoMoqData]
         public async void DispatchAsync_CommandThrowsGenericException_ShouldJustRethrow(
             [Frozen] Mock<IContainer> container,
             [Frozen] Mock<ICommandHandler<ICommand>> commandHandler,
@@ -193,44 +236,11 @@ namespace Abstractor.Cqrs.Test.Operations.Dispatchers
             commandHandler.Verify(t => t.Handle(It.IsAny<ICommand>()), Times.Once);
         }
 
-        [Theory, AutoMoqData]
-        public void Dispatch_CommandThrowsActivationException_ShouldThrowCommandHandlerNotFoundException(
-            [Frozen] Mock<IContainer> container,
-            [Frozen] Mock<ICommandHandler<ICommand>> commandHandler,
-            FakeCommand command,
-            CommandDispatcher dispatcher)
+        [Theory]
+        [AutoMoqData]
+        public async void DispatchAsync_NullCommand_ThrowsArgumentNullException(CommandDispatcher dispatcher)
         {
-            // Arrange
-
-            commandHandler.Setup(h => h.Handle(It.IsAny<FakeCommand>())).Throws<Exception>();
-
-            container.Setup(c => c.GetInstance(It.IsAny<Type>())).Throws<Exception>();
-
-            container.Setup(c => c.IsActivationException(It.IsAny<Exception>())).Returns(true);
-
-            // Act and assert
-
-            Assert.Throws<CommandHandlerNotFoundException>(() => dispatcher.Dispatch(command));
-        }
-
-        [Theory, AutoMoqData]
-        public async void DispatchAsync_CommandThrowsActivationException_ShouldThrowCommandHandlerNotFoundException(
-            [Frozen] Mock<IContainer> container,
-            [Frozen] Mock<ICommandHandler<ICommand>> commandHandler,
-            FakeCommand command,
-            CommandDispatcher dispatcher)
-        {
-            // Arrange
-
-            commandHandler.Setup(h => h.Handle(It.IsAny<FakeCommand>())).Throws<Exception>();
-
-            container.Setup(c => c.GetInstance(It.IsAny<Type>())).Throws<Exception>();
-
-            container.Setup(c => c.IsActivationException(It.IsAny<Exception>())).Returns(true);
-
-            // Act and assert
-
-            await Assert.ThrowsAsync<CommandHandlerNotFoundException>(() => dispatcher.DispatchAsync(command));
+            await Assert.ThrowsAsync<ArgumentNullException>(() => dispatcher.DispatchAsync(null));
         }
     }
 }

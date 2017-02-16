@@ -48,7 +48,7 @@ namespace Abstractor.Cqrs.Infrastructure.CrossCuttingConcerns
             if (value != null) return;
 
             throw new EntityNotFoundException(
-                $"A entidade do tipo '{typeof (T).Name}' não foi encontrada para a chave primária '{primaryKey}'.");
+                $"A entidade do tipo '{typeof(T).Name}' não foi encontrada para a chave primária '{primaryKey}'.");
         }
     }
 }

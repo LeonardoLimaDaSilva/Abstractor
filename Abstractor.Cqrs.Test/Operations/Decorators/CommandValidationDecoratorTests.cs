@@ -12,26 +12,8 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
 {
     public class CommandValidationDecoratorTests
     {
-        [Theory, AutoMoqData]
-        public void Handle_CommandValid_ShouldHandleCommandAfterValidation(
-            [Frozen] Mock<ICommandHandler<ICommand>> commandHandler,
-            [Frozen] Mock<IValidator> validator,
-            ICommand command,
-            CommandValidationDecorator<ICommand> decorator)
-        {
-            // Arrange and assert
-
-            var callOrder = 0;
-
-            validator.Setup(d => d.Validate(command)).Callback(() => callOrder++.Should().Be(0));
-            commandHandler.Setup(d => d.Handle(command)).Callback(() => callOrder++.Should().Be(1));
-
-            // Act
-
-            decorator.Handle(command);
-        }
-
-        [Theory, AutoMoqData]
+        [Theory]
+        [AutoMoqData]
         public void Handle_CommandInvalid_ShouldThrowExceptionAndNotHandleCommand(
             [Frozen] Mock<ICommandHandler<ICommand>> commandHandler,
             [Frozen] Mock<IValidator> validator,
@@ -49,6 +31,26 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
             // Assert
 
             commandHandler.Verify(d => d.Handle(It.IsAny<ICommand>()), Times.Never);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public void Handle_CommandValid_ShouldHandleCommandAfterValidation(
+            [Frozen] Mock<ICommandHandler<ICommand>> commandHandler,
+            [Frozen] Mock<IValidator> validator,
+            ICommand command,
+            CommandValidationDecorator<ICommand> decorator)
+        {
+            // Arrange and assert
+
+            var callOrder = 0;
+
+            validator.Setup(d => d.Validate(command)).Callback(() => callOrder++.Should().Be(0));
+            commandHandler.Setup(d => d.Handle(command)).Callback(() => callOrder++.Should().Be(1));
+
+            // Act
+
+            decorator.Handle(command);
         }
     }
 }

@@ -10,7 +10,8 @@ namespace Abstractor.Cqrs.Test.Domain
         /// <summary>
         ///     Just to please the code coverage tool.
         /// </summary>
-        [Theory, AutoMoqData]
+        [Theory]
+        [AutoMoqData]
         public void Mapping_ShouldSetData(string data)
         {
             var message = new QueueMessage

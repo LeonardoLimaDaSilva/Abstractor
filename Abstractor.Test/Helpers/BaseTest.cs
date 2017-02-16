@@ -5,9 +5,9 @@ namespace Abstractor.Test.Helpers
 {
     public abstract class BaseTest
     {
-        public IQueryDispatcher QueryDispatcher { get; set; }
-
         public ICommandDispatcher CommandDispatcher { get; set; }
+
+        public IQueryDispatcher QueryDispatcher { get; set; }
 
         public FakeUnitOfWork UnitOfWork { get; set; }
 

@@ -35,7 +35,7 @@ namespace Abstractor.Cqrs.Test.Domain
 
         private class ConcreteEntity4 : Entity<ConcreteEntity4Id>
         {
-            public ConcreteEntity4(ConcreteEntity4Id id) 
+            public ConcreteEntity4(ConcreteEntity4Id id)
                 : base(id)
             {
             }
@@ -43,7 +43,7 @@ namespace Abstractor.Cqrs.Test.Domain
 
         private class ConcreteEntity4Id : ValueObject<ConcreteEntity4Id>
         {
-            private Guid Id { get;  }
+            private Guid Id { get; }
 
             public ConcreteEntity4Id(Guid id)
             {
@@ -54,28 +54,6 @@ namespace Abstractor.Cqrs.Test.Domain
             {
                 yield return Id;
             }
-        }
-
-        [Theory]
-        [InlineData("c480311c-3838-4449-bf99-e37e32a4b376", "c480311c-3838-4449-bf99-e37e32a4b376")]
-        public void Id_Constructor_ShouldBe(string id, string expected)
-        {
-            new ConcreteEntity(Guid.Parse(id)).Id.Should().Be(Guid.Parse(expected));
-        }
-
-        [Theory]
-        [InlineData("c480311c-3838-4449-bf99-e37e32a4b376", 532182307)]
-        [InlineData("00000000-0000-0000-0000-000000000000", 0)]
-        public void GetHashCode_ShouldBe(string id, int expected)
-        {
-            new ConcreteEntity(Guid.Parse(id)).GetHashCode().Should().Be(expected);
-        }
-
-        [Theory, AutoMoqData]
-        public void Equals_OtherObject_ShouldBeFalse(object fake)
-        {
-            var entity = new ConcreteEntity(Guid.Empty);
-            entity.Equals(fake).Should().Be.False();
         }
 
         [Fact]
@@ -141,21 +119,19 @@ namespace Abstractor.Cqrs.Test.Domain
             entity2.Equals(entity1).Should().Be.False();
         }
 
+        [Theory]
+        [AutoMoqData]
+        public void Equals_OtherObject_ShouldBeFalse(object fake)
+        {
+            var entity = new ConcreteEntity(Guid.Empty);
+            entity.Equals(fake).Should().Be.False();
+        }
+
         [Fact]
         public void Equals_SameIds_ShouldBeTrue()
         {
             var entity1 = new ConcreteEntity(Guid.Parse("c480311c-3838-4449-bf99-e37e32a4b376"));
             var entity2 = new ConcreteEntity(Guid.Parse("c480311c-3838-4449-bf99-e37e32a4b376"));
-
-            entity1.Equals(entity2).Should().Be.True();
-            entity2.Equals(entity1).Should().Be.True();
-        }
-
-        [Fact]
-        public void Equals_SameValueObjectIds_ShouldBeTrue()
-        {
-            var entity1 = new ConcreteEntity4(new ConcreteEntity4Id(Guid.Parse("c480311c-3838-4449-bf99-e37e32a4b376")));
-            var entity2 = new ConcreteEntity4(new ConcreteEntity4Id(Guid.Parse("c480311c-3838-4449-bf99-e37e32a4b376")));
 
             entity1.Equals(entity2).Should().Be.True();
             entity2.Equals(entity1).Should().Be.True();
@@ -179,6 +155,31 @@ namespace Abstractor.Cqrs.Test.Domain
 
             entity1.Equals(entity2).Should().Be.True();
             entity2.Equals(entity1).Should().Be.True();
+        }
+
+        [Fact]
+        public void Equals_SameValueObjectIds_ShouldBeTrue()
+        {
+            var entity1 = new ConcreteEntity4(new ConcreteEntity4Id(Guid.Parse("c480311c-3838-4449-bf99-e37e32a4b376")));
+            var entity2 = new ConcreteEntity4(new ConcreteEntity4Id(Guid.Parse("c480311c-3838-4449-bf99-e37e32a4b376")));
+
+            entity1.Equals(entity2).Should().Be.True();
+            entity2.Equals(entity1).Should().Be.True();
+        }
+
+        [Theory]
+        [InlineData("c480311c-3838-4449-bf99-e37e32a4b376", 532182307)]
+        [InlineData("00000000-0000-0000-0000-000000000000", 0)]
+        public void GetHashCode_ShouldBe(string id, int expected)
+        {
+            new ConcreteEntity(Guid.Parse(id)).GetHashCode().Should().Be(expected);
+        }
+
+        [Theory]
+        [InlineData("c480311c-3838-4449-bf99-e37e32a4b376", "c480311c-3838-4449-bf99-e37e32a4b376")]
+        public void Id_Constructor_ShouldBe(string id, string expected)
+        {
+            new ConcreteEntity(Guid.Parse(id)).Id.Should().Be(Guid.Parse(expected));
         }
     }
 }

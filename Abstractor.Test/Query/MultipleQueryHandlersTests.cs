@@ -14,7 +14,7 @@ namespace Abstractor.Test.Query
         // E.g. repositories should be able to handle an optimized query and return the results 
         // directly to the consumer via tailored DTOs
         [ExcludeFromCodeCoverage]
-        public class MultipleQueryHandler : 
+        public class MultipleQueryHandler :
             IQueryHandler<FakeQuery1, FakeQuery1Result>,
             IQueryHandler<FakeQuery2, FakeQuery2Result>,
             IQueryHandler<FakeQuery3, FakeCommonResult>,
@@ -24,26 +24,6 @@ namespace Abstractor.Test.Query
             IQueryAsyncHandler<FakeQuery3, FakeCommonResult>,
             IQueryAsyncHandler<FakeQuery4, FakeCommonResult>
         {
-            public FakeQuery1Result Handle(FakeQuery1 query)
-            {
-                return new FakeQuery1Result();
-            }
-
-            public FakeQuery2Result Handle(FakeQuery2 query)
-            {
-                return new FakeQuery2Result();
-            }
-
-            public FakeCommonResult Handle(FakeQuery3 query)
-            {
-                return new FakeCommonResult();
-            }
-
-            public FakeCommonResult Handle(FakeQuery4 query)
-            {
-                return new FakeCommonResult();
-            }
-
             public async Task<FakeQuery1Result> HandleAsync(FakeQuery1 query)
             {
                 return await Task.Run(() => new FakeQuery1Result());
@@ -63,22 +43,42 @@ namespace Abstractor.Test.Query
             {
                 return await Task.Run(() => new FakeCommonResult());
             }
-        }
 
-        // Duplicate implementations of a query handler are not permitted
-        [ExcludeFromCodeCoverage]
-        public class Fake2Repository : 
-            IQueryHandler<FakeQuery1, FakeQuery1Result>,
-            IQueryAsyncHandler<FakeQuery1, FakeQuery1Result>
-        {
             public FakeQuery1Result Handle(FakeQuery1 query)
             {
                 return new FakeQuery1Result();
             }
 
+            public FakeQuery2Result Handle(FakeQuery2 query)
+            {
+                return new FakeQuery2Result();
+            }
+
+            public FakeCommonResult Handle(FakeQuery3 query)
+            {
+                return new FakeCommonResult();
+            }
+
+            public FakeCommonResult Handle(FakeQuery4 query)
+            {
+                return new FakeCommonResult();
+            }
+        }
+
+        // Duplicate implementations of a query handler are not permitted
+        [ExcludeFromCodeCoverage]
+        public class Fake2Repository :
+            IQueryHandler<FakeQuery1, FakeQuery1Result>,
+            IQueryAsyncHandler<FakeQuery1, FakeQuery1Result>
+        {
             public async Task<FakeQuery1Result> HandleAsync(FakeQuery1 query)
             {
                 return await Task.Run(() => new FakeQuery1Result());
+            }
+
+            public FakeQuery1Result Handle(FakeQuery1 query)
+            {
+                return new FakeQuery1Result();
             }
         }
 

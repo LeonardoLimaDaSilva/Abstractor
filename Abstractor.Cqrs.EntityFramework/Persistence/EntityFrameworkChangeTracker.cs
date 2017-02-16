@@ -5,7 +5,7 @@ using Abstractor.Cqrs.EntityFramework.Interfaces;
 namespace Abstractor.Cqrs.EntityFramework.Persistence
 {
     /// <summary>
-    ///     Encapsulates the clear method of the <see cref="IEntityFrameworkContext"/> extension.
+    ///     Encapsulates the clear method of the <see cref="IEntityFrameworkContext" /> extension.
     /// </summary>
     internal class EntityFrameworkChangeTracker : IEntityFrameworkChangeTracker
     {

@@ -17,7 +17,10 @@ namespace Abstractor.Cqrs.Infrastructure.CompositionRoot.Extensions
         /// <param name="container">Inversion of control container.</param>
         /// <param name="compositionSettings">Composition settings.</param>
         /// <param name="globalSettings">Global settings.</param>
-        public static void RegisterAbstractor(this IContainer container, Action<CompositionRootSettings> compositionSettings, Action<GlobalSettings> globalSettings = null)
+        public static void RegisterAbstractor(
+            this IContainer container,
+            Action<CompositionRootSettings> compositionSettings,
+            Action<GlobalSettings> globalSettings = null)
         {
             Guard.ArgumentIsNotNull(container, nameof(container));
             Guard.ArgumentIsNotNull(compositionSettings, nameof(compositionSettings));
@@ -49,7 +52,7 @@ namespace Abstractor.Cqrs.Infrastructure.CompositionRoot.Extensions
         {
             var packages = from assembly in AppDomain.CurrentDomain.GetAssemblies()
                 from type in assembly.GetSafeTypes()
-                where typeof (IAbstractorInstaller).IsAssignableFrom(type)
+                where typeof(IAbstractorInstaller).IsAssignableFrom(type)
                 where !type.IsAbstract
                 select (IAbstractorInstaller) Activator.CreateInstance(type);
 

@@ -7,7 +7,7 @@ namespace Abstractor.Cqrs.AzureStorage.Interfaces
     ///     Represents a data repository of an Azure Table TEntity type with read operations.
     /// </summary>
     /// <typeparam name="TEntity">Table entity type to be read.</typeparam>
-    public interface ITableReader<out TEntity> 
+    public interface ITableReader<out TEntity>
         where TEntity : ITableEntity
     {
         /// <summary>

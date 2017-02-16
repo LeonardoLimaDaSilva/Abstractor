@@ -10,11 +10,15 @@ namespace Abstractor.Cqrs.Interfaces.CompositionRoot
     public interface IContainer
     {
         /// <summary>
-        ///     Gets and instance of the given type.
+        ///     Provides functionality for resolving delegates of type <see cref="Func{TResult}" />.
         /// </summary>
-        /// <param name="type">Type of instance.</param>
-        /// <returns>Instance of given type.</returns>
-        object GetInstance(Type type);
+        void AllowResolvingFuncFactories();
+
+        /// <summary>
+        ///     Begins a new scope for the given container.
+        /// </summary>
+        /// <returns>New scope.</returns>
+        IDisposable BeginLifetimeScope();
 
         /// <summary>
         ///     Gets all instances registered for the given type.
@@ -30,10 +34,67 @@ namespace Abstractor.Cqrs.Interfaces.CompositionRoot
         object GetCurrentLifetimeScope();
 
         /// <summary>
-        ///     Begins a new scope for the given container.
+        ///     Gets and instance of the given type.
         /// </summary>
-        /// <returns>New scope.</returns>
-        IDisposable BeginLifetimeScope();
+        /// <param name="type">Type of instance.</param>
+        /// <returns>Instance of given type.</returns>
+        object GetInstance(Type type);
+
+        /// <summary>
+        ///     Verify whether the exception is an activation exception.
+        /// </summary>
+        /// <param name="exception">Exception to be verified.</param>
+        /// <returns></returns>
+        bool IsActivationException(Exception exception);
+
+        /// <summary>
+        ///     Registers all concrete types that implements an open generic abstraction.
+        /// </summary>
+        /// <param name="openGenericServiceType">Type of the abstraction.</param>
+        /// <param name="assemblies">Assemblies that contains the concrete types.</param>
+        void RegisterCollection(Type openGenericServiceType, IEnumerable<Assembly> assemblies);
+
+        /// <summary>
+        ///     Ensures that the same instance of the supplied decoratorType is returned, wrapping the original
+        ///     serviceType.
+        /// </summary>
+        /// <param name="serviceType">Original type.</param>
+        /// <param name="decoratorType">Type that wraps the original type.</param>
+        void RegisterDecoratorScoped(Type serviceType, Type decoratorType);
+
+        /// <summary>
+        ///     Ensures that the same instance of the supplied decoratorType is returned, wrapping the original
+        ///     serviceType.
+        /// </summary>
+        /// <param name="serviceType">Original type.</param>
+        /// <param name="decoratorType">Type that wraps the original type.</param>
+        void RegisterDecoratorSingleton(Type serviceType, Type decoratorType);
+
+        /// <summary>
+        ///     Ensures that the a new instance of the supplied decoratorType is returned, wrapping the original
+        ///     serviceType.
+        /// </summary>
+        /// <param name="serviceType">Original type.</param>
+        /// <param name="decoratorType">Type that wraps the original type.</param>
+        void RegisterDecoratorTransient(Type serviceType, Type decoratorType);
+
+        /// <summary>
+        ///     Provides functionality for the deferred resolving of unregistered types.
+        /// </summary>
+        /// <typeparam name="TService">Type of abstraction.</typeparam>
+        /// <typeparam name="TImplementation">Type of implementation.</typeparam>
+        void RegisterLazyScoped<TService, TImplementation>()
+            where TService : class
+            where TImplementation : class, TService;
+
+        /// <summary>
+        ///     Provides functionality for the deferred resolving of unregistered types.
+        /// </summary>
+        /// <typeparam name="TService">Type of abstraction.</typeparam>
+        /// <typeparam name="TImplementation">Type of implementation.</typeparam>
+        void RegisterLazySingleton<TService, TImplementation>()
+            where TService : class
+            where TImplementation : class, TService;
 
         /// <summary>
         ///     Registers that an instance of type TImplementation will be returned when an instance of type
@@ -52,6 +113,24 @@ namespace Abstractor.Cqrs.Interfaces.CompositionRoot
         void RegisterScoped(Type serviceType, Type implementationType);
 
         /// <summary>
+        ///     Registers that an instance of type TImplementation will return the same instance of type
+        ///     TService when requested.
+        /// </summary>
+        /// <typeparam name="TService">Type of abstraction.</typeparam>
+        /// <typeparam name="TImplementation">Type of the implementation.</typeparam>
+        void RegisterSingleton<TService, TImplementation>()
+            where TService : class
+            where TImplementation : class, TService;
+
+        /// <summary>
+        ///     Registers the specified delegate that allows returning singleton instances of TService.
+        /// </summary>
+        /// <typeparam name="TService">Type to be registered.</typeparam>
+        /// <param name="instanceCreator"><see cref="Func{T}" /> delegate.</param>
+        void RegisterSingleton<TService>(Func<TService> instanceCreator)
+            where TService : class;
+
+        /// <summary>
         ///     Registers that a new instance of type serviceType will be returned each time that an instance of
         ///     type implementationType is requested.
         /// </summary>
@@ -66,84 +145,5 @@ namespace Abstractor.Cqrs.Interfaces.CompositionRoot
         /// <param name="openGenericServiceType">Type of the abstraction.</param>
         /// <param name="assemblies">Assemblies that contains the concrete type</param>
         void RegisterTransient(Type openGenericServiceType, IEnumerable<Assembly> assemblies);
-
-        /// <summary>
-        ///     Registers all concrete types that implements an open generic abstraction.
-        /// </summary>
-        /// <param name="openGenericServiceType">Type of the abstraction.</param>
-        /// <param name="assemblies">Assemblies that contains the concrete types.</param>
-        void RegisterCollection(Type openGenericServiceType, IEnumerable<Assembly> assemblies);
-
-        /// <summary>
-        ///     Registers that an instance of type TImplementation will return the same instance of type
-        ///     TService when requested.
-        /// </summary>
-        /// <typeparam name="TService">Type of abstraction.</typeparam>
-        /// <typeparam name="TImplementation">Type of the implementation.</typeparam>
-        void RegisterSingleton<TService, TImplementation>()
-            where TService : class
-            where TImplementation : class, TService;
-
-        /// <summary>
-        ///     Ensures that the a new instance of the supplied decoratorType is returned, wrapping the original
-        ///     serviceType.
-        /// </summary>
-        /// <param name="serviceType">Original type.</param>
-        /// <param name="decoratorType">Type that wraps the original type.</param>
-        void RegisterDecoratorTransient(Type serviceType, Type decoratorType);
-
-        /// <summary>
-        ///     Ensures that the same instance of the supplied decoratorType is returned, wrapping the original
-        ///     serviceType.
-        /// </summary>
-        /// <param name="serviceType">Original type.</param>
-        /// <param name="decoratorType">Type that wraps the original type.</param>
-        void RegisterDecoratorSingleton(Type serviceType, Type decoratorType);
-
-        /// <summary>
-        ///     Ensures that the same instance of the supplied decoratorType is returned, wrapping the original
-        ///     serviceType.
-        /// </summary>
-        /// <param name="serviceType">Original type.</param>
-        /// <param name="decoratorType">Type that wraps the original type.</param>
-        void RegisterDecoratorScoped(Type serviceType, Type decoratorType);
-
-        /// <summary>
-        ///     Provides functionality for the deferred resolving of unregistered types.
-        /// </summary>
-        /// <typeparam name="TService">Type of abstraction.</typeparam>
-        /// <typeparam name="TImplementation">Type of implementation.</typeparam>
-        void RegisterLazySingleton<TService, TImplementation>()
-            where TService : class
-            where TImplementation : class, TService;
-
-        /// <summary>
-        ///     Provides functionality for the deferred resolving of unregistered types.
-        /// </summary>
-        /// <typeparam name="TService">Type of abstraction.</typeparam>
-        /// <typeparam name="TImplementation">Type of implementation.</typeparam>
-        void RegisterLazyScoped<TService, TImplementation>()
-            where TService : class
-            where TImplementation : class, TService;
-
-        /// <summary>
-        ///     Provides functionality for resolving delegates of type <see cref="Func{T}" />.
-        /// </summary>
-        void AllowResolvingFuncFactories();
-
-        /// <summary>
-        ///     Registers the specified delegate that allows returning singleton instances of TService.
-        /// </summary>
-        /// <typeparam name="TService">Type to be registered.</typeparam>
-        /// <param name="instanceCreator"><see cref="Func{T}" /> delegate.</param>
-        void RegisterSingleton<TService>(Func<TService> instanceCreator)
-            where TService : class;
-
-        /// <summary>
-        ///     Verify whether the exception is an activation exception.
-        /// </summary>
-        /// <param name="exception">Exception to be verified.</param>
-        /// <returns></returns>
-        bool IsActivationException(Exception exception);
     }
 }

@@ -6,13 +6,13 @@
     public interface IUnitOfWork
     {
         /// <summary>
-        ///     Commits the changes.
-        /// </summary>
-        void Commit();
-
-        /// <summary>
         ///     Clears all tracked states.
         /// </summary>
         void Clear();
+
+        /// <summary>
+        ///     Commits the changes.
+        /// </summary>
+        void Commit();
     }
 }

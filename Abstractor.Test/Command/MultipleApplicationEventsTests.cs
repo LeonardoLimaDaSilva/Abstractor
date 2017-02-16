@@ -22,17 +22,17 @@ namespace Abstractor.Test.Command
         {
             public bool CommandThrowsException { get; set; }
 
-            public bool EventHandler1ThrowsException { get; set; }
-
-            public bool EventHandler2ThrowsException { get; set; }
-
             public bool EventHandler1Executed { get; set; }
-
-            public bool EventHandler2Executed { get; set; }
 
             public bool EventHandler1Succeeded { get; set; }
 
+            public bool EventHandler1ThrowsException { get; set; }
+
+            public bool EventHandler2Executed { get; set; }
+
             public bool EventHandler2Succeeded { get; set; }
+
+            public bool EventHandler2ThrowsException { get; set; }
         }
 
         /// <summary>
@@ -144,15 +144,15 @@ namespace Abstractor.Test.Command
             };
 
             Task.Factory.StartNew(
-                () =>
-                {
-                    // Act
+                    () =>
+                    {
+                        // Act
 
-                    CommandDispatcher.Dispatch(command);
-                },
-                CancellationToken.None,
-                TaskCreationOptions.None,
-                scheduler);
+                        CommandDispatcher.Dispatch(command);
+                    },
+                    CancellationToken.None,
+                    TaskCreationOptions.None,
+                    scheduler);
 
             // Assert
 
@@ -175,14 +175,14 @@ namespace Abstractor.Test.Command
             var command = new FakeCommand();
 
             Task.Factory.StartNew(() =>
-            {
-                // Act
+                    {
+                        // Act
 
-                CommandDispatcher.Dispatch(command);
-            },
-                CancellationToken.None,
-                TaskCreationOptions.None,
-                scheduler);
+                        CommandDispatcher.Dispatch(command);
+                    },
+                    CancellationToken.None,
+                    TaskCreationOptions.None,
+                    scheduler);
 
             // Assert
 
@@ -204,15 +204,15 @@ namespace Abstractor.Test.Command
             };
 
             Task.Factory.StartNew(
-                () =>
-                {
-                    // Act
+                    () =>
+                    {
+                        // Act
 
-                    CommandDispatcher.Dispatch(command);
-                },
-                CancellationToken.None,
-                TaskCreationOptions.None,
-                scheduler);
+                        CommandDispatcher.Dispatch(command);
+                    },
+                    CancellationToken.None,
+                    TaskCreationOptions.None,
+                    scheduler);
 
             // Assert
 

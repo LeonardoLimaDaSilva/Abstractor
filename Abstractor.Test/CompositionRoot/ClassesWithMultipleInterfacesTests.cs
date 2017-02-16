@@ -46,7 +46,7 @@ namespace Abstractor.Test.CompositionRoot
             {
                 command.Repository1 = _fake1Repository;
                 command.Repository2 = _fake2Repository;
-                 
+
                 yield break;
             }
         }

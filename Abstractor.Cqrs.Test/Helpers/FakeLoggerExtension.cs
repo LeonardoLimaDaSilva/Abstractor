@@ -5,10 +5,9 @@ namespace Abstractor.Cqrs.Test.Helpers
 {
     public static class FakeLoggerExtension
     {
-        public static void VerifyMessages(this FakeLogger logger, params string[] messages)
+        public static void ShouldBeCalled(this FakeLogger logger)
         {
-            for (var i = 0; i < messages.Length; i++)
-                logger.Messages[i].Should().Be(messages[i]);
+            logger.Messages.Any().Should().Be.True();
         }
 
         public static void ShouldNeverBeCalled(this FakeLogger logger)
@@ -16,9 +15,10 @@ namespace Abstractor.Cqrs.Test.Helpers
             logger.Messages.Any().Should().Be.False();
         }
 
-        public static void ShouldBeCalled(this FakeLogger logger)
+        public static void VerifyMessages(this FakeLogger logger, params string[] messages)
         {
-            logger.Messages.Any().Should().Be.True();
+            for (var i = 0; i < messages.Length; i++)
+                logger.Messages[i].Should().Be(messages[i]);
         }
     }
 }

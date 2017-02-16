@@ -16,18 +16,18 @@ namespace Abstractor.Cqrs.Infrastructure.CompositionRoot.Installers
             Guard.ArgumentIsNotNull(settings.ApplicationAssemblies, nameof(settings.ApplicationAssemblies));
 
             container.RegisterSingleton<IApplicationEventDispatcher, ApplicationEventDispatcher>();
-            container.RegisterCollection(typeof (IApplicationEventHandler<>), settings.ApplicationAssemblies);
+            container.RegisterCollection(typeof(IApplicationEventHandler<>), settings.ApplicationAssemblies);
 
             container.RegisterSingleton<IDomainEventDispatcher, DomainEventDispatcher>();
-            container.RegisterCollection(typeof (IDomainEventHandler<>), settings.ApplicationAssemblies);
+            container.RegisterCollection(typeof(IDomainEventHandler<>), settings.ApplicationAssemblies);
 
             container.RegisterDecoratorSingleton(
-                typeof (IApplicationEventHandler<>),
-                typeof (ApplicationEventLoggerDecorator<>));
+                typeof(IApplicationEventHandler<>),
+                typeof(ApplicationEventLoggerDecorator<>));
 
             container.RegisterDecoratorSingleton(
-                typeof (IDomainEventHandler<>),
-                typeof (DomainEventLoggerDecorator<>));
+                typeof(IDomainEventHandler<>),
+                typeof(DomainEventLoggerDecorator<>));
 
             container.RegisterDecoratorSingleton(
                 typeof(IApplicationEventHandler<>),

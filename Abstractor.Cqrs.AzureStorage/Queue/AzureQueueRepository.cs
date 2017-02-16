@@ -14,7 +14,28 @@ namespace Abstractor.Cqrs.AzureStorage.Queue
 
         public AzureQueueRepository(IAzureQueueContext context)
         {
-            _context = (AzureQueueContext)context;
+            _context = (AzureQueueContext) context;
+        }
+
+        /// <summary>
+        ///     Gets the total number of messages into the queue.
+        /// </summary>
+        /// <returns>Number of messages.</returns>
+        public int Count()
+        {
+            var set = (AzureQueueSet<TEntity>) _context.Set<TEntity>();
+            return set.Count();
+        }
+
+        /// <summary>
+        ///     Gets the next message from the queue.
+        /// </summary>
+        /// <param name="visibilityTimeout">Specifies the new visibility timeout of message.</param>
+        /// <returns>Message.</returns>
+        public TEntity GetNext(TimeSpan? visibilityTimeout = null)
+        {
+            var set = (AzureQueueSet<TEntity>) _context.Set<TEntity>();
+            return set.GetNext(visibilityTimeout);
         }
 
         /// <summary>
@@ -35,27 +56,6 @@ namespace Abstractor.Cqrs.AzureStorage.Queue
         {
             var set = _context.Set<TEntity>();
             set.Delete(entity);
-        }
-
-        /// <summary>
-        ///     Gets the next message from the queue.
-        /// </summary>
-        /// <param name="visibilityTimeout">Specifies the new visibility timeout of message.</param>
-        /// <returns>Message.</returns>
-        public TEntity GetNext(TimeSpan? visibilityTimeout = null)
-        {
-            var set = (AzureQueueSet<TEntity>) _context.Set<TEntity>();
-            return set.GetNext(visibilityTimeout);
-        }
-
-        /// <summary>
-        ///     Gets the total number of messages into the queue.
-        /// </summary>
-        /// <returns>Number of messages.</returns>
-        public int Count()
-        {
-            var set = (AzureQueueSet<TEntity>) _context.Set<TEntity>();
-            return set.Count();
         }
     }
 }

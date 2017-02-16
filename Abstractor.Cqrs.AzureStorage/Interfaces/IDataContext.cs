@@ -6,11 +6,6 @@
     public interface IDataContext
     {
         /// <summary>
-        ///     Commits the changes of all the stored data sets operations.
-        /// </summary>
-        void SaveChanges();
-
-        /// <summary>
         ///     Clears the internal context.
         /// </summary>
         void Clear();
@@ -19,5 +14,10 @@
         ///     Undoes the changes of all the stored data sets operations.
         /// </summary>
         void Rollback();
+
+        /// <summary>
+        ///     Commits the changes of all the stored data sets operations.
+        /// </summary>
+        void SaveChanges();
     }
 }

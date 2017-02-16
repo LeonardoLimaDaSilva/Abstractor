@@ -11,7 +11,8 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
 {
     public class ApplicationEventLifetimeScopeDecoratorTests
     {
-        [Theory, AutoMoqData]
+        [Theory]
+        [AutoMoqData]
         public void Handle_HasCurrentLifetimeScope_ShouldHandleEvent(
             [Frozen] Mock<IContainer> container,
             [Frozen] Mock<IApplicationEventHandler<IApplicationEvent>> eventHandler,
@@ -29,7 +30,8 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
             container.Verify(c => c.BeginLifetimeScope(), Times.Never);
         }
 
-        [Theory, AutoMoqData]
+        [Theory]
+        [AutoMoqData]
         public void Handle_HasNoCurrentLifetimeScope_ShouldBeginNewLifetimeScopeBeforeHandleEvent(
             [Frozen] Mock<IContainer> container,
             [Frozen] Mock<IApplicationEventHandler<IApplicationEvent>> eventHandler,

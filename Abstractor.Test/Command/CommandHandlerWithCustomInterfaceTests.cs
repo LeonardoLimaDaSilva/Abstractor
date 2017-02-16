@@ -43,17 +43,17 @@ namespace Abstractor.Test.Command
         }
 
         [Fact]
-        public void CommandDispatcher_InterfaceBefore_ShouldHandle()
+        public void CommandDispatcher_InterfaceAfter_ShouldHandle()
         {
-            var command = new Fake1Command();
+            var command = new Fake2Command();
 
             CommandDispatcher.Dispatch(command);
         }
 
         [Fact]
-        public void CommandDispatcher_InterfaceAfter_ShouldHandle()
+        public void CommandDispatcher_InterfaceBefore_ShouldHandle()
         {
-            var command = new Fake2Command();
+            var command = new Fake1Command();
 
             CommandDispatcher.Dispatch(command);
         }

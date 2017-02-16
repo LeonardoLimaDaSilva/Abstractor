@@ -7,7 +7,7 @@ namespace Abstractor.Cqrs.AzureStorage.Interfaces
     ///     Defines the read operations of an Azure Blob repository.
     /// </summary>
     /// <typeparam name="TEntity">Entity type.</typeparam>
-    public interface IBlobReader<out TEntity> 
+    public interface IBlobReader<out TEntity>
         where TEntity : AzureBlob
     {
         /// <summary>
