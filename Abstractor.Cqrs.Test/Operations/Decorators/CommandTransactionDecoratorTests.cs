@@ -186,8 +186,6 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
             unitOfWork.Verify(u => u.Clear(), Times.Once);
 
             unitOfWork.Verify(u => u.Commit(), Times.Once);
-
-            logger.Verify(l => l.Log(It.IsAny<string>()), Times.Never);
         }
 
         [Theory]
