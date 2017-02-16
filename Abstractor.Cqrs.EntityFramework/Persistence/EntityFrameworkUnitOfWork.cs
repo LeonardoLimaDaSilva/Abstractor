@@ -43,9 +43,10 @@ namespace Abstractor.Cqrs.EntityFramework.Persistence
             }
             catch (DbEntityValidationException ex)
             {
-                _logger.Log(ex.EntityValidationErrors
-                              .SelectMany(eve => eve.ValidationErrors)
-                              .Aggregate("", (c, ve) => c + $"{ve.PropertyName}: {ve.ErrorMessage}"));
+                _logger.Log("Entity validation errors:");
+
+                foreach (var ve in ex.EntityValidationErrors.SelectMany(eve => eve.ValidationErrors))
+                    _logger.Log($"-- {ve.PropertyName}: {ve.ErrorMessage}");
 
                 throw;
             }
