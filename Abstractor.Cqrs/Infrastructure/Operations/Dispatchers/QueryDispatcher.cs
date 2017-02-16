@@ -35,18 +35,9 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Dispatchers
             Guard.ArgumentIsNotNull(query, nameof(query));
 
             var handlerType = typeof(IQueryHandler<,>).MakeGenericType(query.GetType(), typeof(TResult));
+            var handler = GetHandler(query, handlerType);
 
-            try
-            {
-                dynamic handler = _container.GetAllInstances(handlerType).SingleOrDefault();
-                if (handler == null) throw new QueryHandlersNotFoundException(query.GetType());
-
-                return handler.Handle((dynamic) query);
-            }
-            catch (InvalidOperationException)
-            {
-                throw new MultipleQueryHandlersException(query.GetType());
-            }
+            return handler.Handle((dynamic) query);
         }
 
         /// <summary>
@@ -60,18 +51,30 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Dispatchers
             Guard.ArgumentIsNotNull(query, nameof(query));
 
             var handlerType = typeof(IQueryAsyncHandler<,>).MakeGenericType(query.GetType(), typeof(TResult));
+            var handler = GetHandler(query, handlerType);
 
-            try
-            {
-                dynamic handler = _container.GetAllInstances(handlerType).SingleOrDefault();
-                if (handler == null) throw new QueryHandlersNotFoundException(query.GetType());
+            return await handler.HandleAsync((dynamic) query);
+        }
 
-                return await handler.HandleAsync((dynamic) query);
-            }
-            catch (InvalidOperationException)
-            {
-                throw new MultipleQueryHandlersException(query.GetType());
-            }
+        /// <summary>
+        ///     Gets a single instance of a query handler for the respective type or throws exceptions if none or multiple
+        ///     instances are found.
+        /// </summary>
+        /// <typeparam name="TResult">Return type.</typeparam>
+        /// <param name="query">Query to be dispatched.</param>
+        /// <param name="handlerType">Generic handler type.</param>
+        /// <returns></returns>
+        private dynamic GetHandler<TResult>(IQuery<TResult> query, Type handlerType)
+        {
+            var instances = _container.GetAllInstances(handlerType).ToList();
+
+            if (instances.Count > 1) throw new MultipleQueryHandlersException(query.GetType());
+
+            dynamic handler = instances.SingleOrDefault();
+
+            if (handler == null) throw new QueryHandlersNotFoundException(query.GetType());
+
+            return handler;
         }
     }
 }
