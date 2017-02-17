@@ -89,6 +89,10 @@
     <Compile Include="ExpirationTokenMiddleware.cs" />
     <Compile Include="ExpirationTokenMiddlewareExtension.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SpaExtension.cs" />
+    <Compile Include="SpaServerExtension.cs" />
+    <Compile Include="SpaServerMiddleware.cs" />
+    <Compile Include="SpaServerOptions.cs" />
     <Compile Include="ValidateModelFilterAttribute.cs" />
     <Compile Include="WebApiExtension.cs" />
     <Compile Include="WebApiOptions.cs" />
