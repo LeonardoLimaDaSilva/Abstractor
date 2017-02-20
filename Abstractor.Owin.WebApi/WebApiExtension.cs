@@ -13,9 +13,22 @@ using Owin;
 
 namespace Abstractor.Owin.WebApi
 {
+    /// <summary>
+    ///     Extends the IAppBuilder interface to provide the Web Api activator.
+    /// </summary>
     public static class WebApiExtension
     {
-        public static HttpConfiguration UseAbstractorWebApi(this IAppBuilder builder, IOAuthAuthorizationServerProvider authorizationServerProvider, WebApiOptions options = null)
+        /// <summary>
+        ///     Activates the common Web Api configuration.
+        /// </summary>
+        /// <param name="builder"></param>
+        /// <param name="authorizationServerProvider"></param>
+        /// <param name="options"></param>
+        /// <returns></returns>
+        public static HttpConfiguration UseAbstractorWebApi(
+            this IAppBuilder builder,
+            IOAuthAuthorizationServerProvider authorizationServerProvider,
+            WebApiOptions options = null)
         {
             if (options == null)
                 options = new WebApiOptions();
@@ -32,7 +45,7 @@ namespace Abstractor.Owin.WebApi
 
             builder.UseOAuthBearerAuthentication(new OAuthBearerAuthenticationOptions
             {
-                AccessTokenProvider = new ApplicationAuthenticationTokenProvider()
+                AccessTokenProvider = new AuthenticationTokenExpiryProvider()
             });
 
             builder.UseExpirationToken();

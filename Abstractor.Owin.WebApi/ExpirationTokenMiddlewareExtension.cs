@@ -5,8 +5,16 @@ using Owin;
 
 namespace Abstractor.Owin.WebApi
 {
-    public static class ExpirationTokenMiddlewareExtension
+    /// <summary>
+    ///     Extends the IAppBuilder interface to provide the expiration token middleware activator.
+    /// </summary>
+    internal static class ExpirationTokenMiddlewareExtension
     {
+        /// <summary>
+        ///     Activates the expiration token middleware.
+        /// </summary>
+        /// <param name="builder"></param>
+        /// <returns></returns>
         public static IAppBuilder UseExpirationToken(this IAppBuilder builder)
         {
             return builder.Use(

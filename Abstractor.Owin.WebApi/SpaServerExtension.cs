@@ -9,8 +9,18 @@ using Owin;
 
 namespace Abstractor.Owin.WebApi
 {
-    public static class SpaServerExtension
+    /// <summary>
+    ///     Extends the IAppBuilder interface to provide the SPA server activator.
+    /// </summary>
+    internal static class SpaServerExtension
     {
+        /// <summary>
+        ///     Activates the static file server.
+        /// </summary>
+        /// <param name="builder"></param>
+        /// <param name="rootPath">The entry point path for the SPA.</param>
+        /// <param name="entryPath">The file system path used to locate resources.</param>
+        /// <returns></returns>
         public static IAppBuilder UseSpaServer(this IAppBuilder builder, string rootPath, string entryPath)
         {
             var options = new SpaServerOptions

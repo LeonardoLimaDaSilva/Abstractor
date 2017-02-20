@@ -3,7 +3,7 @@ using Microsoft.Owin.StaticFiles;
 
 namespace Abstractor.Owin.WebApi
 {
-    public class SpaServerOptions
+    internal class SpaServerOptions
     {
         public PathString EntryPath { get; set; }
 
