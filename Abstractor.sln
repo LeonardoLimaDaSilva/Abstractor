@@ -25,6 +25,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abstractor.Cqrs.UnitOfWork.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abstractor.Owin.WebApi", "Abstractor.Owin.WebApi\Abstractor.Owin.WebApi.csproj", "{5B88B0B5-3BEA-4AFF-B58F-0912753293E5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abstractor.Owin.WebApi.SimpleInjector", "Abstractor.Owin.WebApi.SimpleInjector\Abstractor.Owin.WebApi.SimpleInjector.csproj", "{6F1E387B-CEE1-4B25-9EB8-4567D57F94B9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -67,6 +69,10 @@ Global
 		{5B88B0B5-3BEA-4AFF-B58F-0912753293E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5B88B0B5-3BEA-4AFF-B58F-0912753293E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5B88B0B5-3BEA-4AFF-B58F-0912753293E5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6F1E387B-CEE1-4B25-9EB8-4567D57F94B9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F1E387B-CEE1-4B25-9EB8-4567D57F94B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F1E387B-CEE1-4B25-9EB8-4567D57F94B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F1E387B-CEE1-4B25-9EB8-4567D57F94B9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -81,5 +87,6 @@ Global
 		{9336F8CE-C046-4419-A8DA-75E915A6FBDA} = {708A5531-3578-45D3-893E-5EC97DEC4BA5}
 		{6D74DD59-B219-48E1-B658-24431DE944E4} = {708A5531-3578-45D3-893E-5EC97DEC4BA5}
 		{5B88B0B5-3BEA-4AFF-B58F-0912753293E5} = {E9819DE8-DE01-4061-84F7-921CABE478D0}
+		{6F1E387B-CEE1-4B25-9EB8-4567D57F94B9} = {E9819DE8-DE01-4061-84F7-921CABE478D0}
 	EndGlobalSection
 EndGlobal
