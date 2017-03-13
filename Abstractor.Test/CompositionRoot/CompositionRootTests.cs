@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using Abstractor.Cqrs.AzureStorage.Blob;
 using Abstractor.Cqrs.AzureStorage.Extensions;
 using Abstractor.Cqrs.AzureStorage.Interfaces;
 using Abstractor.Cqrs.EntityFramework.Extensions;
@@ -28,17 +29,9 @@ namespace Abstractor.Test.CompositionRoot
         }
 
         [ExcludeFromCodeCoverage]
-        public class FakeBlobContext : IAzureBlobContext
+        public class FakeBlobContext : AzureBlobContext
         {
-            public void Clear()
-            {
-            }
-
-            public void Rollback()
-            {
-            }
-
-            public void SaveChanges()
+            public FakeBlobContext() : base("fakeConnectionString")
             {
             }
         }
@@ -71,6 +64,46 @@ namespace Abstractor.Test.CompositionRoot
             }
 
             public void SaveChanges()
+            {
+            }
+        }
+
+        public class FakeBlob1 : AzureBlob
+        {
+        }
+
+        public class FakeBlob2 : AzureBlob
+        {
+        }
+
+        public interface IFakeBlob1Repository
+        {
+        }
+
+        public interface IFakeBlob2Repository
+        {
+        }
+
+        public interface IFakeQueue1Repository
+        {
+        }
+
+        public interface IFakeQueue2Repository
+        {
+        }
+
+        public class FakeBlob1Repository : BaseBlobRepository<FakeBlob1>, IFakeBlob1Repository
+        {
+            public FakeBlob1Repository(IAzureBlobRepository<FakeBlob1> repository)
+                : base(repository)
+            {
+            }
+        }
+
+        public class FakeBlob2Repository : BaseBlobRepository<FakeBlob1>, IFakeBlob2Repository
+        {
+            public FakeBlob2Repository(IAzureBlobRepository<FakeBlob1> repository)
+                : base(repository)
             {
             }
         }
@@ -125,6 +158,27 @@ namespace Abstractor.Test.CompositionRoot
             container.Register<ILogger, FakeLogger>(Lifestyle.Singleton);
 
             return containerAdapter;
+        }
+
+        [Fact]
+        public void MultipleBlobRepositories_ShouldResolveWithoutConflicts()
+        {
+            using (var container = new Container())
+            {
+                var adapter = BuildNewAdapter(container);
+
+                adapter.RegisterEntityFramework<FakeEfContext>();
+                adapter.RegisterAzureBlob<FakeBlobContext>();
+                adapter.RegisterAzureQueue<FakeQueueContext>();
+                adapter.RegisterAzureTable<FakeTableContext>();
+                adapter.RegisterUnitOfWork();
+
+                using (container.BeginLifetimeScope())
+                {
+                    container.GetInstance<IFakeBlob1Repository>();
+                    container.GetInstance<IFakeBlob2Repository>();
+                }
+            }
         }
 
         [Fact]

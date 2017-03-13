@@ -4,6 +4,7 @@ using System.Linq;
 using Abstractor.Cqrs.Infrastructure.CrossCuttingConcerns;
 using Abstractor.Cqrs.Interfaces.CompositionRoot;
 using Abstractor.Cqrs.Interfaces.CrossCuttingConcerns;
+using Abstractor.Cqrs.Interfaces.Domain;
 using Abstractor.Cqrs.Interfaces.Events;
 using Abstractor.Cqrs.Interfaces.Operations;
 
@@ -31,6 +32,8 @@ namespace Abstractor.Cqrs.Infrastructure.CompositionRoot.Installers
             {
                 var interfaces = ExcludeEventHandlersInterfaces(type).ToList();
 
+                interfaces = ExcludeIfHasMultipleImplementations(interfaces);
+
                 foreach (var i in interfaces)
                     container.RegisterTransient(i, type);
             }
@@ -50,6 +53,19 @@ namespace Abstractor.Cqrs.Infrastructure.CompositionRoot.Installers
                             (i.GetGenericTypeDefinition() != typeof(IDomainEventHandler<>)) &&
                             (i.GetGenericTypeDefinition() != typeof(IApplicationEventHandler<>)))
                            || !i.IsGenericType);
+        }
+
+        /// <summary>
+        ///     Excludes the IFileRepository from list if there are multiple concrete types implementing it.
+        /// </summary>
+        /// <param name="interfaces"></param>
+        /// <returns></returns>
+        private static List<Type> ExcludeIfHasMultipleImplementations(List<Type> interfaces)
+        {
+            if ((interfaces.Count > 1) && interfaces.Any(i => i == typeof(IFileRepository)))
+                interfaces = interfaces.Where(i => i != typeof(IFileRepository)).ToList();
+
+            return interfaces;
         }
     }
 }
