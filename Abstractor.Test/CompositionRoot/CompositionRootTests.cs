@@ -137,6 +137,7 @@ namespace Abstractor.Test.CompositionRoot
         public ContainerAdapter BuildNewAdapter(Container container)
         {
             container.Options.DefaultScopedLifestyle = new LifetimeScopeLifestyle();
+            container.Options.AllowOverridingRegistrations = true;
 
             var currentAssembly = new[] {typeof(Helpers.CompositionRoot).Assembly};
 

@@ -22,6 +22,7 @@ namespace Abstractor.Cqrs.SimpleInjector.Adapters
         public ContainerAdapter(Container container)
         {
             _container = container;
+            _container.Options.AllowOverridingRegistrations = true;
             _container.RegisterSingleton(typeof(IContainer), this);
         }
 
