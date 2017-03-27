@@ -78,6 +78,10 @@
     <Compile Include="Infrastructure\Domain\AggregateRoot.cs" />
     <Compile Include="Infrastructure\Domain\Entity.cs" />
     <Compile Include="Infrastructure\Domain\GenericFile.cs" />
+    <Compile Include="Infrastructure\Domain\Pagination\OrderDirection.cs" />
+    <Compile Include="Infrastructure\Domain\Pagination\PagedFilter.cs" />
+    <Compile Include="Infrastructure\Domain\Pagination\PagedResult.cs" />
+    <Compile Include="Infrastructure\Domain\Pagination\PagingExtensions.cs" />
     <Compile Include="Infrastructure\Domain\QueueMessage.cs" />
     <Compile Include="Infrastructure\Domain\ValueObject.cs" />
     <Compile Include="Infrastructure\CrossCuttingConcerns\AttributeFinder.cs" />
