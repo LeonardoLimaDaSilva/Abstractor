@@ -5,6 +5,10 @@ using Abstractor.Cqrs.Interfaces.Operations;
 
 namespace Abstractor.Cqrs.Infrastructure.Operations
 {
+    /// <summary>
+    ///     Abstract command handler that provides a mechanism for domain event emmiting.
+    /// </summary>
+    /// <typeparam name="TCommand">Command to be handled.</typeparam>
     public abstract class CommandHandler<TCommand> : ICommandHandler<TCommand>
         where TCommand : ICommand
     {
@@ -27,9 +31,9 @@ namespace Abstractor.Cqrs.Infrastructure.Operations
         public IReadOnlyCollection<IDomainEvent> EmittedEvents => new ReadOnlyCollection<IDomainEvent>(_domainEvents);
 
         /// <summary>
-        ///     Abstract handling method that each concrete handler should override;
+        ///     Abstract handling method that each concrete handler should override.
         /// </summary>
-        /// <param name="command"></param>
+        /// <param name="command">Command to be handled.</param>
         public abstract void Handle(TCommand command);
 
         /// <summary>
