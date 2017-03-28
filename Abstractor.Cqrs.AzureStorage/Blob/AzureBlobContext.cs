@@ -29,7 +29,7 @@ namespace Abstractor.Cqrs.AzureStorage.Blob
         protected override IBaseDataSet GetDataSet<TEntity>()
         {
             var genericType = typeof(AzureBlobSet<>).MakeGenericType(typeof(TEntity));
-            return (IBaseDataSet)Activator.CreateInstance(genericType, _connectionString);
+            return (IBaseDataSet) Activator.CreateInstance(genericType, _connectionString);
         }
     }
 }

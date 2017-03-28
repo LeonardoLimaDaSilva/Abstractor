@@ -1,8 +1,8 @@
 using System;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Abstractor.Cqrs.Infrastructure.CrossCuttingConcerns;
+using Abstractor.Cqrs.Infrastructure.Operations;
 using Abstractor.Cqrs.Interfaces.Events;
 using Abstractor.Cqrs.Interfaces.Operations;
 using Abstractor.Test.Helpers;
@@ -33,13 +33,12 @@ namespace Abstractor.Test.Command
         /// <summary>
         ///     Handler of FakeCommand
         /// </summary>
-        public class FakeCommandHandler : ICommandHandler<FakeCommand>
+        public class FakeCommandHandler : CommandHandler<FakeCommand>
         {
-            public IEnumerable<IDomainEvent> Handle(FakeCommand command)
+            public override void Handle(FakeCommand command)
             {
                 if (command.CommandThrowsGenericException) throw new Exception();
                 if (command.CommandThrowsSpecificException) throw new SpecificException(command);
-                yield break;
             }
         }
 

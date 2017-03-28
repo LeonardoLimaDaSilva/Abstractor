@@ -21,7 +21,7 @@ namespace Abstractor.Cqrs.AzureStorage.Extensions
             where TContext : IAzureBlobContext
         {
             Guard.ArgumentIsNotNull(container, nameof(container));
-            
+
             container.RegisterScoped<IAzureBlobContext, TContext>();
             container.RegisterScoped(typeof(IAzureBlobRepository<>), typeof(AzureBlobRepository<>));
         }

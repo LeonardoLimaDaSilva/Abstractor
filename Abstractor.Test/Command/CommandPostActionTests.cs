@@ -1,6 +1,5 @@
 using System;
-using System.Collections.Generic;
-using Abstractor.Cqrs.Interfaces.Events;
+using Abstractor.Cqrs.Infrastructure.Operations;
 using Abstractor.Cqrs.Interfaces.Operations;
 using Abstractor.Test.Helpers;
 using SharpTestsEx;
@@ -17,7 +16,7 @@ namespace Abstractor.Test.Command
             public bool ThrowException { get; set; }
         }
 
-        public class PostActionCommandHandler : ICommandHandler<PostActionCommand>
+        public class PostActionCommandHandler : CommandHandler<PostActionCommand>
         {
             private readonly ICommandPostAction _commandPostAction;
 
@@ -26,13 +25,11 @@ namespace Abstractor.Test.Command
                 _commandPostAction = commandPostAction;
             }
 
-            public IEnumerable<IDomainEvent> Handle(PostActionCommand command)
+            public override void Handle(PostActionCommand command)
             {
                 _commandPostAction.Execute += () => { command.ActionExecuted = true; };
 
                 if (command.ThrowException) throw new Exception();
-
-                yield break;
             }
         }
 

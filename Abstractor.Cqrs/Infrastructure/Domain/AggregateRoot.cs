@@ -28,7 +28,7 @@ namespace Abstractor.Cqrs.Infrastructure.Domain
         }
 
         /// <summary>
-        ///     Emits the event to be returned by the command handler.
+        ///     Emits the event ocurred into the aggregate.
         /// </summary>
         /// <param name="domainEvent">Domain event to be emitted.</param>
         public void Emit(IDomainEvent domainEvent)

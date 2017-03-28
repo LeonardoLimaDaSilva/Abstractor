@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using Abstractor.Cqrs.Interfaces.CompositionRoot;
-using Abstractor.Cqrs.Interfaces.Events;
 using Abstractor.Cqrs.Interfaces.Operations;
 
 namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
@@ -11,7 +8,7 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
     ///     Ensures that there is a lifetime scope before the command execution.
     /// </summary>
     /// <typeparam name="TCommand">Command to be handled.</typeparam>
-    public sealed class CommandLifetimeScopeDecorator<TCommand> : ICommandHandler<TCommand>
+    public sealed class CommandLifetimeScopeDecorator<TCommand> : CommandHandler<TCommand>
         where TCommand : ICommand
     {
         private readonly IContainer _container;
@@ -34,15 +31,17 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
         ///     Ensures that there is a lifetime scope before the command execution.
         /// </summary>
         /// <param name="command">Command to be handled.</param>
-        /// <returns>List of domain events raised by the command, if any.</returns>
-        public IEnumerable<IDomainEvent> Handle(TCommand command)
+        public override void Handle(TCommand command)
         {
             if (_container.GetCurrentLifetimeScope() != null)
-                return _handlerFactory().Handle(command)?.ToList();
+            {
+                _handlerFactory().Handle(command);
+                return;
+            }
 
             using (_container.BeginLifetimeScope())
             {
-                return _handlerFactory().Handle(command)?.ToList();
+                _handlerFactory().Handle(command);
             }
         }
     }

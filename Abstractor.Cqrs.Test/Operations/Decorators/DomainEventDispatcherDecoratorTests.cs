@@ -1,12 +1,10 @@
 using System.Collections.Generic;
-using System.Linq;
 using Abstractor.Cqrs.Infrastructure.Operations.Decorators;
 using Abstractor.Cqrs.Interfaces.Events;
 using Abstractor.Cqrs.Interfaces.Operations;
 using Abstractor.Cqrs.Test.Helpers;
 using Moq;
 using Ploeh.AutoFixture.Xunit2;
-using SharpTestsEx;
 using Xunit;
 
 namespace Abstractor.Cqrs.Test.Operations.Decorators
@@ -27,37 +25,15 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
         {
             // Arrange
 
-            commandHandler.Setup(d => d.Handle(command)).Returns(new List<IDomainEvent>());
+            commandHandler.Setup(d => d.EmittedEvents).Returns(new List<IDomainEvent>());
 
             // Act
 
-            var result = decorator.Handle(command);
+            decorator.Handle(command);
 
             // Verify
-
-            result.Should().Be.Empty();
 
             eventDispatcher.Verify(d => d.Dispatch(It.IsAny<IDomainEvent>()), Times.Never);
-        }
-
-        [Theory]
-        [AutoMoqData]
-        public void Handle_NullDomainEvents_ReturnsNull(
-            [Frozen] Mock<ICommandHandler<ICommandThatPublishesDomainEvents>> commandHandler,
-            ICommandThatPublishesDomainEvents command,
-            DomainEventDispatcherDecorator<ICommandThatPublishesDomainEvents> decorator)
-        {
-            // Arrange
-
-            commandHandler.Setup(d => d.Handle(command)).Returns((IEnumerable<IDomainEvent>) null);
-
-            // Act
-
-            var result = decorator.Handle(command);
-
-            // Verify
-
-            result.Should().Be.Null();
         }
 
         [Theory]
@@ -78,16 +54,13 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
                 domainEvent2
             };
 
-            commandHandler.Setup(d => d.Handle(command)).Returns(domainEvents);
+            commandHandler.Setup(d => d.EmittedEvents).Returns(domainEvents);
 
             // Act
 
-            var result = decorator.Handle(command).ToList();
+            decorator.Handle(command);
 
             // Verify
-
-            result[0].Should().Be(domainEvent1);
-            result[1].Should().Be(domainEvent2);
 
             eventDispatcher.Verify(d => d.Dispatch(domainEvent1), Times.Once);
             eventDispatcher.Verify(d => d.Dispatch(domainEvent2), Times.Once);

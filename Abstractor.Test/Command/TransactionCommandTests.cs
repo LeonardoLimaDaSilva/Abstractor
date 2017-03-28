@@ -1,6 +1,4 @@
-using System.Collections.Generic;
 using Abstractor.Cqrs.Infrastructure.Operations;
-using Abstractor.Cqrs.Interfaces.Events;
 using Abstractor.Cqrs.Interfaces.Operations;
 using Abstractor.Test.Helpers;
 using Xunit;
@@ -18,19 +16,17 @@ namespace Abstractor.Test.Command
         }
 
         [Transactional]
-        public class TransactionalCommandHandler : ICommandHandler<TransactionalCommand>
+        public class TransactionalCommandHandler : CommandHandler<TransactionalCommand>
         {
-            public IEnumerable<IDomainEvent> Handle(TransactionalCommand command)
+            public override void Handle(TransactionalCommand command)
             {
-                yield break;
             }
         }
 
-        public class NonTransactionalCommandHandler : ICommandHandler<NonTransactionalCommand>
+        public class NonTransactionalCommandHandler : CommandHandler<NonTransactionalCommand>
         {
-            public IEnumerable<IDomainEvent> Handle(NonTransactionalCommand command)
+            public override void Handle(NonTransactionalCommand command)
             {
-                yield break;
             }
         }
 

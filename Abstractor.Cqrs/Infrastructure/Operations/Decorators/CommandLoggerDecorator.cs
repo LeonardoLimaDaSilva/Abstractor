@@ -1,9 +1,6 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using Abstractor.Cqrs.Infrastructure.CompositionRoot;
 using Abstractor.Cqrs.Interfaces.CrossCuttingConcerns;
-using Abstractor.Cqrs.Interfaces.Events;
 using Abstractor.Cqrs.Interfaces.Operations;
 
 namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
@@ -12,7 +9,7 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
     ///     Logs the execution of the command handler.
     /// </summary>
     /// <typeparam name="TCommand">Command to be handled.</typeparam>
-    public sealed class CommandLoggerDecorator<TCommand> : ICommandHandler<TCommand>
+    public sealed class CommandLoggerDecorator<TCommand> : CommandHandler<TCommand>
         where TCommand : ICommand
     {
         private readonly IAttributeFinder _attributeFinder;
@@ -51,11 +48,13 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
         ///     Logs the execution of the command handler.
         /// </summary>
         /// <param name="command">Command to be handled.</param>
-        /// <returns>List of domain events raised by the command, if any.</returns>
-        public IEnumerable<IDomainEvent> Handle(TCommand command)
+        public override void Handle(TCommand command)
         {
             if (!_attributeFinder.Decorates(command.GetType(), typeof(LogAttribute)) && !_settings.EnableLogging)
-                return _handlerFactory().Handle(command)?.ToList();
+            {
+                _handlerFactory().Handle(command);
+                return;
+            }
 
             _stopwatch.Start();
 
@@ -75,7 +74,7 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
                     logger.Log($"Could not serialize the parameters: {ex.Message}");
                 }
 
-                return _handlerFactory().Handle(command)?.ToList();
+                _handlerFactory().Handle(command);
             }
             catch (Exception ex)
             {

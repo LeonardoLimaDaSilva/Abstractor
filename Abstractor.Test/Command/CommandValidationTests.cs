@@ -1,6 +1,5 @@
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using Abstractor.Cqrs.Interfaces.Events;
+using Abstractor.Cqrs.Infrastructure.Operations;
 using Abstractor.Cqrs.Interfaces.Operations;
 using Abstractor.Test.Helpers;
 using Xunit;
@@ -15,11 +14,10 @@ namespace Abstractor.Test.Command
             public string Property { get; set; }
         }
 
-        public class ValidationCommandHandler : ICommandHandler<ValidationCommand>
+        public class ValidationCommandHandler : CommandHandler<ValidationCommand>
         {
-            public IEnumerable<IDomainEvent> Handle(ValidationCommand command)
+            public override void Handle(ValidationCommand command)
             {
-                yield break;
             }
         }
 

@@ -1,7 +1,6 @@
-using System.Collections.Generic;
 using Abstractor.Cqrs.Infrastructure.CompositionRoot.Exceptions;
 using Abstractor.Cqrs.Infrastructure.CrossCuttingConcerns;
-using Abstractor.Cqrs.Interfaces.Events;
+using Abstractor.Cqrs.Infrastructure.Operations;
 using Abstractor.Cqrs.Interfaces.Operations;
 using Abstractor.Test.Helpers;
 using SharpTestsEx;
@@ -20,16 +19,14 @@ namespace Abstractor.Test.Command
             public bool ThrowCommandException { get; set; }
         }
 
-        public class FakeCommandHandler : ICommandHandler<FakeCommand>
+        public class FakeCommandHandler : CommandHandler<FakeCommand>
         {
-            public IEnumerable<IDomainEvent> Handle(FakeCommand command)
+            public override void Handle(FakeCommand command)
             {
                 command.HandlerExecuted = true;
 
                 if (command.ThrowCommandException)
                     throw new FakeCommandException(command);
-
-                yield break;
             }
         }
 
@@ -43,12 +40,11 @@ namespace Abstractor.Test.Command
             }
         }
 
-        public class FakeCommandExceptionHandler : ICommandHandler<FakeCommandException>
+        public class FakeCommandExceptionHandler : CommandHandler<FakeCommandException>
         {
-            public IEnumerable<IDomainEvent> Handle(FakeCommandException command)
+            public override void Handle(FakeCommandException command)
             {
                 command.FakeCommand.ExceptionHandlerExecuted = true;
-                yield break;
             }
         }
 

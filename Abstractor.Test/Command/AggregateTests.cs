@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using Abstractor.Cqrs.Infrastructure.Domain;
 using Abstractor.Cqrs.Infrastructure.Operations;
 using Abstractor.Cqrs.Interfaces.Events;
@@ -50,15 +49,15 @@ namespace Abstractor.Test.Command
             }
         }
 
-        public class ExecuteOperationHandler : ICommandHandler<ExecuteOperation>
+        public class ExecuteOperationHandler : CommandHandler<ExecuteOperation>
         {
-            public IEnumerable<IDomainEvent> Handle(ExecuteOperation command)
+            public override void Handle(ExecuteOperation command)
             {
                 var aggregate = new FakeAggregate(command);
 
                 aggregate.Execute();
 
-                return aggregate.EmittedEvents;
+                Emit(aggregate.EmittedEvents);
             }
         }
 

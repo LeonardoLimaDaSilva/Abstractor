@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using Abstractor.Cqrs.Infrastructure.CrossCuttingConcerns;
 using Abstractor.Cqrs.Interfaces.Events;
 using Abstractor.Cqrs.Interfaces.Operations;
@@ -12,7 +10,7 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
     ///     <see cref="ICommandHandler{TCommand}" />.
     /// </summary>
     /// <typeparam name="TCommand">Command to be handled.</typeparam>
-    public sealed class ApplicationEventDispatcherDecorator<TCommand> : ICommandHandler<TCommand>
+    public sealed class ApplicationEventDispatcherDecorator<TCommand> : CommandHandler<TCommand>
         where TCommand : ICommand, IApplicationEvent
     {
         private readonly IApplicationEventDispatcher _eventDispatcher;
@@ -35,14 +33,12 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
         ///     Delegates the command, marked as an event, to the event dispatcher.
         /// </summary>
         /// <param name="command">Command to be handled.</param>
-        /// <returns>List of domain events raised by the command, if any.</returns>
-        public IEnumerable<IDomainEvent> Handle(TCommand command)
+        public override void Handle(TCommand command)
         {
             try
             {
-                var domainEvents = _handlerFactory().Handle(command)?.ToList();
+                _handlerFactory().Handle(command);
                 _eventDispatcher.Dispatch(command);
-                return domainEvents;
             }
             catch (CommandException ex)
             {

@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Abstractor.Cqrs.Interfaces.Events;
+﻿using Abstractor.Cqrs.Infrastructure.Operations;
 using Abstractor.Cqrs.Interfaces.Operations;
 using Abstractor.Test.Helpers;
 using Xunit;
@@ -9,20 +8,18 @@ namespace Abstractor.Test.Command
     public class CommandHandlerWithCustomInterfaceTests : BaseTest
     {
         // Interface defined after the command handler
-        public class Fake1Repository : ICommandHandler<Fake1Command>, IFake1Repository
+        public class Fake1Repository : CommandHandler<Fake1Command>, IFake1Repository
         {
-            public IEnumerable<IDomainEvent> Handle(Fake1Command command)
+            public override void Handle(Fake1Command command)
             {
-                yield break;
             }
         }
 
         // Interface defined before the command handler
-        public class Fake2Repository : IFake2Repository, ICommandHandler<Fake2Command>
+        public class Fake2Repository : CommandHandler<Fake2Command>, IFake2Repository
         {
-            public IEnumerable<IDomainEvent> Handle(Fake2Command command)
+            public override void Handle(Fake2Command command)
             {
-                yield break;
             }
         }
 

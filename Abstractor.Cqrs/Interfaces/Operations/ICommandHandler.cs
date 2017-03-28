@@ -10,10 +10,14 @@ namespace Abstractor.Cqrs.Interfaces.Operations
     public interface ICommandHandler<in TCommand> where TCommand : ICommand
     {
         /// <summary>
+        ///     Collection of events emitted from the current instance of the command handler.
+        /// </summary>
+        IReadOnlyCollection<IDomainEvent> EmittedEvents { get; }
+
+        /// <summary>
         ///     Handles the <see cref="ICommand" />.
         /// </summary>
         /// <param name="command">Command to be handled.</param>
-        /// <returns>List of domain events raised by the command, if any.</returns>
-        IEnumerable<IDomainEvent> Handle(TCommand command);
+        void Handle(TCommand command);
     }
 }

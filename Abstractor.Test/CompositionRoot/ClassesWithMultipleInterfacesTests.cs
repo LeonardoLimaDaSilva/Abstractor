@@ -1,6 +1,5 @@
-using System.Collections.Generic;
 using Abstractor.Cqrs.Infrastructure.CrossCuttingConcerns;
-using Abstractor.Cqrs.Interfaces.Events;
+using Abstractor.Cqrs.Infrastructure.Operations;
 using Abstractor.Cqrs.Interfaces.Operations;
 using Abstractor.Test.Helpers;
 using SharpTestsEx;
@@ -31,7 +30,7 @@ namespace Abstractor.Test.CompositionRoot
             public IFake2Repository Repository2 { get; set; }
         }
 
-        public class FakeCommandHandler : ICommandHandler<FakeCommand>
+        public class FakeCommandHandler : CommandHandler<FakeCommand>
         {
             private readonly IFake1Repository _fake1Repository;
             private readonly IFake2Repository _fake2Repository;
@@ -42,12 +41,10 @@ namespace Abstractor.Test.CompositionRoot
                 _fake2Repository = fake2Repository;
             }
 
-            public IEnumerable<IDomainEvent> Handle(FakeCommand command)
+            public override void Handle(FakeCommand command)
             {
                 command.Repository1 = _fake1Repository;
                 command.Repository2 = _fake2Repository;
-
-                yield break;
             }
         }
 

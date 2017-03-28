@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using Abstractor.Cqrs.Infrastructure.Operations;
 using Abstractor.Cqrs.Interfaces.Events;
 using Abstractor.Cqrs.Interfaces.Operations;
@@ -17,11 +16,11 @@ namespace Abstractor.Test.Command
             public bool EventHandler2Executed { get; set; }
         }
 
-        public class NonTransactionalFakeCommandHandler : ICommandHandler<NonTransactionalFakeCommand>
+        public class NonTransactionalFakeCommandHandler : CommandHandler<NonTransactionalFakeCommand>
         {
-            public IEnumerable<IDomainEvent> Handle(NonTransactionalFakeCommand command)
+            public override void Handle(NonTransactionalFakeCommand command)
             {
-                yield return new NonTransactionalFakeDomainEvent(command);
+                Emit(new NonTransactionalFakeDomainEvent(command));
             }
         }
 
@@ -59,11 +58,11 @@ namespace Abstractor.Test.Command
             public bool EventHandler2Executed { get; set; }
         }
 
-        public class TransactionalFakeCommandHandler : ICommandHandler<TransactionalFakeCommand>
+        public class TransactionalFakeCommandHandler : CommandHandler<TransactionalFakeCommand>
         {
-            public IEnumerable<IDomainEvent> Handle(TransactionalFakeCommand command)
+            public override void Handle(TransactionalFakeCommand command)
             {
-                yield return new TransactionalFakeDomainEvent(command);
+                Emit(new TransactionalFakeDomainEvent(command));
             }
         }
 

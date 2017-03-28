@@ -1,10 +1,8 @@
 using System;
-using System.Collections.Generic;
 using Abstractor.Cqrs.Infrastructure.CompositionRoot;
 using Abstractor.Cqrs.Infrastructure.Operations;
 using Abstractor.Cqrs.Infrastructure.Operations.Decorators;
 using Abstractor.Cqrs.Interfaces.CrossCuttingConcerns;
-using Abstractor.Cqrs.Interfaces.Events;
 using Abstractor.Cqrs.Interfaces.Operations;
 using Abstractor.Cqrs.Test.Helpers;
 using Moq;
@@ -20,7 +18,7 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
         {
         }
 
-        public class FakeCommandHandler : ICommandHandler<FakeCommand>
+        public class FakeCommandHandler : CommandHandler<FakeCommand>
         {
             public bool Executed { get; private set; }
 
@@ -28,11 +26,11 @@ namespace Abstractor.Cqrs.Test.Operations.Decorators
 
             public bool ThrowsException { get; set; }
 
-            public IEnumerable<IDomainEvent> Handle(FakeCommand command)
+            public override void Handle(FakeCommand command)
             {
                 Executed = true;
 
-                if (!ThrowsException) yield break;
+                if (!ThrowsException) return;
 
                 if (!HasInnerException) throw new Exception("FakeCommandHandlerException.");
 

@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using Abstractor.Cqrs.Infrastructure.CompositionRoot;
 using Abstractor.Cqrs.Interfaces.CrossCuttingConcerns;
-using Abstractor.Cqrs.Interfaces.Events;
 using Abstractor.Cqrs.Interfaces.Operations;
 using Abstractor.Cqrs.Interfaces.Persistence;
 
@@ -13,7 +10,7 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
     ///     Commits the unit of work after the successful command execution.
     /// </summary>
     /// <typeparam name="TCommand">Command to be handled.</typeparam>
-    public sealed class CommandTransactionDecorator<TCommand> : ICommandHandler<TCommand>
+    public sealed class CommandTransactionDecorator<TCommand> : CommandHandler<TCommand>
         where TCommand : ICommand
     {
         private readonly IAttributeFinder _attributeFinder;
@@ -48,12 +45,14 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
         ///     Commits the unit of work after the successful command execution.
         /// </summary>
         /// <param name="command">Command to be handled.</param>
-        /// <returns>List of domain events raised by the command, if any.</returns>
-        public IEnumerable<IDomainEvent> Handle(TCommand command)
+        public override void Handle(TCommand command)
         {
             if (!_attributeFinder.Decorates(command.GetType(), typeof(TransactionalAttribute)) &&
                 !_settings.EnableTransactions)
-                return _handlerFactory().Handle(command)?.ToList();
+            {
+                _handlerFactory().Handle(command);
+                return;
+            }
 
             var log = _attributeFinder.Decorates(command.GetType(), typeof(LogAttribute)) || _settings.EnableLogging;
 
@@ -61,13 +60,11 @@ namespace Abstractor.Cqrs.Infrastructure.Operations.Decorators
 
             _unitOfWork.Clear();
 
-            var domainEvents = _handlerFactory().Handle(command)?.ToList();
+            _handlerFactory().Handle(command);
 
             _unitOfWork.Commit();
 
             if (log) _logger().Log("Transaction committed.");
-
-            return domainEvents;
         }
     }
 }
