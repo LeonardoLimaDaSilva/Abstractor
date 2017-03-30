@@ -60,10 +60,13 @@ namespace Abstractor.Owin.WebApi
             httpConfiguration.Filters.Add(new ValidateModelFilterAttribute());
 
             var jsonFormatter = httpConfiguration.Formatters.OfType<JsonMediaTypeFormatter>().First();
+
             jsonFormatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue("text/html"));
             jsonFormatter.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
             jsonFormatter.SerializerSettings.DateFormatHandling = options.DateFormatHandling;
             jsonFormatter.SerializerSettings.DateTimeZoneHandling = options.DateTimeZoneHandling;
+
+            httpConfiguration.Formatters.Add(new GenericFileMediaTypeFormatter());
 
             builder.UseWebApi(httpConfiguration);
 

@@ -20,6 +20,14 @@ namespace Abstractor.Cqrs.Infrastructure.Domain
         public Stream Stream { get; }
 
         /// <summary>
+        ///     Default empty constructor.
+        /// </summary>
+        public GenericFile()
+        {
+            Stream = Stream.Null;
+        }
+
+        /// <summary>
         ///     Constructs a generic file.
         /// </summary>
         /// <param name="fileName">Name of the file.</param>

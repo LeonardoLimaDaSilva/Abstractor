@@ -78,6 +78,7 @@
     <Compile Include="Infrastructure\Domain\AggregateRoot.cs" />
     <Compile Include="Infrastructure\Domain\Entity.cs" />
     <Compile Include="Infrastructure\Domain\GenericFile.cs" />
+    <Compile Include="Infrastructure\Domain\GenericFileExtension.cs" />
     <Compile Include="Infrastructure\Domain\Pagination\OrderDirection.cs" />
     <Compile Include="Infrastructure\Domain\Pagination\PagedFilter.cs" />
     <Compile Include="Infrastructure\Domain\Pagination\PagedResult.cs" />
