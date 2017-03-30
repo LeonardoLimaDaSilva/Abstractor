@@ -12,13 +12,12 @@ namespace Abstractor.Owin.WebApi
         ///     Extends the authorize attribute receiving an array of roles.
         /// </summary>
         /// <param name="roles">Array of roles.</param>
-        public AuthorizeRolesAttribute(params string[] roles)
+        public AuthorizeRolesAttribute(params object[] roles)
         {
             var sb = new StringBuilder();
 
             for (var i = 0; i < roles.Length; i++)
             {
-                if (string.IsNullOrEmpty(roles[i])) continue;
                 var separator = i != roles.Length ? "," : string.Empty;
                 sb.Append(roles[i] + separator);
             }
