@@ -12,10 +12,7 @@ namespace Abstractor.Cqrs.Infrastructure.Domain
         /// <returns></returns>
         public static bool IsValid(this GenericFile genericFile)
         {
-            return (genericFile != null) &&
-                   string.IsNullOrEmpty(genericFile.FileName) &&
-                   (genericFile.Stream != null) &&
-                   (genericFile.Stream.Length > 0);
+            return !string.IsNullOrEmpty(genericFile?.FileName) && genericFile.Stream != null && genericFile.Stream.Length > 0;
         }
     }
 }
