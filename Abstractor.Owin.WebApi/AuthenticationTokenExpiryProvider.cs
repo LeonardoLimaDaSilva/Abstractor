@@ -16,8 +16,8 @@ namespace Abstractor.Owin.WebApi
         {
             context.DeserializeTicket(context.Token);
 
-            if ((context.Ticket?.Properties.ExpiresUtc != null) &&
-                (context.Ticket.Properties.ExpiresUtc.Value.LocalDateTime < DateTime.Now))
+            if (context.Ticket?.Properties.ExpiresUtc != null &&
+                context.Ticket.Properties.ExpiresUtc.Value.LocalDateTime < DateTime.Now)
                 context.OwinContext.Set("custom.ExpiredToken", true);
         }
     }

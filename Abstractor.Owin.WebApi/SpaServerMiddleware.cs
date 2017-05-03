@@ -32,7 +32,7 @@ namespace Abstractor.Owin.WebApi
         {
             await _innerMiddleware.Invoke(arg);
 
-            if (((int) arg["owin.ResponseStatusCode"] == 404) && _options.Html5Mode)
+            if ((int) arg["owin.ResponseStatusCode"] == 404 && _options.Html5Mode)
             {
                 arg["owin.RequestPath"] = _options.EntryPath.Value;
                 await _next.Invoke(arg);

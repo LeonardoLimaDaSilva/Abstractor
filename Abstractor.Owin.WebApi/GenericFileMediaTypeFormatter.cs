@@ -79,11 +79,12 @@ namespace Abstractor.Owin.WebApi
             using (var config = new HttpConfiguration())
             {
                 // if there is a requiredMemberSelector set, use this one by replacing the validator provider
-                var validateRequiredMembers = (RequiredMemberSelector != null) && (formatterLogger != null);
+                var validateRequiredMembers = RequiredMemberSelector != null && formatterLogger != null;
 
                 if (validateRequiredMembers)
-                    config.Services.Replace(typeof(ModelValidatorProvider),
-                              new RequiredMemberModelValidatorProvider(RequiredMemberSelector));
+                    config.Services.Replace(
+                        typeof(ModelValidatorProvider),
+                        new RequiredMemberModelValidatorProvider(RequiredMemberSelector));
 
                 // create an action context for model binding
                 var actionContext = new HttpActionContext
@@ -100,7 +101,8 @@ namespace Abstractor.Owin.WebApi
 
                 // create model binder context 
                 var valueProvider = new NameValuePairsValueProvider(data, CultureInfo.InvariantCulture);
-                var metadataProvider = actionContext.ControllerContext.Configuration.Services.GetModelMetadataProvider();
+                var metadataProvider = actionContext.ControllerContext.Configuration.Services
+                                                    .GetModelMetadataProvider();
                 var metadata = metadataProvider.GetMetadataForType(null, type);
                 var modelBindingContext = new ModelBindingContext
                 {
@@ -123,11 +125,8 @@ namespace Abstractor.Owin.WebApi
 
                 // log validation errors 
                 foreach (var modelStatePair in actionContext.ModelState)
-                    foreach (var modelError in modelStatePair.Value.Errors)
-                        if (modelError.Exception != null)
-                            formatterLogger.LogError(modelStatePair.Key, modelError.Exception);
-                        else
-                            formatterLogger.LogError(modelStatePair.Key, modelError.ErrorMessage);
+                foreach (var modelError in modelStatePair.Value.Errors)
+                    formatterLogger.LogError(modelStatePair.Key, modelError.ErrorMessage);
 
                 return haveResult
                     ? modelBindingContext.Model

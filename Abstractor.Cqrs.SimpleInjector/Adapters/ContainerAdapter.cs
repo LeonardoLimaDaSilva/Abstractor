@@ -36,7 +36,7 @@ namespace Abstractor.Cqrs.SimpleInjector.Adapters
             {
                 var type = e.UnregisteredServiceType;
 
-                if (!type.IsGenericType || (type.GetGenericTypeDefinition() != typeof(Func<>))) return;
+                if (!type.IsGenericType || type.GetGenericTypeDefinition() != typeof(Func<>)) return;
 
                 var serviceType = type.GetGenericArguments().First();
                 var registration = _container.GetRegistration(serviceType, true);

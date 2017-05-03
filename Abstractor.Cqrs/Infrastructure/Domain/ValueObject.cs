@@ -26,7 +26,7 @@ namespace Abstractor.Cqrs.Infrastructure.Domain
         /// <returns>True if the objects have the same value.</returns>
         public bool Equals(T other)
         {
-            return (other != null) && GetAttributesToIncludeInEqualityCheck()
+            return other != null && GetAttributesToIncludeInEqualityCheck()
                        .SequenceEqual(other.GetAttributesToIncludeInEqualityCheck());
         }
 
