@@ -5,6 +5,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using Abstractor.Cqrs.Interfaces.CompositionRoot;
 using SimpleInjector;
+using SimpleInjector.Lifestyles;
 
 namespace Abstractor.Cqrs.SimpleInjector.Adapters
 {
@@ -53,7 +54,7 @@ namespace Abstractor.Cqrs.SimpleInjector.Adapters
         /// <returns>New scope.</returns>
         public IDisposable BeginLifetimeScope()
         {
-            return _container.BeginLifetimeScope();
+            return ThreadScopedLifestyle.BeginScope(_container);
         }
 
         /// <summary>
@@ -144,9 +145,8 @@ namespace Abstractor.Cqrs.SimpleInjector.Adapters
         public void RegisterLazyScoped<TService, TImplementation>() where TService : class
             where TImplementation : class, TService
         {
-            var registration = new Lazy<Registration>(
-                () => Lifestyle.Scoped
-                               .CreateRegistration<TService, TImplementation>(_container));
+            var registration = new Lazy<Registration>(() =>
+                Lifestyle.Scoped.CreateRegistration<TImplementation>(_container));
 
             _container.ResolveUnregisteredType += (sender, e) =>
             {
@@ -164,9 +164,8 @@ namespace Abstractor.Cqrs.SimpleInjector.Adapters
             where TService : class
             where TImplementation : class, TService
         {
-            var registration = new Lazy<Registration>(
-                () => Lifestyle.Singleton
-                               .CreateRegistration<TService, TImplementation>(_container));
+            var registration = new Lazy<Registration>(() =>
+                Lifestyle.Singleton.CreateRegistration<TImplementation>(_container));
 
             _container.ResolveUnregisteredType += (sender, e) =>
             {

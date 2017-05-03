@@ -22,8 +22,8 @@
         /// </summary>
         public int? Page
         {
-            get { return _page <= 0 ? 1 : _page; }
-            set { _page = value; }
+            get => _page <= 0 ? 1 : _page;
+            set => _page = value;
         }
 
         /// <summary>

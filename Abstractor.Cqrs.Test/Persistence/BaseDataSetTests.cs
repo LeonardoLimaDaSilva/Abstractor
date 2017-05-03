@@ -117,6 +117,22 @@ namespace Abstractor.Cqrs.Test.Persistence
 
         [Theory]
         [AutoMoqData]
+        public void Insert_WithCommit_InvalidType_ThrowsException(
+            object entity,
+            FakeDataSet<object> dataSet)
+        {
+            // Act
+
+            dataSet.Insert(entity);
+            dataSet.InternalOperations.Single().Type = (BaseDataSetOperationType) int.MaxValue;
+
+            // Assert
+
+            Assert.Throws<ArgumentOutOfRangeException>(() => dataSet.Commit());
+        }
+
+        [Theory]
+        [AutoMoqData]
         public void Insert_WithCommitAndRollback_ShouldInsertAfterCommitAndDeleteAfterRollback(
             object entity,
             FakeDataSet<object> dataSet)

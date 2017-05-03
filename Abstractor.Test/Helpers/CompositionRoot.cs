@@ -5,7 +5,7 @@ using Abstractor.Cqrs.Interfaces.CrossCuttingConcerns;
 using Abstractor.Cqrs.Interfaces.Persistence;
 using Abstractor.Cqrs.SimpleInjector.Adapters;
 using SimpleInjector;
-using SimpleInjector.Extensions.LifetimeScoping;
+using SimpleInjector.Lifestyles;
 
 namespace Abstractor.Test.Helpers
 {
@@ -34,7 +34,7 @@ namespace Abstractor.Test.Helpers
 
                     _container = new Container();
 
-                    _container.Options.DefaultScopedLifestyle = new LifetimeScopeLifestyle();
+                    _container.Options.DefaultScopedLifestyle = new ThreadScopedLifestyle();
 
                     var currentAssembly = new[] {typeof(CompositionRoot).Assembly};
 

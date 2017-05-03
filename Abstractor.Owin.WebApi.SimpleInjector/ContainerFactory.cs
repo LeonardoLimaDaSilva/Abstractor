@@ -1,6 +1,6 @@
 ﻿using Abstractor.Cqrs.SimpleInjector.Adapters;
 using SimpleInjector;
-using SimpleInjector.Integration.WebApi;
+using SimpleInjector.Lifestyles;
 
 namespace Abstractor.Owin.WebApi.SimpleInjector
 {
@@ -22,7 +22,7 @@ namespace Abstractor.Owin.WebApi.SimpleInjector
         /// <returns>An adapter.</returns>
         public static ContainerAdapter CreateAdapter()
         {
-            Container.Options.DefaultScopedLifestyle = new WebApiRequestLifestyle();
+            Container.Options.DefaultScopedLifestyle = new AsyncScopedLifestyle();
             return new ContainerAdapter(Container);
         }
     }

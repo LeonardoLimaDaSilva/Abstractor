@@ -13,7 +13,7 @@ using Abstractor.Cqrs.SimpleInjector.Adapters;
 using Abstractor.Cqrs.UnitOfWork.Extensions;
 using SharpTestsEx;
 using SimpleInjector;
-using SimpleInjector.Extensions.LifetimeScoping;
+using SimpleInjector.Lifestyles;
 using Xunit;
 
 namespace Abstractor.Test.CompositionRoot
@@ -136,7 +136,7 @@ namespace Abstractor.Test.CompositionRoot
 
         public ContainerAdapter BuildNewAdapter(Container container)
         {
-            container.Options.DefaultScopedLifestyle = new LifetimeScopeLifestyle();
+            container.Options.DefaultScopedLifestyle = new ThreadScopedLifestyle();
             container.Options.AllowOverridingRegistrations = true;
 
             var currentAssembly = new[] {typeof(Helpers.CompositionRoot).Assembly};
@@ -174,7 +174,7 @@ namespace Abstractor.Test.CompositionRoot
                 adapter.RegisterAzureTable<FakeTableContext>();
                 adapter.RegisterUnitOfWork();
 
-                using (container.BeginLifetimeScope())
+                using (ThreadScopedLifestyle.BeginScope(container))
                 {
                     container.GetInstance<IFakeBlob1Repository>();
                     container.GetInstance<IFakeBlob2Repository>();
@@ -193,7 +193,7 @@ namespace Abstractor.Test.CompositionRoot
                 adapter.RegisterAzureQueue<FakeQueueContext>();
                 adapter.RegisterAzureTable<FakeTableContext>();
 
-                using (container.BeginLifetimeScope())
+                using (ThreadScopedLifestyle.BeginScope(container))
                 {
                     // ReSharper disable once AccessToDisposedClosure
                     Assert.Throws<ActivationException>(() => container.GetInstance<IUnitOfWork>());
@@ -210,7 +210,7 @@ namespace Abstractor.Test.CompositionRoot
 
                 adapter.RegisterEntityFramework<FakeEfContext>();
 
-                using (container.BeginLifetimeScope())
+                using (ThreadScopedLifestyle.BeginScope(container))
                 {
                     var uow = container.GetInstance<IUnitOfWork>();
                     uow.GetType()
@@ -236,7 +236,7 @@ namespace Abstractor.Test.CompositionRoot
                 adapter.RegisterAzureTable<FakeTableContext>();
                 adapter.RegisterUnitOfWork();
 
-                using (container.BeginLifetimeScope())
+                using (ThreadScopedLifestyle.BeginScope(container))
                 {
                     var uow = container.GetInstance<IUnitOfWork>();
                     uow.GetType().FullName.Should().Be("Abstractor.Cqrs.UnitOfWork.Persistence.UnitOfWork");
@@ -256,7 +256,7 @@ namespace Abstractor.Test.CompositionRoot
 
                 adapter.RegisterEntityFramework<FakeEfContextWithDependencyInjection>();
 
-                using (container.BeginLifetimeScope())
+                using (ThreadScopedLifestyle.BeginScope(container))
                 {
                     var logger = (FakeLogger) container.GetInstance<ILogger>();
                     var uow = container.GetInstance<IUnitOfWork>();
@@ -281,7 +281,7 @@ namespace Abstractor.Test.CompositionRoot
 
                 adapter.RegisterUnitOfWork();
 
-                using (container.BeginLifetimeScope())
+                using (ThreadScopedLifestyle.BeginScope(container))
                 {
                     // ReSharper disable once AccessToDisposedClosure
                     Assert.Throws<ActivationException>(() => container.GetInstance<IUnitOfWork>());
@@ -299,7 +299,7 @@ namespace Abstractor.Test.CompositionRoot
                 adapter.RegisterUnitOfWork();
                 adapter.RegisterEntityFramework<FakeEfContext>();
 
-                using (container.BeginLifetimeScope())
+                using (ThreadScopedLifestyle.BeginScope(container))
                 {
                     // ReSharper disable once AccessToDisposedClosure
                     Assert.Throws<ActivationException>(() => container.GetInstance<IUnitOfWork>());
@@ -320,7 +320,7 @@ namespace Abstractor.Test.CompositionRoot
                 adapter.RegisterAzureTable<FakeTableContext>();
                 adapter.RegisterEntityFramework<FakeEfContext>();
 
-                using (container.BeginLifetimeScope())
+                using (ThreadScopedLifestyle.BeginScope(container))
                 {
                     var uow = container.GetInstance<IUnitOfWork>();
                     uow.GetType().FullName.Should().Be("Abstractor.Cqrs.UnitOfWork.Persistence.UnitOfWork");
