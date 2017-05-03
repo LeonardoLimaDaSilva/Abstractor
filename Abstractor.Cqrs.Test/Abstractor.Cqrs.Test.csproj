@@ -89,10 +89,16 @@
     <Compile Include="CrossCuttingConcerns\GuardTests.cs" />
     <Compile Include="CrossCuttingConcerns\JsonLoggerSerializerTests.cs" />
     <Compile Include="CrossCuttingConcerns\SystemClockTests.cs" />
+    <Compile Include="Domain\AggregateRootTests.cs" />
     <Compile Include="Domain\EntityTests.cs" />
+    <Compile Include="Domain\GenericFileExtensionTests.cs" />
     <Compile Include="Domain\GenericFileTests.cs" />
+    <Compile Include="Domain\Pagination\PagedFilterTests.cs" />
+    <Compile Include="Domain\Pagination\PagedResultTests.cs" />
+    <Compile Include="Domain\Pagination\PagingExtensionsTests.cs" />
     <Compile Include="Domain\QueueMessageTests.cs" />
     <Compile Include="Domain\ValueObjectTests.cs" />
+    <Compile Include="Events\DomainEventsTests.cs" />
     <Compile Include="Helpers\FakeLogger.cs" />
     <Compile Include="Helpers\FakeLoggerExtension.cs" />
     <Compile Include="Operations\Decorators\ApplicationEventLifetimeScopeDecoratorTests.cs" />

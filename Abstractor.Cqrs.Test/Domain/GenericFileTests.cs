@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using Abstractor.Cqrs.Infrastructure.Domain;
 using Abstractor.Cqrs.Test.Helpers;
@@ -43,6 +44,35 @@ namespace Abstractor.Cqrs.Test.Domain
                 genericFile.FileName.Should().Be(fileName);
                 genericFile.Stream.Should().Be(stream);
             }
+        }
+
+        [Fact]
+        public void Constructor_StreamShouldBeNull()
+        {
+            // Arrange and act
+
+            using (var genericFile = new GenericFile())
+            {
+                // Assert
+                
+                genericFile.Stream.Should().Be(Stream.Null);
+            }
+        }
+
+        [Fact]
+        public void Constructor_NullFileName_ThrowsException()
+        {
+            // Arrange, act and assert
+
+            Assert.Throws<ArgumentNullException>(() => new GenericFile(null, new MemoryStream()));
+        }
+
+        [Fact]
+        public void Constructor_NullStream_ThrowsException()
+        {
+            // Arrange, act and assert
+
+            Assert.Throws<ArgumentNullException>(() => new GenericFile("fileName", null));
         }
     }
 }

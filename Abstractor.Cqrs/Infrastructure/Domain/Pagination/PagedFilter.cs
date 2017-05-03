@@ -22,15 +22,15 @@
         /// </summary>
         public int? Page
         {
-            get => _page <= 0 ? 1 : _page;
+            get => !_page.HasValue || _page <= 0 ? 1 : _page;
             set => _page = value;
         }
 
         /// <summary>
         ///     Number of results to be skipped.
         /// </summary>
-        public int Skip => Take.HasValue
-            ? (Page.GetValueOrDefault() - 1) * Take.Value
+        public int Skip => Take.HasValue && Page.HasValue
+            ? (Page.Value - 1) * Take.Value
             : 0;
 
         /// <summary>

@@ -121,16 +121,15 @@ namespace Abstractor.Test.Command
 
             var command = new FakeCommand();
 
-            Task.Factory.StartNew(
-                    () =>
-                    {
-                        // Act
+            Task.Factory.StartNew(() =>
+                {
+                    // Act
 
-                        CommandDispatcher.Dispatch(command);
-                    },
-                    CancellationToken.None,
-                    TaskCreationOptions.None,
-                    scheduler);
+                    CommandDispatcher.Dispatch(command);
+                },
+                CancellationToken.None,
+                TaskCreationOptions.None,
+                scheduler);
 
             // Assert
 
@@ -153,14 +152,14 @@ namespace Abstractor.Test.Command
             // Act
 
             Task.Factory.StartNew(() =>
-                    {
-                        // Act
+                {
+                    // Act
 
-                        Assert.Throws<SpecificException>(() => CommandDispatcher.Dispatch(command));
-                    },
-                    CancellationToken.None,
-                    TaskCreationOptions.None,
-                    scheduler);
+                    Assert.Throws<SpecificException>(() => CommandDispatcher.Dispatch(command));
+                },
+                CancellationToken.None,
+                TaskCreationOptions.None,
+                scheduler);
 
             // Assert
 
