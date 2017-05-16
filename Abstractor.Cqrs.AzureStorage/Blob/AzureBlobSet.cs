@@ -97,6 +97,7 @@ namespace Abstractor.Cqrs.AzureStorage.Blob
         protected override void InsertEntity(TEntity entity)
         {
             var blobToUpload = _container.GetBlockBlobReference(entity.FileName);
+            blobToUpload.UploadFromStream(entity.Stream);
 
             var cacheControl = typeof(TEntity).GetBlobCacheControl();
             var extension = Path.GetExtension(entity.FileName) ?? string.Empty;
@@ -105,8 +106,6 @@ namespace Abstractor.Cqrs.AzureStorage.Blob
             blobToUpload.Properties.CacheControl = cacheControl;
 
             blobToUpload.SetProperties();
-
-            blobToUpload.UploadFromStream(entity.Stream);
         }
 
         /// <summary>
