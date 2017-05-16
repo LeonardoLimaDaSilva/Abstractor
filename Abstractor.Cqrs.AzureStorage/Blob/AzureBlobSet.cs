@@ -23,8 +23,9 @@ namespace Abstractor.Cqrs.AzureStorage.Blob
         public AzureBlobSet(string connectionString)
         {
             var blobClient = CloudStorageAccount.Parse(connectionString).CreateCloudBlobClient();
+
             _container = blobClient.GetContainerReference(typeof(TEntity).GetContainerName());
-            _container.CreateIfNotExists();
+            _container.CreateIfNotExists(typeof(TEntity).GetPublicAccessType());
         }
 
         /// <summary>

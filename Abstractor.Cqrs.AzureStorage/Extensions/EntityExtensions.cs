@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Abstractor.Cqrs.AzureStorage.Attributes;
+using Microsoft.WindowsAzure.Storage.Blob;
 
 namespace Abstractor.Cqrs.AzureStorage.Extensions
 {
@@ -16,11 +17,25 @@ namespace Abstractor.Cqrs.AzureStorage.Extensions
         /// <returns>Container name.</returns>
         public static string GetContainerName(this Type type)
         {
-            var attributes =
-                (AzureContainerAttribute[]) type.GetCustomAttributes(typeof(AzureContainerAttribute), false);
-            return attributes.Length > 0
-                ? attributes.First().Name.ToLowerInvariant()
-                : type.Name.ToLowerInvariant();
+            var attribute =
+                ((AzureContainerAttribute[]) type.GetCustomAttributes(typeof(AzureContainerAttribute), false))
+                .SingleOrDefault();
+            
+            return attribute?.Name.ToLowerInvariant() ?? type.Name.ToLowerInvariant();
+        }
+
+        /// <summary>
+        ///     Gets the public access type using the <see cref="AzureContainerAttribute" /> decorated in the entity class.
+        /// </summary>
+        /// <param name="type">Entity type.</param>
+        /// <returns>The public access type.</returns>
+        public static BlobContainerPublicAccessType GetPublicAccessType(this Type type)
+        {
+            var attribute =
+                ((AzureContainerAttribute[])type.GetCustomAttributes(typeof(AzureContainerAttribute), false))
+                .SingleOrDefault();
+
+            return attribute?.PublicAccessType ?? BlobContainerPublicAccessType.Off;
         }
 
         /// <summary>
@@ -30,10 +45,11 @@ namespace Abstractor.Cqrs.AzureStorage.Extensions
         /// <returns>Table name.</returns>
         public static string GetQueueName(this Type type)
         {
-            var attributes = (AzureQueueAttribute[]) type.GetCustomAttributes(typeof(AzureQueueAttribute), false);
-            return attributes.Length > 0
-                ? attributes.First().Name.ToLowerInvariant()
-                : type.Name.ToLowerInvariant();
+            var attribute =
+                ((AzureQueueAttribute[])type.GetCustomAttributes(typeof(AzureQueueAttribute), false))
+                .SingleOrDefault();
+
+            return attribute?.Name.ToLowerInvariant() ?? type.Name.ToLowerInvariant();
         }
 
         /// <summary>
@@ -43,10 +59,11 @@ namespace Abstractor.Cqrs.AzureStorage.Extensions
         /// <returns>Table name.</returns>
         public static string GetTableName(this Type type)
         {
-            var attributes = (AzureTableAttribute[]) type.GetCustomAttributes(typeof(AzureTableAttribute), false);
-            return attributes.Length > 0
-                ? attributes.First().Name
-                : type.Name;
+            var attribute =
+                ((AzureTableAttribute[])type.GetCustomAttributes(typeof(AzureTableAttribute), false))
+                .SingleOrDefault();
+
+            return attribute?.Name ?? type.Name;
         }
     }
 }

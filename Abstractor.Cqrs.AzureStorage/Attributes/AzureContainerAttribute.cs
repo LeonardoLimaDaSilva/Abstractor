@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.WindowsAzure.Storage.Blob;
 
 namespace Abstractor.Cqrs.AzureStorage.Attributes
 {
@@ -14,12 +15,21 @@ namespace Abstractor.Cqrs.AzureStorage.Attributes
         public string Name { get; private set; }
 
         /// <summary>
+        ///     Specifies the level of public access allowed in this container.
+        /// </summary>
+        public BlobContainerPublicAccessType PublicAccessType { get; }
+
+        /// <summary>
         ///     Attribute constructor.
         /// </summary>
         /// <param name="name">The name of Azure container.</param>
-        public AzureContainerAttribute(string name)
+        /// <param name="publicAccessType">Specifies the level of public access allowed in this container.</param>
+        public AzureContainerAttribute(
+            string name,
+            BlobContainerPublicAccessType publicAccessType = BlobContainerPublicAccessType.Off)
         {
             Name = name;
+            PublicAccessType = publicAccessType;
         }
     }
 }
