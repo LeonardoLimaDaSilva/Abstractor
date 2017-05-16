@@ -98,6 +98,14 @@ namespace Abstractor.Cqrs.AzureStorage.Blob
         {
             var blobToUpload = _container.GetBlockBlobReference(entity.FileName);
             blobToUpload.UploadFromStream(entity.Stream);
+
+            var cacheControl = typeof(TEntity).GetBlobCacheControl();
+            var extension = Path.GetExtension(entity.FileName) ?? string.Empty;
+
+            blobToUpload.Properties.ContentType = MimeTypeMapper.GetFromExtension(extension.ToLower());
+            blobToUpload.Properties.CacheControl = cacheControl;
+
+            blobToUpload.SetProperties();
         }
 
         /// <summary>

@@ -11,6 +11,21 @@ namespace Abstractor.Cqrs.AzureStorage.Extensions
     internal static class EntityExtensions
     {
         /// <summary>
+        ///     Gets the cache control value defined for the entity.
+        /// </summary>
+        /// <param name="type">Entity type.</param>
+        /// <returns>Cache control value.</returns>
+        public static string GetBlobCacheControl(this Type type)
+        {
+            var attribute =
+                ((AzureBlobCacheControlAttribute[]) type.GetCustomAttributes(typeof(AzureBlobCacheControlAttribute),
+                    false))
+                .SingleOrDefault();
+
+            return attribute?.Value.ToLowerInvariant();
+        }
+
+        /// <summary>
         ///     Gets the container name using the <see cref="AzureContainerAttribute" /> decorated in the entity class.
         /// </summary>
         /// <param name="type">Entity type.</param>
@@ -20,7 +35,7 @@ namespace Abstractor.Cqrs.AzureStorage.Extensions
             var attribute =
                 ((AzureContainerAttribute[]) type.GetCustomAttributes(typeof(AzureContainerAttribute), false))
                 .SingleOrDefault();
-            
+
             return attribute?.Name.ToLowerInvariant() ?? type.Name.ToLowerInvariant();
         }
 
@@ -32,7 +47,7 @@ namespace Abstractor.Cqrs.AzureStorage.Extensions
         public static BlobContainerPublicAccessType GetPublicAccessType(this Type type)
         {
             var attribute =
-                ((AzureContainerAttribute[])type.GetCustomAttributes(typeof(AzureContainerAttribute), false))
+                ((AzureContainerAttribute[]) type.GetCustomAttributes(typeof(AzureContainerAttribute), false))
                 .SingleOrDefault();
 
             return attribute?.PublicAccessType ?? BlobContainerPublicAccessType.Off;
@@ -46,7 +61,7 @@ namespace Abstractor.Cqrs.AzureStorage.Extensions
         public static string GetQueueName(this Type type)
         {
             var attribute =
-                ((AzureQueueAttribute[])type.GetCustomAttributes(typeof(AzureQueueAttribute), false))
+                ((AzureQueueAttribute[]) type.GetCustomAttributes(typeof(AzureQueueAttribute), false))
                 .SingleOrDefault();
 
             return attribute?.Name.ToLowerInvariant() ?? type.Name.ToLowerInvariant();
@@ -60,7 +75,7 @@ namespace Abstractor.Cqrs.AzureStorage.Extensions
         public static string GetTableName(this Type type)
         {
             var attribute =
-                ((AzureTableAttribute[])type.GetCustomAttributes(typeof(AzureTableAttribute), false))
+                ((AzureTableAttribute[]) type.GetCustomAttributes(typeof(AzureTableAttribute), false))
                 .SingleOrDefault();
 
             return attribute?.Name ?? type.Name;

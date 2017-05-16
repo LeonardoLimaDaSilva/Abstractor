@@ -70,6 +70,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Attributes\AzureBlobCacheControlAttribute.cs" />
     <Compile Include="Attributes\AzureContainerAttribute.cs" />
     <Compile Include="Attributes\AzureQueueAttribute.cs" />
     <Compile Include="Attributes\AzureTableAttribute.cs" />
@@ -78,6 +79,7 @@
     <Compile Include="Blob\AzureBlobRepository.cs" />
     <Compile Include="Blob\AzureBlobSet.cs" />
     <Compile Include="Blob\BaseBlobRepository.cs" />
+    <Compile Include="Blob\MimeTypeMapper.cs" />
     <Compile Include="Extensions\AzureBlobExtensions.cs" />
     <Compile Include="Extensions\ContainerExtensions.cs" />
     <Compile Include="Extensions\EntityExtensions.cs" />
