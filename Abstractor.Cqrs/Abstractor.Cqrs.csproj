@@ -112,6 +112,7 @@
     <Compile Include="Infrastructure\Persistence\BaseDataSetOperation.cs" />
     <Compile Include="Infrastructure\Persistence\BaseDataSetOperationType.cs" />
     <Compile Include="Infrastructure\Persistence\IBaseDataSet.cs" />
+    <Compile Include="Infrastructure\TestHelpers\Assertions.cs" />
     <Compile Include="Interfaces\CompositionRoot\IContainer.cs" />
     <Compile Include="Interfaces\CrossCuttingConcerns\IAttributeFinder.cs" />
     <Compile Include="Interfaces\CrossCuttingConcerns\IClock.cs" />

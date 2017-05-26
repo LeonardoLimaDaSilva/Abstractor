@@ -78,6 +78,22 @@ namespace Abstractor.Cqrs.Infrastructure.CompositionRoot.Extensions
         }
 
         /// <summary>
+        ///     Determines whether a type implements an open generic interface.
+        /// </summary>
+        /// <param name="candidateType">Type to be verified.</param>
+        /// <param name="openGenericInterfaceType">Open generic interface type.</param>
+        /// <returns></returns>
+        public static bool ImplementsOpenGenericInterface(this Type candidateType, Type openGenericInterfaceType)
+        {
+            return candidateType == openGenericInterfaceType ||
+                   candidateType.IsGenericType && candidateType.GetGenericTypeDefinition() ==
+                   openGenericInterfaceType ||
+                   candidateType.GetInterfaces()
+                                .Any(i => i.IsGenericType &&
+                                          ImplementsOpenGenericInterface(i, openGenericInterfaceType));
+        }
+
+        /// <summary>
         ///     Ensures the return of types that can be loaded from an assembly.
         /// </summary>
         /// <param name="assembly">Assembly to be analized.</param>
